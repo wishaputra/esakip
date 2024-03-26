@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\model_misi;
 use App\Models\model_visi;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class MisiController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::whereid_visi($request->id_visi)->orderBy('id', 'ASC')->get();
+        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
         return DataTables::of($visi)
             ->addColumn('action', function ($p) {
                 return "
@@ -110,11 +111,10 @@ class MisiController extends Controller
         $misi  = model_misi::find($id);
 
         $rule = [
-            "id_visi" => 'required',
+            
             "misi" => 'required',
             "creator" => 'required',
-            "create_at" => 'required',
-            "updated_at" => 'required',
+            
 
         ];
 
@@ -126,12 +126,10 @@ class MisiController extends Controller
 
         $misi->update([
 
-            "id_visi" => 'required',
-            "misi" => 'required',
-            "creator" => 'required',
-            "create_at" => 'required',
-            "updated_at" => 'required',
-
+            
+            "misi" => $request->misi,
+            "creator" => Auth::user()->id,
+           
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
@@ -146,7 +144,7 @@ class MisiController extends Controller
     {
         $visi  = model_misi::find($id);
 
-        if ($visi->sub_menus2->count() > 0) {
+        if ($visi->misi->count() > 0) {
             return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
         }
 

@@ -57,9 +57,9 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">visi id</td>
+                                            <td width="20%">visi</td>
                                             <td>misi</td>
-                                            <td>creator</td>
+                                            
                                           
 
                                             <td width="10%">Aksi</td>
@@ -181,9 +181,9 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.misi.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#nama').val(data.nama).focus();
-            $('#no_urut').val(data.no_urut);
-            $('#route').val(data.route);
+            // $('#visi').val(data.visi).focus();
+            $('#misi').val(data.misi);
+            $('#creator').val(data.creator);
            
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
@@ -247,9 +247,9 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'visi', name: 'visi'},
+            {data: 'id_visi', name: 'id_visi'},
             {data: 'misi', name: 'misi'},
-            {data: 'creator', name: 'creator'},
+            
            
             
             
