@@ -159,13 +159,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::post('visi/api', [VisiController::class, 'api'])->name('visi.api');
         Route::resource('visi', visiController::class);
+        Route::post('misi/api', [MisiController::class, 'api'])->name('misi.api');
+        Route::resource('misi', MisiController::class);
 
         Route::post('submenu/api', [SubMenuController::class, 'api'])->name('submenu.api');
-
         Route::resource('submenu', SubMenuController::class);
-
         Route::post('submenu2/api', [SubMenu2Controller::class, 'api'])->name('submenu2.api');
-
         Route::resource('submenu2', SubMenu2Controller::class);
 
         Route::prefix('section')->name('section.')->group(function () {

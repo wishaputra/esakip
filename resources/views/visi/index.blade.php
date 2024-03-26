@@ -105,14 +105,14 @@
                         <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Tahun Awal</label>
-                                <input type= "text" name="creator" id="creator" value= "{{ Auth::user()->id }}">
-                                <input type="number" name="tahun_awal" id="tahun_awal" min="1900" max="2023" class="form-control">
+                                <input type= "hidden" name="creator" id="creator" value= "{{ Auth::user()->id }}">
+                                <input type="number" name="tahun_awal" id="tahun_awal" min="2008" max="3000" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Tahun Akhir</label>
-                                <input type="number" name="tahun_akhir" id="tahun_akhir" min="1900" max="2023" class="form-control">
+                                <input type="number" name="tahun_akhir" id="tahun_akhir" min="2008" max="3000" class="form-control">
                             </div>
                         </div>
                     </div>
