@@ -1,0 +1,1 @@
+User::factory()->has(Peserta::factory()->has(Kes_reproduksi::factory(),'kes_reproduksi'))->count(100)->create();
