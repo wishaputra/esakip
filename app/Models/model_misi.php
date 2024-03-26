@@ -11,6 +11,6 @@ class model_misi extends Model
 
     public function visi()
     {
-        return $this->belongsTo(model_visi::class, 'visi_id');
+        return $this->belongsTo(model_visi::class, 'id_visi');
     }
 }

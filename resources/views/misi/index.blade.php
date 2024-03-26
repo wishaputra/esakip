@@ -101,14 +101,26 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
+                    
+
+                    <div class="col-md-6">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">visi</label>
+                                <input type="hidden" name="creator" id="creator" value="{{ Auth::user()->id}}">
+                                <input value="{{ $visi->visi}}"  type="text" name="id_visi" id="id_visi"  class="form-control" readonly>
+                            </div>
+                        </div>
+
+
+
                     <div class="form-row">
-    <div class="col-md-12">
-        <div class="form-group col-md-12">
-            <label for="misi" class="col-form-label">Misi</label>
-            <textarea name="misi" id="misi" class="form-control" rows="3"></textarea>
-        </div>
-    </div>
-</div>
+                        <div class="col-md-8">
+                            <div class="form-group col-md-12">
+                                <label for="misi" class="col-form-label">Misi</label>
+                                <textarea name="misi" id="misi" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
 
                         <!-- </div>
                         <div class="col-md-4">
@@ -117,12 +129,12 @@
                                 <input type="text" name="nama" id="nama" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Misi</label>
                                 <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
                             </div>
-                        </div> -->
+                        </div> --> -->
 
                     </div>
 

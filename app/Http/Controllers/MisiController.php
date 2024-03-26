@@ -11,7 +11,7 @@ class MisiController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::wheremenu_id($request->visi_id)->orderBy('tahun_awal', 'ASC')->get();
+        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
         return DataTables::of($visi)
             ->addColumn('action', function ($p) {
                 return "
@@ -36,7 +36,7 @@ class MisiController extends Controller
         $title = "misi " . $visi->awal_tahun;
 
 
-        return view('misi.index', compact('title', 'visi_id'));
+        return view('misi.index', compact('title', 'visi_id', 'visi'));
     }
 
     /**
@@ -62,8 +62,7 @@ class MisiController extends Controller
             "id_visi" => 'required',
             "misi" => 'required',
             "creator" => 'required',
-            "create_at" => 'required',
-            "updated_at" => 'required',
+           
         ]);
 
 
@@ -73,8 +72,6 @@ class MisiController extends Controller
             "id_visi" => $request->id_visi,
             "misi" => $request->misi,
             "creator" => $request->creator,
-            "create_at" => $request->created_at,
-            "updated_at" => $request->updated_at
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
@@ -110,7 +107,7 @@ class MisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $submenu  = model_misi::find($id);
+        $misi  = model_misi::find($id);
 
         $rule = [
             "id_visi" => 'required',
@@ -127,7 +124,7 @@ class MisiController extends Controller
 
 
 
-        $submenu->update([
+        $misi->update([
 
             "id_visi" => 'required',
             "misi" => 'required',
