@@ -15,7 +15,7 @@ class VisiController extends Controller
         return DataTables::of($visi)
 
             ->addColumn('misi_count', function ($p) {
-                $count = $p->cascading_misi->count();
+                $count = $p->misi->count();
                 return "<a  href='".route('setup.misi.index')."?visi_id=".$p->id."'  title='misi'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {

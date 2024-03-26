@@ -238,8 +238,6 @@
             {data: 'tahun_akhir', name: 'tahun_akhir'},
             {data: 'visi', name: 'visi'},
            
-         
-            
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
