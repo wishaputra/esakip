@@ -60,8 +60,7 @@
                                             <td width="20%">visi id</td>
                                             <td>misi</td>
                                             <td>creator</td>
-                                            <td>create at</td>
-                                            <td>updated at</td>
+                                          
 
                                             <td width="10%">Aksi</td>
                                         </tr>
@@ -107,7 +106,8 @@
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">visi</label>
                                 <input type="hidden" name="creator" id="creator" value="{{ Auth::user()->id}}">
-                                <input value="{{ $visi->visi}}"  type="text" name="id_visi" id="id_visi"  class="form-control" readonly>
+                                <input value="{{ $visi->id}}"  type="hidden" name="id_visi" id="id_visi"  class="form-control" >
+                                <input value="{{ $visi->visi}}"  type="text" name="visi" id="visi"  class="form-control" readonly>
                             </div>
                         </div>
 
@@ -134,9 +134,9 @@
                                 <label for="" class="col-form-label">Misi</label>
                                 <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
                             </div>
-                        </div> --> -->
+                        </div> --> 
 
-                    </div>
+                   
 
 
 
@@ -247,11 +247,10 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'id_visi', name: 'id_visi'},
+            {data: 'visi', name: 'visi'},
             {data: 'misi', name: 'misi'},
             {data: 'creator', name: 'creator'},
-            {data: 'create_at', name: 'create_at'},
-            {data: 'updated_at', name: 'updated_at'},
+           
             
             
             

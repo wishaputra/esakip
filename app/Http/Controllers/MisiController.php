@@ -11,7 +11,7 @@ class MisiController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
+        $visi = model_misi::whereid_visi($request->id_visi)->orderBy('id', 'ASC')->get();
         return DataTables::of($visi)
             ->addColumn('action', function ($p) {
                 return "
