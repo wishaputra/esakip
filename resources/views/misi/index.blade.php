@@ -57,10 +57,11 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">Nama</td>
-                                            <td>No Urut</td>
-                                            <td>Route</td>
-                                            <td>Submenu</td>
+                                            <td width="20%">visi id</td>
+                                            <td>misi</td>
+                                            <td>creator</td>
+                                            <td>create at</td>
+                                            <td>updated at</td>
 
                                             <td width="10%">Aksi</td>
                                         </tr>
@@ -166,7 +167,7 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.menu.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.misi.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#nama').val(data.nama).focus();
             $('#no_urut').val(data.no_urut);
@@ -190,7 +191,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.menu.store') }}" : "{{ route('setup.menu.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.misi.store') }}" : "{{ route('setup.misi.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -229,15 +230,17 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.menu.api') }}",
+            url: "{{ route('setup.misi.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'nama', name: 'nama'},
-            {data: 'no_urut', name: 'no_urut'},
-            {data: 'route', name: 'route'},
-            {data: 'submenu_count', name: 'submenu_count'},
+            {data: 'id_visi', name: 'id_visi'},
+            {data: 'misi', name: 'misi'},
+            {data: 'creator', name: 'creator'},
+            {data: 'create_at', name: 'create_at'},
+            {data: 'updated_at', name: 'updated_at'},
+            
             
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -275,7 +278,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.menu.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.misi.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

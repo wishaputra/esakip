@@ -18,6 +18,7 @@ use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\VisiController;
+use app\Http\controllers\MisiController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
