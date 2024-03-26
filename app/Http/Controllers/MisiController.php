@@ -18,7 +18,6 @@ class MisiController extends Controller
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
                     <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['menu', 'action', 'photo', 'submenu_count'])
             ->toJson();
     }
     /**
@@ -28,7 +27,7 @@ class MisiController extends Controller
      */
     public function index(Request $request)
     {
-        $visi_id = $request->menu_id;
+        $visi_id = $request->visi_id;
         if (!$visi_id || !model_visi::whereid($visi_id)->first()) {
             return redirect()->route('setup.menu.index');
         }

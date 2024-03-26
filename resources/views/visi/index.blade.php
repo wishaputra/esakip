@@ -60,6 +60,7 @@
                                             <td width="20%">tahun awal</td>
                                             <td>tahun akhir</td>
                                             <td>visi</td>
+                                            <td>misi</td>
                                             
 
                                             <td width="10%">Aksi</td>
@@ -171,6 +172,7 @@
             $('#tahun_awal').val(data.tahun_awal).focus();
             $('#tahun_akhir').val(data.tahun_akhir);
             $('#visi').val(data.visi);
+
            
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
@@ -237,6 +239,7 @@
             {data: 'tahun_awal', name: 'tahun_awal'},
             {data: 'tahun_akhir', name: 'tahun_akhir'},
             {data: 'visi', name: 'visi'},
+            {data: 'misi_count', name: 'misi_count'},
            
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}

@@ -127,7 +127,7 @@ class VisiController extends Controller
     public function destroy($id)
     {
         $visi  = model_visi::find($id);
-        if ($visi->model_misi->count() > 0) {
+        if ($visi->misi->count() > 0) {
             return response()->json(["message" => "<center>Hapus misi terlebih dahulu</center>"], 500);
         }
         
