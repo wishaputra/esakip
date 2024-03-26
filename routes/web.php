@@ -57,8 +57,22 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 });
 
 Route::get('/tree', function () {
-    return view('tree.index');
-})->name('tree');
+    return view('visi.index');
+})->name('visi');
+
+Route::get('/misi', function () {
+    return view('misi.index');
+})->name('misi');
+
+Route::get('/tujuan', function () {
+    return view('tujuan.index');
+})->name('tujuan');
+
+Route::get('/sasaran', function () {
+    return view('sasaran.index');
+})->name('sasaran');
+
+
 
 
 Route::get('tree-view', function () {

@@ -102,20 +102,29 @@
 
                 <li class="treeview">
             <a href="#">
-                <i class="icon icon-minus s-14 text-blue"></i> <span>Cascade</span>
+                <i class="icon icon-minus s-14 text-blue"></i> <span>Cascading</span>
                 <i class="icon icon-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
                 <!-- Sub-menu items -->
                 <li>
-                <a href="{{ route('tree') }}">
-                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tree</span>
+                <a href="{{ route('visi') }}">
+                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>visi</span>
                 </a>
 
 
-                    <a href="{{ route('setup.menu.index') }}">
-                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Chart</span>
+                    <a href="{{ route('misi') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>misi</span>
                     </a>
+
+                    <a href="{{ route('tujuan') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>tujuan</span>
+                    </a>
+
+                    <a href="{{ route('sasaran') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>sasaran</span>
+                    </a>
+        
             </ul>
 
         <li>
