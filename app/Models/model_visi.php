@@ -11,6 +11,6 @@ class model_visi extends Model
 
     public function misi()
     {
-        return $this->hasMany(model_misi::class)->orderBy('id');
+        return $this->hasMany(model_misi::class, 'id');
     }
 }
