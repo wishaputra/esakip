@@ -57,10 +57,10 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">Nama</td>
-                                            <td>No Urut</td>
-                                            <td>Route</td>
-                                            <td>Submenu</td>
+                                            <td width="20%">tahun awal</td>
+                                            <td>tahun akhir</td>
+                                            <td>visi</td>
+                                            
 
                                             <td width="10%">Aksi</td>
                                         </tr>
@@ -102,26 +102,27 @@
 
 
                     <div class="form-row">
-    <div class="col-md-4">
-        <div class="form-group col-md-12">
-            <label for="" class="col-form-label">Tahun Awal</label>
-            <input type="date" name="tahun_awal" id="tahun_awal" class="form-control">
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group col-md-12">
-            <label for="" class="col-form-label">Tahun Akhir</label>
-            <input type="date" name="tahun_akhir" id="tahun_akhir" class="form-control">
-        </div>
-    </div>
-</div>
                         <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Visi</label>
-                                <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
+                                <label for="" class="col-form-label">Tahun Awal</label>
+                                <input type= "text" name="creator" id="creator" value= "{{ Auth::user()->id }}">
+                                <input type="number" name="tahun_awal" id="tahun_awal" min="1900" max="2023" class="form-control">
                             </div>
                         </div>
-
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Tahun Akhir</label>
+                                <input type="number" name="tahun_akhir" id="tahun_akhir" min="1900" max="2023" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="misi" class="col-form-label">visi</label>
+                                <textarea name="visi" id="visi" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -165,11 +166,11 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.menu.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.visi.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#nama').val(data.nama).focus();
-            $('#no_urut').val(data.no_urut);
-            $('#route').val(data.route);
+            $('#tahun_awal').val(data.tahun_awal).focus();
+            $('#tahun_akhir').val(data.tahun_akhir);
+            $('#visi').val(data.visi);
            
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
@@ -189,7 +190,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.menu.store') }}" : "{{ route('setup.menu.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.visi.store') }}" : "{{ route('setup.visi.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -228,15 +229,16 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.menu.api') }}",
+            url: "{{ route('setup.visi.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'nama', name: 'nama'},
-            {data: 'no_urut', name: 'no_urut'},
-            {data: 'route', name: 'route'},
-            {data: 'submenu_count', name: 'submenu_count'},
+            {data: 'tahun_awal', name: 'tahun_awal'},
+            {data: 'tahun_akhir', name: 'tahun_akhir'},
+            {data: 'visi', name: 'visi'},
+           
+         
             
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -274,7 +276,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.menu.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.visi.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

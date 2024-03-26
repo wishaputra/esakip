@@ -17,6 +17,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\VisiController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
@@ -56,7 +57,7 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
-Route::get('/tree', function () {
+Route::get('/visi', function () {
     return view('visi.index');
 })->name('visi');
 
@@ -155,6 +156,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::middleware('auth')->prefix('setup')->name('setup.')->group(function () {
         Route::post('menu/api', [MenuController::class, 'api'])->name('menu.api');
         Route::resource('menu', MenuController::class);
+
+        Route::post('visi/api', [VisiController::class, 'api'])->name('visi.api');
+        Route::resource('visi', visiController::class);
 
         Route::post('submenu/api', [SubMenuController::class, 'api'])->name('submenu.api');
 
