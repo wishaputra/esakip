@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Section\Tree;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\CategoryBusiness;
@@ -175,6 +176,17 @@ class HomeController extends Controller
         $title = 'File Download';
 
         return view('front.custom_page.download', compact('breadcrumbs', 'files', 'title'));
+    }
+    
+    public function treeview()
+    {
+        $files = Tree::orderBy('order')->get();
+        $breadcrumbs = ['treeview'];
+        $title = "Treeview";
+        $route = $this->treeview();
+        // Make sure 'section.treeview.index' is the correct path to your view file.
+        return view('front.custom_page.treeview', compact('title', 'route'));
+    
     }
 
     public function search(Request $request)

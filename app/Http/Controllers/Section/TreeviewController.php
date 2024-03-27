@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Section;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section\Tree;
-
+use Yajra\DataTables\DataTables;
 
 class TreeviewController extends Controller
 {

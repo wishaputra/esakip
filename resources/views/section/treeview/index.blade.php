@@ -1,19 +1,54 @@
-{{-- Layout --}}
 @extends('layouts.app')
+@section('title')
+{{ $title }}
+@endsection
 
-{{-- Page Title --}}
-@section('title', $title)
-
-{{-- Custom Styles --}}
 @push('style')
-<!-- Styles can be added here -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 @endpush
 
-{{-- Main Content --}}
 @section('content')
-<div id="myDiagramDiv" style="width: 100%; height: 600px; border: 1px solid lightgray;"></div>
 
-<!-- Modal for Form -->
+<div class="page has-sidebar-left bg-light">
+    <header class="blue accent-3 relative nav-sticky">
+        <div class="container-fluid text-white">
+            <div class="row p-t-b-10 ">
+                <div class="col">
+                    <h4>
+                        <i class="icon-box"></i>
+                        {{ $title}}
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="nav responsive-tab nav-material nav-material-white" id="v-pills-tab">
+                    <li>
+                        <a class="nav-link " target="_blank" href="{{ route('main.treeview') }}">
+                            <i class="icon icon-eye"></i>treeview</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid relative animatedParent animateOnce">
+        <div class="tab-content pb-3" id="v-pills-tabContent">
+            <div class="tab-pane animated fadeInUpShort show active" id="v-pills-1">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-3 mt-3 shadow r-0">
+                            <div class="card-header white"></div>
+                            <div class="card-body">
+                                <div id="tree"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
@@ -26,60 +61,35 @@
             <div class="modal-body">
                 <div id="alert"></div>
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
-                    @method('POST')
+                    {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-                    <!-- Your form fields go here -->
-                </form>
+                    <div class="form-group col-md-12">
+                        <label for="" class="col-form-label">No Urut</label>
+                        <input type="number" name="order" id="order" class="form-control">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="" class="col-form-label">Nama</label>
+                        <input type="text" name="nama" id="nama" class="form-control">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="" class="col-form-label">File</label>
+                        <a id="frm_file" style="display: none" href="" target="_blank"> FILE</a>
+                        <input type="file" name="file" id="file" placeholder="" class="form-control">
+                        <small class="text-danger" id="ket_photo" style="display: none">*Abaikan jika tidak ingin mengganti file</small>
+                    </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="submit" id="action" class="btn btn-primary tButton">Simpan</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
 @endsection
 
-{{-- Custom Scripts --}}
-@push('scripts')
-<script src="https://unpkg.com/gojs/release/go.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {{-- Ensure you have jQuery available --}}
-<script>
-    function init() {
-        var $ = go.GraphObject.make; // for conciseness in defining templates
-        var myDiagram = $(go.Diagram, "myDiagramDiv", {
-            layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35 })
-        });
 
-        // Define the Node template
-        myDiagram.nodeTemplate =
-            $(go.Node, "Horizontal",
-                $(go.TextBlock, new go.Binding("text", "nama")),
-                // Add more bindings as necessary
-            );
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script src="{{ asset('js/treeview.js') }}"></script>   
 
-        // Define the Link template
-        myDiagram.linkTemplate =
-            $(go.Link, $(go.Shape)); // simple link template
-
-        // Load the tree data from the server
-        fetchTreeData();
-    }
-
-    function fetchTreeData() {
-        $.ajax({
-            url: "{{ route('setup.section.tree.api') }}", // Use the route name you've defined in web.php
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                if(data) {
-                    // Assuming 'data' is the array of tree nodes
-                    myDiagram.model = new go.TreeModel(data.data); // Adjust based on your actual JSON structure
-                }
-            },
-            error: function(error) {
-                console.error("Error fetching tree data:", error);
-            }
-        });
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-</script>
-@endpush

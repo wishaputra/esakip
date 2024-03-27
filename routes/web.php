@@ -110,6 +110,7 @@ Route::get('/page/s/{slug}', [HomeController::class, 'page'])->name('main.page')
 Route::get('/page/team', [HomeController::class, 'team'])->name('main.team');
 
 Route::get('/download', [HomeController::class, 'download'])->name('main.download');
+Route::get('/treeview', [HomeController::class, 'download'])->name('main.treeview');
 Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 Route::get('/blog/s/{slug}', [HomeController::class, 'blog'])->name('main.page.blog');
