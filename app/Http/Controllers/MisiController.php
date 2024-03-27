@@ -140,15 +140,21 @@ class MisiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $visi  = model_misi::find($id);
+    public function destroy(Request $request, $id)
+{
+    $visi  = model_misi::find($id);
 
-        if ($visi->misi->count() > 0) {
-            return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
-        }
-
-        $visi->delete();
-        return response()->json(["message" => "Berhasil menghapus data!"], 200);
+    if ($visi && $visi->misi && is_iterable($visi->misi)) {
+        $count = $visi->misi->count();
+    } else {
+        $count = 0;
     }
+
+    if ($count > 0) {
+        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
+    }
+
+    $visi->delete();
+    return response()->json(["message" => "Berhasil menghapus data!"], 200);
+}
 }
