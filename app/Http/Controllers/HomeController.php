@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Section\Tree;
 use App\Models\Business;
+use App\Models\Chart;
 use App\Models\Category;
 use App\Models\CategoryBusiness;
 use App\Models\Contact;
@@ -180,12 +181,20 @@ class HomeController extends Controller
     
     public function treeview()
     {
-        $files = Tree::orderBy('order')->get();
+        
         $breadcrumbs = ['treeview'];
         $title = "Treeview";
-        $route = $this->treeview();
         // Make sure 'section.treeview.index' is the correct path to your view file.
-        return view('front.custom_page.treeview', compact('title', 'route'));
+        return view('front.custom_page.treeview', compact('title',));
+    
+    }
+    public function Chart()
+    {
+        
+        $breadcrumbs = ['chart'];
+        $title = "Chart";
+        // Make sure 'section.treeview.index' is the correct path to your view file.
+        return view('front.custom_page.struktur', compact('title',));
     
     }
 

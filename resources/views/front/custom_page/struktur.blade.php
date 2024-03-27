@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@extends('front.custom_page.layout')
+@push('styles')
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+
 @section('content')
 
 
@@ -9,7 +14,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>Organization Chart</title>
+        
     </head>
     <body>
     <div id="allSampleContent" class="p-4 w-full">
@@ -18,8 +23,6 @@
 
         <!-- Buttons -->
          <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-        <button onclick="addNode()" style="margin-right: 5px;">Add Node</button>
-        <button onclick="saveChart()">Save Chart</button>
     </div>
 
         <!-- Properties Panel -->
@@ -51,22 +54,15 @@
             // Define the template for a simple node
             myDiagram.nodeTemplate =
     go.GraphObject.make(go.Node, "Auto",
-    go.GraphObject.make(go.Shape, "RoundedRectangle",
-    {
-        fill: "white",
-        portId: "",
-        cursor: "pointer",
-        width: 15000, // Increased the width of the node
-        height: 10000  // Increased the height of the node
-    },
-            new go.TextBlock("", {
-                font: "bold 16pt sans-serif", // Increase the font-size of the text
-                editable: true,
-                stroke: "black",
-                wrap: go.TextBlock.WrapFit,
-            })
-    )
-);
+        go.GraphObject.make(go.Shape, "RoundedRectangle",
+            {
+                fill: "white", // Background color of node
+                portId: "", // Important for linking
+                cursor: "pointer" // Cursor style
+            }
+        )
+        // No TextBlock included here means no text will be displayed within the node
+    );
 
 
 

@@ -124,7 +124,7 @@ $(go.Node, "Auto",
       name: "SHAPE",
       fill: graygrad, stroke: "black",
       portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer",
-      width: 120, height: 60 // Adjust width and height as desired
+      width: 250, height: 100 // Adjust width and height as desired
     }),
   // define the panel where the text will appear
   $(go.Panel, "Table",
