@@ -8,30 +8,38 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.2.8/go.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.2.8/goui.js"></script>
     <style>
+        /* Style for the diagram container */
         #myDiagramDiv {
-            width: 100%;
-            height: 800px;
+            width: 50%; /* Adjust width as needed */
+            height: 500px;
             border: 1px solid black;
             overflow: auto;
+            float: left; /* Float left to position next to the description box */
+        }
+        
+        /* Style for the description box */
+        #descriptionBox {
+            width: 50%; /* Adjust width as needed */
+            height: 500px;
+            border: 1px solid black;
+            overflow: auto;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
+    <!-- Diagram container -->
     <div id="myDiagramDiv"></div>
+    
+    <!-- Description box -->
+    <div id="descriptionBox">
+        <h2>Description</h2>
+        <p id="descriptionContent"></p>
+    </div>
 
+    <!-- Include your JavaScript file -->
     <script src="{{ asset('js/treeview.js') }}"></script>   
 
-    <script>
-        // Ensure that the diagram is initialized only once
-        var isDiagramInitialized = false;
-        function initializeDiagram() {
-            if (!isDiagramInitialized) {
-                init(); // Call the function to initialize the diagram
-                isDiagramInitialized = true;
-            }
-        }
-        window.addEventListener('DOMContentLoaded', initializeDiagram);
-    </script>
 </body>
 </html>
 @endsection

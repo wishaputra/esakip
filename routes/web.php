@@ -11,6 +11,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CategoryBusinessController;
 use App\Http\Controllers\Section\DownloadController;
+use App\Http\Controllers\Section\TreeviewController;
 use App\Http\Controllers\FooterController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\HomeController;
@@ -202,6 +203,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('download/api', [DownloadController::class, 'api'])->name('download.api');
             Route::resource('download', DownloadController::class);
+            
+            Route::get('/treeview', [TreeviewController::class, 'index'])->name('treeview.index');
+            Route::get('/treeview', [TreeviewController::class, 'index'])->name('treeview');
+            Route::resource('tree', TreeviewController::class);
+            // Place this in routes/web.php or routes/api.php
+            Route::get('/section/tree/api', [App\Http\Controllers\Section\TreeviewController::class, 'api'])->name('setup.section.tree.api');
+
         });
 
 
