@@ -31,12 +31,7 @@
             Name: <input type="text" id="name" value="" onchange="updateData(this.value, 'name')"><br>
             Title: <input type="text" id="title" value="" onchange="updateData(this.value, 'title')"><br>
             Comments: <input type="text" id="comments" value="" onchange="updateData(this.value, 'comments')"><br>
-        </div>
-
-        <!-- Instructions -->
-        <p>Double click on a node in order to add a person. Drag a node onto another in order to change relationships.</p>
-    </div>
-
+        
     <script>
         var orgChartData = [];
         var myDiagram = null;
@@ -153,7 +148,7 @@ function loadChart() {
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/gojs@2.3.14/release/go.js"></script>
-    <script src="{{ asset('js/orgchart.js') }}"></script>   
+    <script src="{{ asset('js/orgchart2.js') }}"></script>   
     
     </body>
     </html>

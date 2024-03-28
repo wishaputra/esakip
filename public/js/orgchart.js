@@ -152,7 +152,7 @@ $(go.Node, "Auto",
   // define the Link template
   myDiagram.linkTemplate =
     $(go.Link, go.Link.Orthogonal,
-      { corner: 5 },
+      { corner: 10 },
       $(go.Shape, { strokeWidth: 2 }));  // the link shape
 
   myDiagram.linkTemplateMap.add("Support",

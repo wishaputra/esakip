@@ -89,7 +89,7 @@ function init() {
 // define the Node template
 myDiagram.nodeTemplate =
 $(go.Node, "Auto",
-  { doubleClick: nodeDoubleClick },
+  // { doubleClick: nodeDoubleClick },
   { // handle dragging a Node onto a Node to (maybe) change the reporting relationship
     mouseDragEnter: (e, node, prev) => {
       var diagram = node.diagram;
@@ -124,7 +124,7 @@ $(go.Node, "Auto",
       name: "SHAPE",
       fill: graygrad, stroke: "black",
       portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer",
-      width: 120, height: 60 // Adjust width and height as desired
+      width: 250, height: 90 // Adjust width and height as desired
     }),
   // define the panel where the text will appear
   $(go.Panel, "Table",
@@ -200,19 +200,19 @@ function onSelectionChanged(e) {
 }
 
 // Update the HTML elements for editing the properties of the currently selected node, if any
-function updateProperties(data) {
-  if (data === null) {
-    document.getElementById("propertiesPanel").style.display = "none";
-    document.getElementById("name").value = "";
-    document.getElementById("title").value = "";
-    document.getElementById("comments").value = "";
-  } else {
-    document.getElementById("propertiesPanel").style.display = "block";
-    document.getElementById("name").value = data.name || "";
-    document.getElementById("title").value = data.title || "";
-    document.getElementById("comments").value = data.comments || "";
-  }
-}
+// function updateProperties(data) {
+//   if (data === null) {
+//     document.getElementById("propertiesPanel").style.display = "none";
+//     document.getElementById("name").value = "";
+//     document.getElementById("title").value = "";
+//     document.getElementById("comments").value = "";
+//   } else {
+//     document.getElementById("propertiesPanel").style.display = "block";
+//     document.getElementById("name").value = data.name || "";
+//     document.getElementById("title").value = data.title || "";
+//     document.getElementById("comments").value = data.comments || "";
+//   }
+// }
 
 // This is called when the user has finished inline text-editing
 function onTextEdited(e) {
