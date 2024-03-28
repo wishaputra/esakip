@@ -8,6 +8,36 @@
 
 
     @section('content')
+
+    <header id="header" class="ex-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>{{$title}}</h1>
+
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </header> <!-- end of ex-header -->
+    <!-- end of header -->
+    <div class="ex-basic-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumbs">
+                        <a href="{{URL::to('/')}}">Home</a>
+
+                    
+                        <i class="fa fa-angle-double-right"></i>
+                        <a href="{{URL::to('/struktur')}}">struktur</a>
+                    </div> <!-- end of breadcrumbs -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of ex-basic-1 -->
+
+
+
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -31,7 +61,12 @@
             Name: <input type="text" id="name" value="" onchange="updateData(this.value, 'name')"><br>
             Title: <input type="text" id="title" value="" onchange="updateData(this.value, 'title')"><br>
             Comments: <input type="text" id="comments" value="" onchange="updateData(this.value, 'comments')"><br>
-        
+        </div>
+
+        <!-- Instructions -->
+       
+    </div>
+
     <script>
         var orgChartData = [];
         var myDiagram = null;

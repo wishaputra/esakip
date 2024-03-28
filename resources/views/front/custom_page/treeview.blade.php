@@ -6,6 +6,38 @@
 
 @endpush
 @section('content')
+
+<header id="header" class="ex-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>{{$title}}</h1>
+
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </header> <!-- end of ex-header -->
+    <!-- end of header -->
+    <div class="ex-basic-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumbs">
+                        <a href="{{URL::to('/')}}">Home</a>
+
+                    
+                        <i class="fa fa-angle-double-right"></i>
+                        <a href="{{URL::to('/treeview')}}">Tree</a>
+                    </div> <!-- end of breadcrumbs -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of ex-basic-1 -->
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +45,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.2.8/go.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.2.8/goui.js"></script>
+    <script src="https://unpkg.com/gojs@2.3.16/release/go.js"></script>
     <style>
         /* Style for the diagram container */
         #myDiagramDiv {

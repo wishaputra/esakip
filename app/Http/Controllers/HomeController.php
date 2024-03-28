@@ -183,7 +183,7 @@ class HomeController extends Controller
     {
         
         $breadcrumbs = ['treeview'];
-        $title = "Treeview";
+        $title = "Tree";
         // Make sure 'section.treeview.index' is the correct path to your view file.
         return view('front.custom_page.treeview', compact('title',));
     
@@ -192,7 +192,7 @@ class HomeController extends Controller
     {
         
         $breadcrumbs = ['chart'];
-        $title = "Chart";
+        $title = "Struktur";
         // Make sure 'section.treeview.index' is the correct path to your view file.
         return view('front.custom_page.struktur', compact('title',));
     

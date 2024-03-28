@@ -68,8 +68,19 @@ function init() {
       )  // end Horizontal Panel
     );  // end Node
 
-  // without lines
-  myDiagram.linkTemplate = $(go.Link);
+ 
+  // with lines
+      myDiagram.linkTemplate =
+        $(go.Link,
+          { selectable: false,
+            routing: go.Link.Orthogonal,
+            fromEndSegmentLength: 4,
+            toEndSegmentLength: 4,
+            fromSpot: new go.Spot(0.001, 1, 7, 0),
+            toSpot: go.Spot.Left },
+          $(go.Shape,
+            { stroke: 'gray', strokeDashArray: [1,2] }));
+
 
   var nodeDataArray = [
     { key: 0, name: "VISI : TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN", isTreeLeaf: false },
@@ -102,21 +113,36 @@ function init() {
 
   myDiagram.model = new go.TreeModel(nodeDataArray);
 
-  // Display total number of nodes
-  document.getElementById("nodeCount").innerText = "Total Nodes: " + myDiagram.nodes.count;
+
 }
+
+function makeTree(level, count, max, nodeDataArray, parentdata) {
+  var numchildren = Math.floor(Math.random() * 10);
+  for (var i = 0; i < numchildren; i++) {
+    if (count >= max) return count;
+    count++;
+    var childdata = { key: count, parent: parentdata.key };
+    nodeDataArray.push(childdata);
+    if (level > 0 && Math.random() > 0.5) {
+      count = makeTree(level - 1, count, max, nodeDataArray, childdata);
+    }
+  }
+  return count;
+}
+
 
 function imageConverter(prop, picture) {
   var node = picture.part;
   if (node.isTreeLeaf) {
-    return "img/document.svg";
+    return "images/document.svg";
   } else {
     if (node.isTreeExpanded) {
-      return "img/openFolder.svg";
+      return "images/openFolder.svg";
     } else {
-      return "img/closedFolder.svg";
+      return "images/closedFolder.svg";
     }
   }
 }
+
 
 window.addEventListener('DOMContentLoaded', init);
