@@ -1,34 +1,27 @@
 function init() {
   const $ = go.GraphObject.make;
 
-  myDiagram =
-    new go.Diagram("myDiagramDiv",
-      {
-        allowMove: false,
-        allowCopy: false,
-        allowDelete: false,
-        allowHorizontalScroll: true,
-        layout:
-          $(go.TreeLayout,
-            {
-              alignment: go.TreeLayout.AlignmentStart,
-              angle: 0,
-              compaction: go.TreeLayout.CompactionNone,
-              layerSpacing: 16,
-              layerSpacingParentOverlap: 1,
-              nodeIndentPastParent: 1.0,
-              nodeSpacing: 0,
-              setsPortSpot: false,
-              setsChildPortSpot: false
-            })
-      });
+  myDiagram = new go.Diagram("myDiagramDiv", {
+    allowMove: false,
+    allowCopy: false,
+    allowDelete: false,
+    allowHorizontalScroll: true,
+    layout: $(go.TreeLayout, {
+      alignment: go.TreeLayout.AlignmentStart,
+      angle: 0,
+      compaction: go.TreeLayout.CompactionNone,
+      layerSpacing: 16,
+      layerSpacingParentOverlap: 1,
+      nodeIndentPastParent: 1.0,
+      nodeSpacing: 0,
+      setsPortSpot: false,
+      setsChildPortSpot: false
+    })
+  });
 
   myDiagram.nodeTemplate =
-    $(go.Node,
-      { // no Adornment: instead change panel background color by binding to Node.isSelected
+    $(go.Node, {
         selectionAdorned: false,
-        // a custom function to allow expanding/collapsing on double-click
-        // this uses similar logic to a TreeExpanderButton
         doubleClick: (e, node) => {
           var cmd = myDiagram.commandHandler;
           if (node.isTreeExpanded) {
@@ -44,20 +37,19 @@ function init() {
           }
         }
       },
-      $("TreeExpanderButton",
-        {
-          "_treeExpandedFigure": "LineDown",
-          "_treeCollapsedFigure": "LineRight",
-          "ButtonBorder.fill": "whitesmoke",
-          "ButtonBorder.stroke": null,
-          "_buttonFillOver": "rgba(0,128,255,0.25)",
-          "_buttonStrokeOver": null
-        }),
-      $(go.Panel, "Horizontal",
-        { position: new go.Point(18, 0) },
+      $("TreeExpanderButton", {
+        "_treeExpandedFigure": "LineDown",
+        "_treeCollapsedFigure": "LineRight",
+        "ButtonBorder.fill": "whitesmoke",
+        "ButtonBorder.stroke": null,
+        "_buttonFillOver": "rgba(0,128,255,0.25)",
+        "_buttonStrokeOver": null
+      }),
+      $(go.Panel, "Horizontal", {
+          position: new go.Point(18, 0)
+        },
         new go.Binding("background", "isSelected", s => s ? "lightblue" : "white").ofObject(),
-        $(go.TextBlock,
-          {
+        $(go.TextBlock, {
             font: '9pt Verdana, sans-serif',
             editable: true,
             textAlign: "left",
@@ -65,22 +57,24 @@ function init() {
             stretch: go.GraphObject.Horizontal
           },
           new go.Binding("text", "name").makeTwoWay())
-      )  // end Horizontal Panel
-    );  // end Node
+      )
+    );
 
- 
   // with lines
-      myDiagram.linkTemplate =
-        $(go.Link,
-          { selectable: false,
-            routing: go.Link.Orthogonal,
-            fromEndSegmentLength: 4,
-            toEndSegmentLength: 4,
-            fromSpot: new go.Spot(0.001, 1, 7, 0),
-            toSpot: go.Spot.Left },
-          $(go.Shape,
-            { stroke: 'gray', strokeDashArray: [1,2] }));
-
+  myDiagram.linkTemplate =
+    $(go.Link, {
+        selectable: false,
+        routing: go.Link.Orthogonal,
+        fromEndSegmentLength: 4,
+        toEndSegmentLength: 4,
+        fromSpot: new go.Spot(0.001, 1, 7, 0),
+        toSpot: go.Spot.Left
+      },
+      $(go.Shape, {
+        stroke: 'gray',
+        strokeDashArray: [1, 2]
+      })
+    );
 
   var nodeDataArray = [
     { key: 0, name: "VISI : TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN", isTreeLeaf: false },
@@ -107,13 +101,16 @@ function init() {
     { key: 20, name: "MISI : MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN", parent: 0 },
     { key: 21, name: "Mewujudkan Birokrasi Yang Efektif dan Efisien", parent: 20 },
     { key: 22, name: "Meningkatnya Kinerja Penyelenggaraan Pemerintah Daerah", parent: 21 },
-
-
   ];
 
   myDiagram.model = new go.TreeModel(nodeDataArray);
 
-
+  // Collapse all nodes except the "MISI" nodes
+  myDiagram.nodes.each(function(node) {
+    if (!node.data.name.startsWith("MISI")) {
+      node.isTreeExpanded = false;
+    }
+  });
 }
 
 function makeTree(level, count, max, nodeDataArray, parentdata) {
@@ -130,7 +127,6 @@ function makeTree(level, count, max, nodeDataArray, parentdata) {
   return count;
 }
 
-
 function imageConverter(prop, picture) {
   var node = picture.part;
   if (node.isTreeLeaf) {
@@ -143,6 +139,5 @@ function imageConverter(prop, picture) {
     }
   }
 }
-
 
 window.addEventListener('DOMContentLoaded', init);

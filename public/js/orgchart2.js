@@ -6,14 +6,12 @@ function init() {
   
 
   myDiagram =
-    new go.Diagram("myDiagramDiv", // must be the ID or reference to div
-      {
-        // make sure users can only create trees
-        validCycle: go.Diagram.CycleDestinationTree,
-        // users can select only one part at a time
-        maxSelectionCount: 1,
-        layout:
-          $(go.TreeLayout,
+  new go.Diagram("myDiagramDiv", {
+    // make sure users can only create trees
+    validCycle: go.Diagram.CycleDestinationTree,
+    // users can select only one part at a time
+    maxSelectionCount: 1,
+    layout: $(go.TreeLayout,
             {
               treeStyle: go.TreeLayout.StyleLastParents,
               arrangement: go.TreeLayout.ArrangementHorizontal,
@@ -39,6 +37,7 @@ function init() {
         "linkingTool.archetypeLinkData": { category: "Support", text: "100%" },
         // enable undo & redo
         "undoManager.isEnabled": true
+        
       });
 
   // when the document is modified, add a "*" to the title and enable the "Save" button
@@ -149,6 +148,7 @@ $(go.Node, "Auto",
 );  // end Node
 
 
+
   // define the Link template
   myDiagram.linkTemplate =
     $(go.Link, go.Link.Orthogonal,
@@ -186,7 +186,7 @@ $(go.Node, "Auto",
         })));
 
   // read in the JSON-format data from the "mySavedModel" element
-  load();
+  loadChart();
 }
 
 // Allow the user to edit text when a single node is selected
@@ -245,14 +245,68 @@ function updateData(text, field) {
 }
 
 // Show the diagram's model in JSON format
-function save() {
-  document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-  myDiagram.isModified = false;
+function saveChart() {
+  var chartData = { nodeDataArray: myDiagram.model.nodeDataArray, linkDataArray: myDiagram.model.linkDataArray };
+  var jsonData = JSON.stringify({ chartData: chartData });
+
+  $.ajax({
+      type: "POST", // Ensure you're using POST method
+      url: "/save-chart", // Adjust the URL to match your route
+      data: jsonData,
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function(response) {
+          console.log('Chart data saved successfully:', response);
+      },
+      error: function(xhr, status, error) {
+          console.error('Error saving chart data:', error);
+      }
+  });
 }
-function load() {
-  myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+function loadChart() {
+  $.ajax({
+    url: "/load-chart",
+    type: 'GET',
+    success: function(response) {
+      console.log('Chart data loaded successfully', response);
+
+      myDiagram.model = new go.GraphLinksModel(response.nodeDataArray, response.linkDataArray);
+
+      // Collapse all nodes after the diagram model is set
+      myDiagram.nodes.each(function(node) {
+        node.isTreeExpanded = false;
+      });
+    },
+    error: function(xhr, status, error) {
+      console.error('Failed to load chart data:', error);
+    }
+  });
 }
+
+
+function expandFirstNode() {
+  myDiagram.startTransaction();
+  var firstNode = myDiagram.model.findNodeDataForKey(myDiagram.model.nodeDataArray[0].key);
+  if (firstNode) {
+    firstNode.expanded = true;
+
+    // Traverse the tree and collapse all child nodes
+    collapseChildNodes(firstNode);
+  }
+  myDiagram.commitTransaction();
+}
+
+function collapseChildNodes(parentNode) {
+  if (parentNode.isTreeLeaf) return; // No children
+
+  for (var i = 0; i < parentNode.data.children.length; i++) {
+    var childNode = myDiagram.model.findNodeDataForKey(parentNode.data.children[i]);
+    if (childNode) {
+      childNode.expanded = false;
+      collapseChildNodes(childNode);
+    }
+  }
+}
+
+
 window.addEventListener('DOMContentLoaded', init);
-
-
-
