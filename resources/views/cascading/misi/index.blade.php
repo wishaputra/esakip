@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Data</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Misi</a>
                     </li>
 
 
@@ -57,11 +57,8 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">visi</td>
-                                            <td>misi</td>
-                                            
-                                          
-
+                                            {{-- <td width="20%">Visi</td> --}}
+                                            <td>Misi</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -99,20 +96,16 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
-                    
-
-                    <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col-md-8">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">visi</label>
+                                <label for="" class="col-form-label">Visi</label>
                                 <input type="hidden" name="creator" id="creator" value="{{ Auth::user()->id}}">
                                 <input value="{{ $visi->id}}"  type="hidden" name="id_visi" id="id_visi"  class="form-control" >
-                                <input value="{{ $visi->visi}}"  type="text" name="visi" id="visi"  class="form-control" readonly>
+                                <textarea name="visi" id="visi"  class="form-control" readonly>{{ $visi->visi}}</textarea>
                             </div>
                         </div>
-
-
-
+                    </div>
                     <div class="form-row">
                         <div class="col-md-8">
                             <div class="form-group col-md-12">
@@ -134,15 +127,7 @@
                                 <label for="" class="col-form-label">Misi</label>
                                 <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
                             </div>
-                        </div> --> 
-
-                   
-
-
-
-
-
-
+                        </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -166,9 +151,6 @@
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-        
-            
-       
     }
     
     function edit(id){
@@ -189,11 +171,7 @@
         }, "JSON").fail(function(){
             reload();
         });
-
-       
-        
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -247,13 +225,8 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'id_visi', name: 'id_visi'},
-            {data: 'misi', name: 'misi'},
-            
-           
-            
-            
-            
+            // {data: 'id_visi', name: 'id_visi'},
+            {data: 'misi', name: 'misi'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
@@ -271,8 +244,6 @@
 		'overlayShow'	:	false
 	});
     });
-
-    
 
         function remove(id){
         $.confirm({

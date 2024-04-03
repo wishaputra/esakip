@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Data</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Visi</a>
                     </li>
 
 
@@ -57,12 +57,10 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">tahun awal</td>
-                                            <td>tahun akhir</td>
-                                            <td>visi</td>
-                                            <td>misi</td>
-                                            
-
+                                            <td width="20%">Tahun Awal</td>
+                                            <td>Tahun Akhir</td>
+                                            <td>Visi</td>
+                                            <td>Misi</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -76,10 +74,6 @@
 
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 </div>
@@ -120,17 +114,11 @@
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="misi" class="col-form-label">visi</label>
+                                <label for="misi" class="col-form-label">Visi</label>
                                 <textarea name="visi" id="visi" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -154,9 +142,6 @@
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-        
-            
-       
     }
     
     function edit(id){
@@ -172,17 +157,11 @@
             $('#tahun_awal').val(data.tahun_awal).focus();
             $('#tahun_akhir').val(data.tahun_akhir);
             $('#visi').val(data.visi);
-
-           
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
         });
-
-       
-        
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -240,8 +219,6 @@
             {data: 'tahun_akhir', name: 'tahun_akhir'},
             {data: 'visi', name: 'visi'},
             {data: 'misi_count', name: 'misi_count'},
-           
-            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
@@ -259,8 +236,6 @@
 		'overlayShow'	:	false
 	});
     });
-
-    
 
         function remove(id){
         $.confirm({

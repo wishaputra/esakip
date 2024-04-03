@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Cascading;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\model_misi;
-use App\Models\model_visi;
+use App\Models\Cascading\Model_Misi;
+use App\Models\Cascading\Model_Visi;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class MisiController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
+        // $visi   = Model_Visi::find($request->id_visi)->misi;
+        $visi   = Model_Visi::find(3)->misi;
         return DataTables::of($visi)
             ->addColumn('action', function ($p) {
                 return "
@@ -28,16 +31,15 @@ class MisiController extends Controller
      */
     public function index(Request $request)
     {
-        $visi_id = $request->visi_id;
-        if (!$visi_id || !model_visi::whereid($visi_id)->first()) {
-            return redirect()->route('setup.menu.index');
+        $id_visi = $request->id_visi;
+        if (!$id_visi || !Model_Visi::whereid($id_visi)->first()) {
+            return redirect()->route('setup.visi.index');
         }
 
-        $visi = model_visi::find($visi_id);
-        $title = "misi " . $visi->awal_tahun;
+        $visi = Model_Visi::find($id_visi);
+        $title = "Misi " . $visi->tahun_awal;
 
-
-        return view('misi.index', compact('title', 'visi_id', 'visi'));
+        return view('cascading.misi.index', compact('title', 'id_visi', 'visi'));
     }
 
     /**
@@ -68,7 +70,7 @@ class MisiController extends Controller
 
 
 
-        model_misi::create([
+        Model_Misi::create([
 
             "id_visi" => $request->id_visi,
             "misi" => $request->misi,
@@ -96,7 +98,7 @@ class MisiController extends Controller
      */
     public function edit($id)
     {
-        return model_misi::find($id);
+        return Model_Misi::find($id);
     }
 
     /**
@@ -108,7 +110,7 @@ class MisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = model_misi::find($id);
+        $misi  = Model_Misi::find($id);
 
         $rule = [
             
@@ -142,7 +144,7 @@ class MisiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $visi  = model_misi::find($id);
+    $visi  = Model_Misi::find($id);
 
     if ($visi && $visi->misi && is_iterable($visi->misi)) {
         $count = $visi->misi->count();
