@@ -97,7 +97,7 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
                     <div class="form-row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Visi</label>
                                 <input type="hidden" name="creator" id="creator" value="{{ Auth::user()->id}}">
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="misi" class="col-form-label">Misi</label>
                                 <textarea name="misi" id="misi" class="form-control" rows="3"></textarea>

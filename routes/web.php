@@ -289,8 +289,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::post('kegiatan/api', [KegiatanController::class, 'api'])->name('kegiatan.api');
             Route::resource('kegiatan', KegiatanController::class);
 
-            Route::post('subkegiatan/api', [SubKegiatanController::class, 'api'])->name('subkegiatan.api');
-            Route::resource('subkegiatan', SubKegiatanController::class);
+            Route::post('sub_kegiatan/api', [SubKegiatanController::class, 'api'])->name('sub_kegiatan.api');
+            Route::resource('sub_kegiatan', SubKegiatanController::class);
         // });
 
         Route::post('menu/api', [MenuController::class, 'api'])->name('menu.api');

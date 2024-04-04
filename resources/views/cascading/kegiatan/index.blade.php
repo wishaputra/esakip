@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Tujuan</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Kegiatan</a>
                     </li>
 
 
@@ -57,7 +57,8 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Tujuan</td>
+                                            <td>Kode Kegiatan</td>
+                                            <td>Kegiatan</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -106,19 +107,25 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_misi" class="col-form-label">Misi</label>
-                                <select name="id_misi" id="id_misi" class="form-control">
+                                <label for="id_program" class="col-form-label">Program</label>
+                                <select name="id_program" id="id_program" class="form-control">
                                     <option value="">Pilih</option>
-                                    @foreach ($misi as $item)
-                                        <option value="{{ $item->id }}">{{ $item->misi }}</option>
+                                    @foreach ($program as $item)
+                                        <option value="{{ $item->id }}">{{ $item->program }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="tujuan" class="col-form-label">Tujuan</label>
-                                <textarea name="tujuan" id="tujuan" class="form-control" rows="3"></textarea>
+                                <label for="kode_kegiatan" class="col-form-label">Kode Kegiatan</label>
+                                <input type="text" name="kode_kegiatan" id="kode_kegiatan" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="kegiatan" class="col-form-label">Kegiatan</label>
+                                <textarea name="kegiatan" id="kegiatan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -168,11 +175,12 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.kegiatan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
-            $('#id_misi').val(data.id_misi);
-            $('#tujuan').val(data.tujuan).focus();
+            $('#id_program').val(data.id_program);
+            $('#kode_kegiatan').val(data.kode_kegiatan).focus();
+            $('#kegiatan').val(data.kegiatan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -188,7 +196,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan.store') }}" : "{{ route('setup.tujuan.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.kegiatan.store') }}" : "{{ route('setup.kegiatan.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -227,13 +235,13 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.tujuan.api') }}",
+            url: "{{ route('setup.kegiatan.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'tujuan', name: 'tujuan'},
-            // {data: 'no_urut', name: 'no_urut'},
+            {data: 'kode_kegiatan', name: 'kode_kegiatan'},
+            {data: 'kegiatan', name: 'kegiatan'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -269,7 +277,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.kegiatan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

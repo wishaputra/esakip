@@ -132,11 +132,10 @@
                 <a href="{{ route('setup.kegiatan.index') }}">
                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
                 </a>
-                <a href="{{ route('setup.subkegiatan.index') }}">
+                <a href="{{ route('setup.sub_kegiatan.index') }}">
                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
                 </a>
             </ul>
-
         <li>
             <a href="{{ route('setup.front.index') }}">
                 <i class="icon icon-layers s-16 indigo-text"></i> <span>Front End</span>
