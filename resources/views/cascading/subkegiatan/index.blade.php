@@ -186,7 +186,6 @@
             reload();
         });
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
