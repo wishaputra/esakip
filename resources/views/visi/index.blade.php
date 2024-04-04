@@ -120,7 +120,7 @@
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="misi" class="col-form-label">visi</label>
+                                <label for="visi" class="col-form-label">visi</label>
                                 <textarea name="visi" id="visi" class="form-control" rows="3"></textarea>
                             </div>
                         </div>

@@ -20,6 +20,7 @@ use App\Http\Controllers\LogoController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\VisiController;
 use App\Http\Controllers\MisiController;
+use App\Http\Controllers\TujuanController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
@@ -33,6 +34,8 @@ use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
+use App\Models\TreeNode;
+use App\Models\ChildNode;
 use App\Models\CategoryBusiness;
 use App\Models\Frontend;
 use App\Models\Section\Pricing;
@@ -75,6 +78,15 @@ Route::get('/sasaran', function () {
     return view('sasaran.index');
 })->name('sasaran');
 
+//treeview
+Route::get('/tree-data', function () {
+    $nodes = TreeNode::all();
+    return response()->json($nodes);
+});
+Route::get('/child-nodes', function () {
+    $childNodes = ChildNode::all();
+    return response()->json($childNodes);
+});
 
 
 
@@ -165,6 +177,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::resource('visi', visiController::class);
         Route::post('misi/api', [MisiController::class, 'api'])->name('misi.api');
         Route::resource('misi', MisiController::class);
+        Route::post('tujuan/api', [TujuanController::class, 'api'])->name('tujuan.api');
+        Route::resource('tujuan', TujuanController::class);
 
         Route::post('submenu/api', [SubMenuController::class, 'api'])->name('submenu.api');
         Route::resource('submenu', SubMenuController::class);

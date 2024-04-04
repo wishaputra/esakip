@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\model_misi;
 use App\Models\model_visi;
+use App\Models\model_tujuan;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 
-class MisiController extends Controller
+class TujuanController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
-        return DataTables::of($visi)
+        $misi = model_misi::where($request->misi_id)->orderBy('id', 'ASC')->get();
+        return DataTables::of($misi)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
@@ -28,16 +29,16 @@ class MisiController extends Controller
      */
     public function index(Request $request)
     {
-        $visi_id = $request->visi_id;
-        if (!$visi_id || !model_visi::whereid($visi_id)->first()) {
-            return redirect()->route('setup.visi.index');
+        $misi_id = $request->misi_id;
+        if (!$misi_id || !model_misi::whereid($misi_id)->first()) {
+            return redirect()->route('setup.tujuan.index');
         }
 
-        $visi = model_visi::find($visi_id);
+        $visi = model_misi::find($misi_id);
         $title = "misi " . $visi->awal_tahun;
 
 
-        return view('misi.index', compact('title', 'visi_id', 'visi'));
+        return view('tujuan.index', compact('title', 'misi_id', 'misi'));
     }
 
     /**
@@ -60,7 +61,7 @@ class MisiController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_visi" => 'required',
+            "id_misi" => 'required',
             "misi" => 'required',
             "creator" => 'required',
            
@@ -68,10 +69,10 @@ class MisiController extends Controller
 
 
 
-        model_misi::create([
+        model_tujuan::create([
 
-            "id_visi" => $request->id_visi,
-            "misi" => $request->misi,
+            "id_misi" => $request->id_misi,
+            "tujuan" => $request->misi,
             "creator" => $request->creator,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -96,7 +97,7 @@ class MisiController extends Controller
      */
     public function edit($id)
     {
-        return model_misi::find($id);
+        return model_tujuan::find($id);
     }
 
     /**
@@ -108,11 +109,11 @@ class MisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = model_misi::find($id);
+        $tujuan  = model_tujuan::find($id);
 
         $rule = [
             
-            "misi" => 'required',
+            "tujuan" => 'required',
             "creator" => 'required',
             
 
@@ -124,7 +125,7 @@ class MisiController extends Controller
 
 
 
-        $misi->update([
+        $tujuan->update([
 
             
             "misi" => $request->misi,
@@ -142,10 +143,10 @@ class MisiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $visi  = model_misi::find($id);
+    $misi  = model_tujuan::find($id);
 
-    if ($visi && $visi->misi && is_iterable($visi->misi)) {
-        $count = $visi->misi->count();
+    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
+        $count = $misi->tujuan->count();
     } else {
         $count = 0;
     }
@@ -154,7 +155,7 @@ class MisiController extends Controller
         return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
     }
 
-    $visi->delete();
+    $misi->delete();
     return response()->json(["message" => "Berhasil menghapus data!"], 200);
 }
 }

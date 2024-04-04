@@ -59,8 +59,8 @@
                                             <td>#</td>
                                             <td width="20%">visi</td>
                                             <td>misi</td>
+                                            <td>tujuan</td>
                                             
-                                          
 
                                             <td width="10%">Aksi</td>
                                         </tr>
@@ -100,7 +100,6 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
-                    
 
                     <div class="col-md-6">
                             <div class="form-group col-md-12">
@@ -121,23 +120,6 @@
                             </div>
                         </div>
                     </div>
-
-                        <!-- </div>
-                        <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Nama</label>
-                                <input type="text" name="nama" id="nama" class="form-control">
-                            </div>
-                        </div>
-                        <!-- <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Misi</label>
-                                <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
-                            </div>
-                        </div> --> 
-
-                   
-
 
 
 
@@ -181,9 +163,10 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.misi.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            // $('#visi').val(data.visi).focus();
+            $('#visi').val(data.visi).focus();
             $('#misi').val(data.misi);
             $('#creator').val(data.creator);
+
            
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
@@ -249,10 +232,8 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'id_visi', name: 'id_visi'},
             {data: 'misi', name: 'misi'},
-            
+            {data: 'tujuan_count', name: 'tujuan_count'},
            
-            
-            
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]

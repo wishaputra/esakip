@@ -86,66 +86,83 @@ function init() {
   // define the Node template
   // define the Node template
 // define the Node template
+// Define the Node template
 myDiagram.nodeTemplate =
-$(go.Node, "Auto",
-  // { doubleClick: nodeDoubleClick },
-  { // handle dragging a Node onto a Node to (maybe) change the reporting relationship
-    mouseDragEnter: (e, node, prev) => {
-      var diagram = node.diagram;
-      var selnode = diagram.selection.first();
-      if (!mayWorkFor(selnode, node)) return;
-      var shape = node.findObject("SHAPE");
-      if (shape) shape.fill = "darkred";
-    },
-    mouseDragLeave: (e, node, next) => {
-      var shape = node.findObject("SHAPE");
-      if (shape) shape.fill = graygrad;
-    },
-    mouseDrop: (e, node) => {
-      var diagram = node.diagram;
-      var selnode = diagram.selection.first();  // assume just one Node in selection
-      if (mayWorkFor(selnode, node)) {
-        // find any existing link into the selected node
-        var link = selnode.findTreeParentLink();
-        if (link !== null) {  // reconnect any existing link
-          link.fromNode = node;
-        } else {  // else create a new link
-          diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
+  $(go.Node, "Auto",
+    // Handle dragging a Node onto a Node to (maybe) change the reporting relationship
+    {
+      mouseDragEnter: (e, node, prev) => {
+        var diagram = node.diagram;
+        var selnode = diagram.selection.first();
+        if (!mayWorkFor(selnode, node)) return;
+        var shape = node.findObject("SHAPE");
+        if (shape) shape.fill = "darkred";
+      },
+      mouseDragLeave: (e, node, next) => {
+        var shape = node.findObject("SHAPE");
+        if (shape) shape.fill = graygrad;
+      },
+      mouseDrop: (e, node) => {
+        var diagram = node.diagram;
+        var selnode = diagram.selection.first();  // assume just one Node in selection
+        if (mayWorkFor(selnode, node)) {
+          // find any existing link into the selected node
+          var link = selnode.findTreeParentLink();
+          if (link !== null) {  // reconnect any existing link
+            link.fromNode = node;
+          } else {  // else create a new link
+            diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
+          }
         }
       }
-    }
-  },
-  // bind the Part.layerName to control the Node's layer depending on whether it isSelected
-  new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
-  // define the node's outer shape
-  $(go.Shape, "RoundedRectangle",
-    {
-      name: "SHAPE",
-      fill: graygrad, stroke: "black",
-      portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer",
-      width: 250, height: 90 // Adjust width and height as desired
-    }),
-  // define the panel where the text will appear
-  $(go.Panel, "Table",
-    {
-      maxSize: new go.Size(150, 999),
-      margin: new go.Margin(3, 3, 0, 3),
-      defaultAlignment: go.Spot.Left
     },
-    $(go.RowColumnDefinition, { column: 2, width: 4 }),
-    $(go.TextBlock, "Title: ", textStyle(),
+    // Bind the Part.layerName to control the Node's layer depending on whether it isSelected
+    new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
+    // Define the node's outer shape
+    $(go.Shape, "RoundedRectangle",
       {
-        row: 0, column: 0,
-        font: "bold 9pt sans-serif",
-        editable: true, isMultiline: false,
-        stroke: "white", minSize: new go.Size(80, 24), // Adjust minimum size as desired
-        name: "title"
+        name: "SHAPE",
+        fill: graygrad, stroke: "black",
+        portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer",
+        width: 250, height: 90 // Adjust width and height as desired
+      }),
+    // Define the panel where the text will appear
+    $(go.Panel, "Table",
+      {
+        maxSize: new go.Size(150, 999),
+        margin: new go.Margin(3, 3, 0, 3),
+        defaultAlignment: go.Spot.Left
       },
-      new go.Binding("text", "title").makeTwoWay()),
-    $("TreeExpanderButton",
-      { row: 1, columnSpan: 99, alignment: go.Spot.Center })
-  )  // end Table Panel
-);  // end Node
+      $(go.RowColumnDefinition, { column: 2, width: 4 }),
+      $(go.TextBlock, "Title: ", textStyle(),
+        {
+          row: 0, column: 0,
+          font: "bold 9pt sans-serif",
+          editable: true, isMultiline: false,
+          stroke: "white", minSize: new go.Size(80, 24), // Adjust minimum size as desired
+          name: "title"
+        },
+        new go.Binding("text", "title").makeTwoWay()),
+      $("TreeExpanderButton",
+        {
+          row: 1, columnSpan: 99, alignment: go.Spot.Center,
+          click: function (e, obj) {
+            var node = obj.part;
+            if (node !== null) {
+              var diagram = node.diagram;
+              diagram.startTransaction("toggleExpansion");
+              if (node.isTreeExpanded) {
+                diagram.commandHandler.collapseTree(node);
+              } else {
+                diagram.commandHandler.expandTree(node);
+              }
+              diagram.commitTransaction("toggleExpansion");
+            }
+          }
+        })
+    )  // end Table Panel
+  );  // end Node
+
 
 
 
@@ -286,9 +303,10 @@ function loadChart() {
 
 function expandFirstNode() {
   myDiagram.startTransaction();
-  var firstNode = myDiagram.model.findNodeDataForKey(myDiagram.model.nodeDataArray[0].key);
+  var firstNode = myDiagram.findNodeForKey(myDiagram.model.nodeDataArray[0].key);
   if (firstNode) {
-    firstNode.expanded = true;
+    // Toggle the expansion state of the first node
+    myDiagram.commandHandler.expandTree(firstNode);
 
     // Traverse the tree and collapse all child nodes
     collapseChildNodes(firstNode);
@@ -296,15 +314,43 @@ function expandFirstNode() {
   myDiagram.commitTransaction();
 }
 
-function collapseChildNodes(parentNode) {
-  if (parentNode.isTreeLeaf) return; // No children
 
-  for (var i = 0; i < parentNode.data.children.length; i++) {
-    var childNode = myDiagram.model.findNodeDataForKey(parentNode.data.children[i]);
-    if (childNode) {
-      childNode.expanded = false;
-      collapseChildNodes(childNode);
-    }
+let currentExpandIndex = 0;
+
+function expandFirstNode() {
+  myDiagram.startTransaction();
+  currentExpandIndex = 0;
+  expandNextParent();
+  myDiagram.commitTransaction();
+}
+
+function expandNextParent() {
+  if (currentExpandIndex >= myDiagram.model.nodeDataArray.length) {
+    return; // No more nodes to expand
+  }
+
+  var nodeData = myDiagram.model.nodeDataArray[currentExpandIndex];
+  var node = myDiagram.findNodeForData(nodeData);
+
+  if (node && !node.data.expanded) {
+    node.data.expanded = true;
+
+    setTimeout(() => {
+      currentExpandIndex++;
+      expandNextParent();
+    }, 500);
+  } else {
+    currentExpandIndex++;
+    expandNextParent();
+  }
+}
+
+
+function collapseChildNodes(parentNode) {
+  if (parentNode instanceof go.Node) {
+    parentNode.findTreeChildrenNodes().each(function(child) {
+      myDiagram.commandHandler.collapseTree(child);
+    });
   }
 }
 

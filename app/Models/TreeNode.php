@@ -9,7 +9,7 @@ class TreeNode extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['key', 'parent_id']; // List of fillable attributes
+    protected $table = 'cascading_visi'; // List of fillable attributes
 
     // Define any relationships or additional methods here
 }
