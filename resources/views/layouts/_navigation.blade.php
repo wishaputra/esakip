@@ -108,25 +108,34 @@
             <ul class="treeview-menu">
                 <!-- Sub-menu items -->
                 <li>
-                <a href="{{ route('visi') }}">
-                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>visi</span>
+                <a href="{{ route('setup.visi.index') }}">
+                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>Visi & Misi</span>
                 </a>
-
-
-                    <a href="{{ route('misi') }}">
-                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>misi</span>
-                    </a>
-
-                    <a href="{{ route('tujuan') }}">
-                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>tujuan</span>
-                    </a>
-
-                    <a href="{{ route('sasaran') }}">
-                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>sasaran</span>
-                    </a>
-        
+                <a href="{{ route('setup.tujuan.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan</span>
+                </a>
+                <a href="{{ route('setup.sasaran.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran</span>
+                </a>
+                <a href="{{ route('setup.perangkat_daerah.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Perangkat Daerah</span>
+                </a>
+                <a href="{{ route('setup.tujuan_renstra.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
+                </a>
+                <a href="{{ route('setup.sasaran_renstra.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
+                </a>
+                <a href="{{ route('setup.program.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
+                </a>
+                <a href="{{ route('setup.kegiatan.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
+                </a>
+                <a href="{{ route('setup.sub_kegiatan.index') }}">
+                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
+                </a>
             </ul>
-
         <li>
             <a href="{{ route('setup.front.index') }}">
                 <i class="icon icon-layers s-16 indigo-text"></i> <span>Front End</span>

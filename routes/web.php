@@ -18,9 +18,30 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\MenuController;
-use App\Http\Controllers\VisiController;
-use App\Http\Controllers\MisiController;
-use App\Http\Controllers\TujuanController;
+use App\Http\Controllers\Cascading\VisiController;
+use App\Http\Controllers\Cascading\MisiController;
+use App\Http\Controllers\Cascading\TujuanController;
+use App\Http\Controllers\Cascading\TujuanIndikatorController;
+use App\Http\Controllers\Cascading\TujuanNilaiController;
+use App\Http\Controllers\Cascading\SasaranController;
+use App\Http\Controllers\Cascading\SasaranIndikatorController;
+use App\Http\Controllers\Cascading\SasaranNilaiController;
+use App\Http\Controllers\Cascading\PerangkatDaerahController;
+use App\Http\Controllers\Cascading\TujuanRenstraController;
+use App\Http\Controllers\Cascading\TujuanRenstraIndikatorController;
+use App\Http\Controllers\Cascading\TujuanRenstraNilaiController;
+use App\Http\Controllers\Cascading\SasaranRenstraController;
+use App\Http\Controllers\Cascading\SasaranRenstraIndikatorController;
+use App\Http\Controllers\Cascading\SasaranRenstraNilaiController;
+use App\Http\Controllers\Cascading\ProgramController;
+use App\Http\Controllers\Cascading\ProgramIndikatorController;
+use App\Http\Controllers\Cascading\ProgramNilaiController;
+use App\Http\Controllers\Cascading\KegiatanController;
+use App\Http\Controllers\Cascading\KegiatanIndikatorController;
+use App\Http\Controllers\Cascading\KegiatanNilaiController;
+use App\Http\Controllers\Cascading\SubKegiatanController;
+use App\Http\Controllers\Cascading\SubKegiatanIndikatorController;
+use App\Http\Controllers\Cascading\SubKegiatanNilaiController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
@@ -34,12 +55,13 @@ use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
+use App\Models\CategoryBusiness;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
-use App\Models\CategoryBusiness;
 use App\Models\Frontend;
 use App\Models\Section\Pricing;
 use App\Models\TextContent;
+use App\Models\Cascading\model_tujuan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 
@@ -62,21 +84,108 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
+//---------------- CASCADING START ---------------- //
+
 Route::get('/visi', function () {
-    return view('visi.index');
+    return view('cascading.visi.index');
 })->name('visi');
 
 Route::get('/misi', function () {
-    return view('misi.index');
+    return view('cascading.misi.index');
 })->name('misi');
 
 Route::get('/tujuan', function () {
-    return view('tujuan.index');
+    return view('cascading.tujuan.index');
 })->name('tujuan');
 
+Route::get('/tujuan-nodes', function () {
+    $tujuanNodes = model_tujuan::all();
+    return response()->json($tujuanNodes);
+});
+
+Route::get('/tujuan_indikator', function () {
+    return view('cascading.tujuan_indikator.index');
+})->name('tujuan_indikator');
+
+Route::get('/tujuan_nilai', function () {
+    return view('cascading.tujuan_nilai.index');
+})->name('tujuan_nilai');
+
 Route::get('/sasaran', function () {
-    return view('sasaran.index');
+    return view('cascading.sasaran.index');
 })->name('sasaran');
+
+Route::get('/sasaran_indikator', function () {
+    return view('cascading.sasaran_indikator.index');
+})->name('sasaran_indikator');
+
+Route::get('/sasaran_nilai', function () {
+    return view('cascading.sasaran_nilai.index');
+})->name('sasaran_nilai');
+
+Route::get('/perangkat_daerah', function () {
+    return view('cascading.perangkat_daerah.index');
+})->name('perangkat_daerah');
+
+Route::get('/tujuan_renstra', function () {
+    return view('cascading.tujuan_renstra.index');
+})->name('tujuan_renstra');
+
+Route::get('/tujuan_renstra_indikator', function () {
+    return view('cascading.tujuan_renstra_indikator.index');
+})->name('tujuan_renstra_indikator');
+
+Route::get('/tujuan_renstra_nilai', function () {
+    return view('cascading.tujuan_renstra_nilai.index');
+})->name('tujuan_renstra_nilai');
+
+Route::get('/sasaran_renstra', function () {
+    return view('cascading.sasaran_renstra.index');
+})->name('sasaran_renstra');
+
+Route::get('/sasaran_renstra_indikator', function () {
+    return view('cascading.sasaran_renstra_indikator.index');
+})->name('sasaran_renstra_indikator');
+
+Route::get('/sasaran_renstra_nilai', function () {
+    return view('cascading.sasaran_renstra_nilai.index');
+})->name('sasaran_renstra_nilai');
+
+Route::get('/program', function () {
+    return view('cascading.program.index');
+})->name('program');
+
+Route::get('/program_indikator', function () {
+    return view('cascading.program_indikator.index');
+})->name('program_indikator');
+
+Route::get('/program_nilai', function () {
+    return view('cascading.program_nilai.index');
+})->name('program_nilai');
+
+Route::get('/kegiatan', function () {
+    return view('cascading.kegiatan.index');
+})->name('kegiatan');
+
+Route::get('/kegiatan_indikator', function () {
+    return view('cascading.kegiatan_indikator.index');
+})->name('kegiatan_indikator');
+
+Route::get('/kegiatan_nilai', function () {
+    return view('cascading.kegiatan_nilai.index');
+})->name('kegiatan_nilai');
+
+Route::get('/subkegiatan', function () {
+    return view('cascading.subkegiatan.index');
+})->name('subkegiatan');
+
+Route::get('/subkegiatan_indikator', function () {
+    return view('cascading.subkegiatan_indikator.index');
+})->name('subkegiatan_indikator');
+
+Route::get('/subkegiatan_nilai', function () {
+    return view('cascading.subkegiatan_nilai.index');
+})->name('subkegiatan_nilai');
 
 //treeview
 Route::get('/tree-data', function () {
@@ -87,6 +196,8 @@ Route::get('/child-nodes', function () {
     $childNodes = ChildNode::all();
     return response()->json($childNodes);
 });
+
+//---------------- CASCADING END ---------------- //
 
 
 
@@ -161,24 +272,47 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::prefix('business')->name('business.')->group(function () {
         Route::post('category/api', [CategoryBusinessController::class, 'api'])->name('category.api');
-
         Route::resource('category', CategoryBusinessController::class);
 
         Route::post('list/api', [BusinessController::class, 'api'])->name('list.api');
-
         Route::resource('list', BusinessController::class);
     });
 
     Route::middleware('auth')->prefix('setup')->name('setup.')->group(function () {
+         // Route::prefix('cascading')->name('cascading.')->group(function () {
+            Route::post('visi/api', [VisiController::class, 'api'])->name('visi.api');
+            Route::resource('visi', VisiController::class);
+
+            Route::post('misi/api', [MisiController::class, 'api'])->name('misi.api');
+            Route::resource('misi', MisiController::class);
+
+            Route::post('tujuan/api', [TujuanController::class, 'api'])->name('tujuan.api');
+            Route::resource('tujuan', TujuanController::class);
+
+            Route::post('sasaran/api', [SasaranController::class, 'api'])->name('sasaran.api');
+            Route::resource('sasaran', SasaranController::class);
+
+            Route::post('perangkat_daerah/api', [PerangkatDaerahController::class, 'api'])->name('perangkat_daerah.api');
+            Route::resource('perangkat_daerah', PerangkatDaerahController::class);
+
+            Route::post('tujuan_renstra/api', [TujuanRenstraController::class, 'api'])->name('tujuan_renstra.api');
+            Route::resource('tujuan_renstra', TujuanRenstraController::class);
+
+            Route::post('sasaran_renstra/api', [SasaranRenstraController::class, 'api'])->name('sasaran_renstra.api');
+            Route::resource('sasaran_renstra', SasaranRenstraController::class);
+
+            Route::post('program/api', [ProgramController::class, 'api'])->name('program.api');
+            Route::resource('program', ProgramController::class);
+
+            Route::post('kegiatan/api', [KegiatanController::class, 'api'])->name('kegiatan.api');
+            Route::resource('kegiatan', KegiatanController::class);
+
+            Route::post('sub_kegiatan/api', [SubKegiatanController::class, 'api'])->name('sub_kegiatan.api');
+            Route::resource('sub_kegiatan', SubKegiatanController::class);
+        // });
+
         Route::post('menu/api', [MenuController::class, 'api'])->name('menu.api');
         Route::resource('menu', MenuController::class);
-
-        Route::post('visi/api', [VisiController::class, 'api'])->name('visi.api');
-        Route::resource('visi', visiController::class);
-        Route::post('misi/api', [MisiController::class, 'api'])->name('misi.api');
-        Route::resource('misi', MisiController::class);
-        Route::post('tujuan/api', [TujuanController::class, 'api'])->name('tujuan.api');
-        Route::resource('tujuan', TujuanController::class);
 
         Route::post('submenu/api', [SubMenuController::class, 'api'])->name('submenu.api');
         Route::resource('submenu', SubMenuController::class);
