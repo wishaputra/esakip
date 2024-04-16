@@ -42,6 +42,7 @@ use App\Models\Section\Pricing;
 use App\Models\TextContent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
+use App\Models\model_tujuan;
 
 
 /*
@@ -86,6 +87,11 @@ Route::get('/tree-data', function () {
 Route::get('/child-nodes', function () {
     $childNodes = ChildNode::all();
     return response()->json($childNodes);
+});
+
+Route::get('/tujuan-nodes', function () {
+    $tujuanNodes = model_tujuan::all();
+    return response()->json($tujuanNodes);
 });
 
 
