@@ -61,6 +61,7 @@ use App\Models\ChildNode;
 use App\Models\Frontend;
 use App\Models\Section\Pricing;
 use App\Models\TextContent;
+use App\Models\Cascading\Model_Sasaran;
 use App\Models\Cascading\model_tujuan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
@@ -97,6 +98,11 @@ Route::get('/misi', function () {
 Route::get('/tujuan', function () {
     return view('cascading.tujuan.index');
 })->name('tujuan');
+
+Route::get('/sasaran-nodes', function () {
+    $sasaran = Model_Sasaran::all();
+    return response()->json($sasaran);
+});
 
 Route::get('/tujuan-nodes', function () {
     $tujuanNodes = model_tujuan::all();
@@ -208,6 +214,8 @@ Route::get('tree-view', function () {
 Route::get('/org-chart', function () {
     return view('org-chart');
 });
+
+Route::get('/get-nodes', 'App\Http\Controllers\NodeController@getNodes');
 
 
 // Route to render the organization chart view

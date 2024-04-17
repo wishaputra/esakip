@@ -60,10 +60,10 @@ function init() {
   }, new go.Binding("text", "misi")), $(go.TextBlock, {
     font: '9pt Verdana, sans-serif',
     margin: new go.Margin(0, 0, 0, 4)
-  }, new go.Binding("text", "tujuan")))));
-
-  // New node template for "tujuan" nodes
-  
+  }, new go.Binding("text", "tujuan")), $(go.TextBlock, {
+    font: '9pt Verdana, sans-serif',
+    margin: new go.Margin(0, 0, 0, 4)
+  }, new go.Binding("text", "sasaran")))));
 
   myDiagram.linkTemplate = $(go.Link, {
     selectable: false,
@@ -80,6 +80,8 @@ function init() {
   fetch('/tree-data')
     .then(response => response.json())
     .then(data => {
+      // Urutkan data berdasarkan id sebelum dimasukkan ke dalam model
+      data.sort((a, b) => a.id - b.id);
       myDiagram.model = new go.TreeModel(data);
       myDiagram.layoutDiagram(true); // Update layout after adding nodes
     })
@@ -90,6 +92,8 @@ function init() {
   fetch('/child-nodes')
     .then(response => response.json())
     .then(childData => {
+      // Urutkan data berdasarkan id sebelum dimasukkan ke dalam diagram
+      childData.sort((a, b) => a.id - b.id);
       childData.forEach(childNode => {
         addChildNode(myDiagram, childNode); // Pass myDiagram as a parameter
       });
@@ -101,12 +105,27 @@ function init() {
   fetch('/tujuan-nodes')
     .then(response => response.json())
     .then(tujuanData => {
+      // Urutkan data berdasarkan id sebelum dimasukkan ke dalam diagram
+      tujuanData.sort((a, b) => a.id - b.id);
       tujuanData.forEach(tujuanNode => {
         addTujuanNode(myDiagram, tujuanNode); // Pass myDiagram as a parameter
       });
     })
     .catch(error => {
       console.error('Error fetching tujuan node data:', error);
+    });
+
+  fetch('/sasaran-nodes')
+    .then(response => response.json())
+    .then(sasaranData => {
+      // Urutkan data berdasarkan id sebelum dimasukkan ke dalam diagram
+      sasaranData.sort((a, b) => a.id - b.id);
+      sasaranData.forEach(sasaranNode => {
+        addSasaranNode(myDiagram, sasaranNode); // Pass myDiagram as a parameter
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching sasaran node data:', error);
     });
 }
 
@@ -128,7 +147,7 @@ function addTujuanNode(diagram, tujuanNodeData) {
   diagram.startTransaction('add node');
   diagram.model.addNodeData(tujuanNodeData);
 
-  var parentKey = tujuanNodeData.id_misi; // Assuming 'id_misi' is the correct foreign key in 'cascading_tujuan'
+  var parentKey = tujuanNodeData.id_misi;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
     var linkData = { from: parentKey, to: tujuanNodeData.key };
@@ -139,6 +158,19 @@ function addTujuanNode(diagram, tujuanNodeData) {
 }
 
 
+function addSasaranNode(diagram, sasaranNodeData) {
+  diagram.startTransaction('add node');
+  diagram.model.addNodeData(sasaranNodeData);
+
+  var parentKey = sasaranNodeData.id_tujuan; // Assuming 'id_tujuan' is the correct foreign key in 'cascading_sasaran'
+  var parentNode = diagram.findNodeForKey(parentKey);
+  if (parentNode !== null) {
+    var linkData = { from: parentKey, to: sasaranNodeData.key };
+    diagram.model.addLinkData(linkData);
+  }
+
+  diagram.commitTransaction('add node');
+}
 
 function imageConverter(prop, picture) {
   var node = picture.part;
