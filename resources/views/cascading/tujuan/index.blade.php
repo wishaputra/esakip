@@ -171,7 +171,7 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.tujuan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
+            $('#tahun').val(data.id_visi);
             $('#id_misi').val(data.id_misi);
             $('#tujuan').val(data.tujuan).focus();
             $('#form-modal').modal('show');

@@ -13,4 +13,9 @@ class Model_Misi extends Model
     {
         return $this->belongsTo(Model_Visi::class, 'id');
     }
+
+    public function tujuan()
+    {
+        return $this->hasMany(Model_Tujuan::class, 'id_misi');
+    }
 }

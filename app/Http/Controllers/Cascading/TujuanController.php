@@ -102,7 +102,8 @@ class TujuanController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        $query  = Model_Tujuan::with('misi')->get();
+        return $query;
     }
 
     /**
