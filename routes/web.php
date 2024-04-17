@@ -55,7 +55,8 @@ use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
-use App\Models\CategoryBusiness;
+use App\Models\Model_Tujuan;
+use App\Models\Model_Sasaran;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
 use App\Models\Frontend;
@@ -64,7 +65,6 @@ use App\Models\TextContent;
 use App\Models\Cascading\model_tujuan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
-use App\Models\model_tujuan;
 
 
 /*
@@ -135,6 +135,11 @@ Route::get('/tujuan_renstra_nilai', function () {
     return view('cascading.tujuan_renstra_nilai.index');
 })->name('tujuan_renstra_nilai');
 
+Route::get('/tujuan-nodes', function () {
+    $tujuanNodes = Model_Tujuan::all();
+    return response()->json($tujuanNodes);
+});
+
 Route::get('/sasaran_renstra', function () {
     return view('cascading.sasaran_renstra.index');
 })->name('sasaran_renstra');
@@ -146,6 +151,11 @@ Route::get('/sasaran_renstra_indikator', function () {
 Route::get('/sasaran_renstra_nilai', function () {
     return view('cascading.sasaran_renstra_nilai.index');
 })->name('sasaran_renstra_nilai');
+
+Route::get('/sasaran-nodes', function () {
+    $sasaran = Model_Sasaran::all();
+    return response()->json($sasaran);
+});
 
 Route::get('/program', function () {
     return view('cascading.program.index');
@@ -183,77 +193,15 @@ Route::get('/subkegiatan_nilai', function () {
     return view('cascading.subkegiatan_nilai.index');
 })->name('subkegiatan_nilai');
 
-Route::get('/sasaran_indikator', function () {
-    return view('cascading.sasaran_indikator.index');
-})->name('sasaran_indikator');
-
-Route::get('/sasaran_nilai', function () {
-    return view('cascading.sasaran_nilai.index');
-})->name('sasaran_nilai');
-
-Route::get('/perangkat_daerah', function () {
-    return view('cascading.perangkat_daerah.index');
-})->name('perangkat_daerah');
-
-Route::get('/tujuan_renstra', function () {
-    return view('cascading.tujuan_renstra.index');
-})->name('tujuan_renstra');
-
-Route::get('/tujuan_renstra_indikator', function () {
-    return view('cascading.tujuan_renstra_indikator.index');
-})->name('tujuan_renstra_indikator');
-
-Route::get('/tujuan_renstra_nilai', function () {
-    return view('cascading.tujuan_renstra_nilai.index');
-})->name('tujuan_renstra_nilai');
-
-Route::get('/sasaran_renstra', function () {
-    return view('cascading.sasaran_renstra.index');
-})->name('sasaran_renstra');
-
-Route::get('/sasaran_renstra_indikator', function () {
-    return view('cascading.sasaran_renstra_indikator.index');
-})->name('sasaran_renstra_indikator');
-
-Route::get('/sasaran_renstra_nilai', function () {
-    return view('cascading.sasaran_renstra_nilai.index');
-})->name('sasaran_renstra_nilai');
-
-Route::get('/program', function () {
-    return view('cascading.program.index');
-})->name('program');
-
-Route::get('/program_indikator', function () {
-    return view('cascading.program_indikator.index');
-})->name('program_indikator');
-
-Route::get('/program_nilai', function () {
-    return view('cascading.program_nilai.index');
-})->name('program_nilai');
-
-Route::get('/kegiatan', function () {
-    return view('cascading.kegiatan.index');
-})->name('kegiatan');
-
-Route::get('/kegiatan_indikator', function () {
-    return view('cascading.kegiatan_indikator.index');
-})->name('kegiatan_indikator');
-
-Route::get('/kegiatan_nilai', function () {
-    return view('cascading.kegiatan_nilai.index');
-})->name('kegiatan_nilai');
-
-Route::get('/subkegiatan', function () {
-    return view('cascading.subkegiatan.index');
-})->name('subkegiatan');
-
-Route::get('/subkegiatan_indikator', function () {
-    return view('cascading.subkegiatan_indikator.index');
-})->name('subkegiatan_indikator');
-
-Route::get('/subkegiatan_nilai', function () {
-    return view('cascading.subkegiatan_nilai.index');
-})->name('subkegiatan_nilai');
+//treeview
+Route::get('/tree-data', function () {
+    $nodes = TreeNode::all();
+    return response()->json($nodes);
+});
+Route::get('/child-nodes', function () {
+    $childNodes = ChildNode::all();
+    return response()->json($childNodes);
+});
 
 //---------------- CASCADING END ---------------- //
 
