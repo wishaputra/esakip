@@ -6,29 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
-use App\Models\Cascading\Model_Tujuan;
+use App\Models\Cascading\Model_Perangkat_Daerah;
 use App\Models\Cascading\Model_Sasaran;
+use App\Models\Cascading\Model_Tujuan_Renstra;
+use App\Models\Cascading\Model_Tujuan_Renstra_Indikator;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 
-class SasaranController extends Controller
+class TujuanRenstraIndikatorController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran   = Model_Sasaran::all();
-        return DataTables::of($sasaran)
-            ->addColumn('sasaran_indikator_count', function ($p) {
-                $count = $p->sasaran_indikator->count();
-                return "<a  href='".route('setup.sasaran_indikator.index')."?sasaran_indikator_id=".$p->id."'  title='Indikator Sasaran'>".$count."</a>";
+        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::all();
+        return DataTables::of($tujuan_renstra_indikator)
+            ->addColumn('tujuan_renstra_nilai_count', function ($p) {
+                $count = $p->tujuan_nilai->count();
+                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?tujuan_renstra_nilai_id=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['sasaran_indikator_count', 'action'])
+            ->rawColumns(['tujuan_renstra_nilai_count', 'action'])
             ->toJson();
     }
     /**
@@ -39,17 +40,18 @@ class SasaranController extends Controller
     public function index(Request $request)
     {
         // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
+        // if (!$id_visi || !Model_Tujuan_Renstra::whereid($id_visi)->first()) {
         //     return redirect()->route('setup.tujuan.index');
         // }
 
-        // $visi = Model_Tujuan::find($id_visi);
+        // $visi = Model_Tujuan_Renstra::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $tujuan = Model_Tujuan::all();
+        $sasaran   = Model_Sasaran::all();
+        $opd    = Model_Perangkat_Daerah::all();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.sasaran.index', compact('tahun','tujuan'));
+        return view('cascading.tujuan_renstra.index', compact('tahun','sasaran','opd'));
     }
 
     /**
@@ -72,14 +74,16 @@ class SasaranController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_tujuan" => 'required',
-            "sasaran" => 'required',
+            "id_sasaran" => 'required',
+            "id_perangkat_daerah" => 'required',
+            "tujuan_renstra" => 'required',
         ]);
 
-        Model_Sasaran::create([
-            "id_tujuan" => $request->id_tujuan,
-            "sasaran" => $request->sasaran,
-            "creator" => Auth::user()->id,
+        Model_Tujuan_Renstra::create([
+            "id_sasaran"    => $request->id_sasaran,
+            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
+            "tujuan_renstra"=> $request->tujuan_renstra,
+            "creator"       => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
@@ -103,7 +107,7 @@ class SasaranController extends Controller
      */
     public function edit($id)
     {
-        return Model_Sasaran::find($id);
+        return Model_Tujuan_Renstra::find($id);
     }
 
     /**
@@ -115,16 +119,18 @@ class SasaranController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran::find($id);
+        $misi  = Model_Tujuan_Renstra::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "tujuan_renstra" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "sasaran" => $request->sasaran,
-            "creator" => Auth::user()->id,
+            "id_sasaran"    => $request->id_sasaran,
+            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
+            "tujuan_renstra"=> $request->tujuan_renstra,
+            "creator"       => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
@@ -137,7 +143,7 @@ class SasaranController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Sasaran::find($id);
+    $misi  = Model_Tujuan_Renstra::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

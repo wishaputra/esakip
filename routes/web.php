@@ -270,27 +270,55 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('tujuan/api', [TujuanController::class, 'api'])->name('tujuan.api');
             Route::resource('tujuan', TujuanController::class);
+            Route::post('tujuan_indikator/api', [TujuanIndikatorController::class, 'api'])->name('tujuan_indikator.api');
+            Route::resource('tujuan_indikator', TujuanIndikatorController::class);
+            Route::post('tujuan_nilai/api', [TujuanNilaiController::class, 'api'])->name('tujuan_nilai.api');
+            Route::resource('tujuan_nilai', TujuanNilaiController::class);
 
             Route::post('sasaran/api', [SasaranController::class, 'api'])->name('sasaran.api');
             Route::resource('sasaran', SasaranController::class);
+            Route::post('sasaran_indikator/api', [SasaranIndikatorController::class, 'api'])->name('sasaran_indikator.api');
+            Route::resource('sasaran_indikator', SasaranIndikatorController::class);
+            Route::post('sasaran_nilai/api', [SasaranNilaiController::class, 'api'])->name('sasaran_nilai.api');
+            Route::resource('sasaran_nilai', SasaranNilaiController::class);
 
             Route::post('perangkat_daerah/api', [PerangkatDaerahController::class, 'api'])->name('perangkat_daerah.api');
             Route::resource('perangkat_daerah', PerangkatDaerahController::class);
 
             Route::post('tujuan_renstra/api', [TujuanRenstraController::class, 'api'])->name('tujuan_renstra.api');
             Route::resource('tujuan_renstra', TujuanRenstraController::class);
+            Route::post('tujuan_renstra_indikator/api', [TujuanRenstraIndikatorController::class, 'api'])->name('tujuan_renstra_indikator.api');
+            Route::resource('tujuan_renstra_indikator', TujuanRenstraIndikatorController::class);
+            Route::post('tujuan_renstra_nilai/api', [TujuanRenstraNilaiController::class, 'api'])->name('tujuan_renstra_nilai.api');
+            Route::resource('tujuan_renstra_nilai', TujuanRenstraNilaiController::class);
 
             Route::post('sasaran_renstra/api', [SasaranRenstraController::class, 'api'])->name('sasaran_renstra.api');
             Route::resource('sasaran_renstra', SasaranRenstraController::class);
+            Route::post('sasaran_renstra_indikator/api', [SasaranRenstraIndikatorController::class, 'api'])->name('sasaran_renstra_indikator.api');
+            Route::resource('sasaran_renstra_indikator', SasaranRenstraIndikatorController::class);
+            Route::post('sasaran_renstra_nilai/api', [SasaranRenstraNilaiController::class, 'api'])->name('sasaran_renstra_nilai.api');
+            Route::resource('sasaran_renstra_nilai', SasaranRenstraNilaiController::class);
 
             Route::post('program/api', [ProgramController::class, 'api'])->name('program.api');
             Route::resource('program', ProgramController::class);
+            Route::post('program_indikator/api', [ProgramIndikatorController::class, 'api'])->name('program_indikator.api');
+            Route::resource('program_indikator', ProgramIndikatorController::class);
+            Route::post('program_nilai/api', [ProgramNilaiController::class, 'api'])->name('program_nilai.api');
+            Route::resource('program_nilai', ProgramNilaiController::class);
 
             Route::post('kegiatan/api', [KegiatanController::class, 'api'])->name('kegiatan.api');
             Route::resource('kegiatan', KegiatanController::class);
+            Route::post('kegiatan_indikator/api', [KegiatanIndikatorController::class, 'api'])->name('kegiatan_indikator.api');
+            Route::resource('kegiatan_indikator', KegiatanIndikatorController::class);
+            Route::post('kegiatan_nilai/api', [KegiatanNilaiController::class, 'api'])->name('kegiatan_nilai.api');
+            Route::resource('kegiatan_nilai', KegiatanNilaiController::class);
 
             Route::post('sub_kegiatan/api', [SubKegiatanController::class, 'api'])->name('sub_kegiatan.api');
             Route::resource('sub_kegiatan', SubKegiatanController::class);
+            Route::post('sub_kegiatan_indikator/api', [SubKegiatanIndikatorController::class, 'api'])->name('sub_kegiatan_indikator.api');
+            Route::resource('sub_kegiatan_indikator', SubKegiatanIndikatorController::class);
+            Route::post('sub_kegiatan_nilai/api', [SubKegiatanNilaiController::class, 'api'])->name('sub_kegiatan_nilai.api');
+            Route::resource('sub_kegiatan_nilai', SubKegiatanNilaiController::class);
         // });
 
         Route::post('menu/api', [MenuController::class, 'api'])->name('menu.api');

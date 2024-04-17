@@ -9,8 +9,8 @@ class Model_Tujuan_Renstra_Nilai extends Model
     protected $table = "cascading_tujuan_renstra_nilai";
     protected $fillable = ['id_indikator_tujuan_renstra', 'satuan', 'tahun', 'target', 'capaian', 'creator', 'created_at', 'updated_at'];
 
-    // public function misi()
-    // {
-    //     return $this->hasMany(Model_Misi::class, 'id_visi');
-    // }
+    public function tujuan_renstra_indikator()
+    {
+        return $this->belongsTo(Model_Tujuan_Renstra_Indikator::class, 'id');
+    }
 }

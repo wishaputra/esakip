@@ -9,8 +9,8 @@ class Model_SubKegiatan extends Model
     protected $table = "cascading_sub_kegiatan";
     protected $fillable = ['id_kegiatan', 'kode_sub_kegiatan', 'sub_kegiatan', 'creator', 'created_at', 'updated_at'];
 
-    // public function misi()
-    // {
-    //     return $this->hasMany(Model_Misi::class, 'id_visi');
-    // }
+    public function subkegiatan_indikator()
+    {
+        return $this->hasMany(Model_SubKegiatan_Indikator::class, 'id_sub_kegiatan');
+    }
 }

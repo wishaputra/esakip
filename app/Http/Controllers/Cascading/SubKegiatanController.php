@@ -19,14 +19,18 @@ class SubKegiatanController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
         $subkegiatan   = Model_SubKegiatan::all();
         return DataTables::of($subkegiatan)
+            ->addColumn('subkegiatan_indikator_count', function ($p) {
+                $count = $p->subkegiatan_indikator->count();
+                return "<a  href='".route('setup.sub_kegiatan_indikator.index')."?subkegiatan_id=".$p->id."'  title='Indikator Sub Kegiatan'>".$count."</a>";
+            })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
+            ->rawColumns(['subkegiatan_indikator_count', 'action'])
             ->toJson();
     }
     /**

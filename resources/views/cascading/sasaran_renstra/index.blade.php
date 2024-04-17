@@ -58,6 +58,7 @@
                                         <tr>
                                             <td width="15%">#</td>
                                             <td>Sasaran Renstra</td>
+                                            <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -233,7 +234,7 @@
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'sasaran_renstra', name: 'sasaran_renstra'},
-            // {data: 'no_urut', name: 'no_urut'},
+            {data: 'sasaran_renstra_indikator_count', name: 'sasaran_renstra_indikator_count'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}

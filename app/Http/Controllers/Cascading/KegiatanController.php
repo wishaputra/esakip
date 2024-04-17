@@ -18,14 +18,18 @@ class KegiatanController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
         $kegiatan   = Model_Kegiatan::all();
         return DataTables::of($kegiatan)
+            ->addColumn('kegiatan_indikator_count', function ($p) {
+                $count = $p->kegiatan_indikator->count();
+                return "<a  href='".route('setup.kegiatan_indikator.index')."?kegiatan_id=".$p->id."'  title='Indikator Kegiatan'>".$count."</a>";
+            })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
+            ->rawColumns(['kegiatan_indikator_count', 'action'])
             ->toJson();
     }
     /**

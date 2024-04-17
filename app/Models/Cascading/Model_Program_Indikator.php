@@ -9,8 +9,13 @@ class Model_Program_Indikator extends Model
     protected $table = "cascading_program_indikator";
     protected $fillable = ['id_program', 'indikator', 'creator', 'created_at', 'updated_at'];
 
-    // public function misi()
-    // {
-    //     return $this->hasMany(Model_Misi::class, 'id_visi');
-    // }
+    public function program()
+    {
+        return $this->belongsTo(Model_Program::class, 'id');
+    }
+
+    public function program_nilai()
+    {
+        return $this->hasMany(Model_Program_Nilai::class, 'id_indikator_program');
+    }
 }

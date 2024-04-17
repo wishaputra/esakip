@@ -14,9 +14,9 @@ class MisiController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $visi   = Model_Visi::find(3)->misi;
-        return DataTables::of($visi)
+        $misi   = Model_Misi::whereid_visi($request->id_visi)->orderBy('id', 'ASC')->get();
+        // $misi   = Model_Misi::find(3)->misi;
+        return DataTables::of($misi)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>

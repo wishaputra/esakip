@@ -18,14 +18,18 @@ class ProgramController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
         $program   = Model_Program::all();
         return DataTables::of($program)
+            ->addColumn('program_indikator_count', function ($p) {
+                $count = $p->program_indikator->count();
+                return "<a  href='".route('setup.program_indikator.index')."?program_id=".$p->id."'  title='Indikator Program'>".$count."</a>";
+            })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
+            ->rawColumns(['program_indikator_count', 'action'])
             ->toJson();
     }
     /**
