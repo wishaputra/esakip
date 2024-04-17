@@ -137,7 +137,7 @@ function addChildNode(diagram, childNodeData) {
   var parentKey = childNodeData.parent_id;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
-    var linkData = { from: parentKey, to: childNodeData.key };
+    var linkData = { from: parentKey, to: childNodeData.key, category: 'parentChildLink' };
     diagram.model.addLinkData(linkData);
 
     // Add the child node to the parent node's children array
@@ -156,8 +156,13 @@ function addTujuanNode(diagram, tujuanNodeData) {
   var parentKey = tujuanNodeData.id_misi;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
-    var linkData = { from: parentKey, to: tujuanNodeData.key };
+    var linkData = { from: parentKey, to: tujuanNodeData.key, category: 'parentChildLink' };
     diagram.model.addLinkData(linkData);
+
+    // Add the child node to the parent node's children array
+    var children = parentNode.data.children || [];
+    children.push(tujuanNodeData.key);
+    parentNode.data.children = children;
   }
 
   diagram.commitTransaction('add node');
@@ -170,12 +175,18 @@ function addSasaranNode(diagram, sasaranNodeData) {
   var parentKey = sasaranNodeData.id_tujuan;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
-    var linkData = { from: parentKey, to: sasaranNodeData.key };
+    var linkData = { from: parentKey, to: sasaranNodeData.key, category: 'parentChildLink' };
     diagram.model.addLinkData(linkData);
+
+    // Add the child node to the parent node's children array
+    var children = parentNode.data.children || [];
+    children.push(sasaranNodeData.key);
+    parentNode.data.children = children;
   }
 
   diagram.commitTransaction('add node');
 }
+
 
 function imageConverter(prop, picture) {
   var node = picture.part;
