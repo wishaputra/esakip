@@ -59,6 +59,7 @@
                                             <td width="15%">#</td>
                                             <td>Kode Kegiatan</td>
                                             <td>Kegiatan</td>
+                                            <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -242,7 +243,7 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'kode_kegiatan', name: 'kode_kegiatan'},
             {data: 'kegiatan', name: 'kegiatan'},
-            // {data: 'route', name: 'route'},
+            {data: 'kegiatan_indikator_count', name: 'kegiatan_indikator_count'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]

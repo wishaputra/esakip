@@ -8,27 +8,28 @@ use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Sasaran;
+use App\Models\Cascading\Model_Sasaran_Renstra_Indikator;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 
-class SasaranController extends Controller
+class SasaranRenstraIndikatorController extends Controller
 {
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran   = Model_Sasaran::all();
-        return DataTables::of($sasaran)
-            ->addColumn('sasaran_indikator_count', function ($p) {
-                $count = $p->sasaran_indikator->count();
-                return "<a  href='".route('setup.sasaran_indikator.index')."?sasaran_indikator_id=".$p->id."'  title='Indikator Sasaran'>".$count."</a>";
+        $sasaran_renstra_indikator   = Model_Sasaran_Renstra_Indikator::all();
+        return DataTables::of($sasaran_renstra_indikator)
+            ->addColumn('sasaran_renstra_nilai_count', function ($p) {
+                $count = $p->sasaran_nilai->count();
+                return "<a  href='".route('setup.sasaran_renstra_nilai.index')."?sasaran_renstra_nilai_id=".$p->id."'  title='Nilai Sasaran Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['sasaran_indikator_count', 'action'])
+            ->rawColumns(['sasaran_renstra_nilai_count', 'action'])
             ->toJson();
     }
     /**
@@ -48,8 +49,7 @@ class SasaranController extends Controller
         $tahun  = Model_Visi::all();
         $tujuan = Model_Tujuan::all();
 
-        // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.sasaran.index', compact('tahun','tujuan'));
+        return view('cascading.sasaran_indikator.index', compact('tahun','tujuan'));
     }
 
     /**

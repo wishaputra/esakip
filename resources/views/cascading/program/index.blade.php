@@ -59,6 +59,7 @@
                                             <td width="15%">#</td>
                                             <td>Kode Program</td>
                                             <td>Program</td>
+                                            <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -242,7 +243,7 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'kode_program', name: 'kode_program'},
             {data: 'program', name: 'program'},
-            // {data: 'route', name: 'route'},
+            {data: 'program_indikator_count', name: 'program_indikator_count'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]

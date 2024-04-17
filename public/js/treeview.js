@@ -128,7 +128,7 @@ function addTujuanNode(diagram, tujuanNodeData) {
   diagram.startTransaction('add node');
   diagram.model.addNodeData(tujuanNodeData);
 
-  var parentKey = tujuanNodeData.id_misi; // Assuming 'id_misi' is the correct foreign key in 'cascading_tujuan'
+  var parentKey = tujuanNodeData.id_misi; // Assuming 'id_misi' is the parent id in 'cascading_tujuan'
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
     var linkData = { from: parentKey, to: tujuanNodeData.key };
@@ -137,8 +137,6 @@ function addTujuanNode(diagram, tujuanNodeData) {
 
   diagram.commitTransaction('add node');
 }
-
-
 
 function imageConverter(prop, picture) {
   var node = picture.part;

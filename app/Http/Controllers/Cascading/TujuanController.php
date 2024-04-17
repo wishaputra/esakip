@@ -18,11 +18,16 @@ class TujuanController extends Controller
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $tujuan   = Model_Tujuan::all();
         return DataTables::of($tujuan)
+            ->addColumn('tujuan_indikator_count', function ($p) {
+                $count = $p->tujuan_indikator->count();
+                return "<a  href='".route('setup.tujuan_indikator.index')."?tujuan_id=".$p->id."'  title='Indikator Tujuan'>".$count."</a>";
+            })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
+            ->rawColumns(['tujuan_indikator_count', 'action'])
             ->toJson();
     }
     /**
@@ -97,7 +102,8 @@ class TujuanController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        $query  = Model_Tujuan::with('misi')->get();
+        return $query;
     }
 
     /**
@@ -111,14 +117,16 @@ class TujuanController extends Controller
     {
         $misi  = Model_Tujuan::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "id_misi"   => 'required',
+            "tujuan"    => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
-            "creator" => Auth::user()->id,
+            "id_misi"   => $request->id_misi,
+            "tujuan"    => $request->tujuan,
+            "creator"   => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }

@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Tujuan Renstra</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Indikator Tujuan</a>
                     </li>
 
 
@@ -57,8 +57,8 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Tujuan Renstra</td>
-                                            <td>Jumlah Indikator</td>
+                                            <td>Indikator Tujuan</td>
+                                            <td>Jumlah Nilai Tujuan</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -107,30 +107,19 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_sasaran" class="col-form-label">Sasaran</label>
-                                <select name="id_sasaran" id="id_sasaran" class="form-control">
+                                <label for="id_misi" class="col-form-label">Misi</label>
+                                <select name="id_misi" id="id_misi" class="form-control">
                                     <option value="">Pilih</option>
-                                    @foreach ($sasaran as $item)
-                                        <option value="{{ $item->id }}">{{ $item->sasaran }}</option>
+                                    @foreach ($misi as $item)
+                                        <option value="{{ $item->id }}">{{ $item->misi }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_perangkat_daerah" class="col-form-label">Perangkat Daerah</label>
-                                <select name="id_perangkat_daerah" id="id_perangkat_daerah" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($opd as $item)
-                                        <option value="{{ $item->id }}">{{ $item->perangkat_daerah }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="tujuan_renstra" class="col-form-label">Tujuan Renstra</label>
-                                <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" rows="3"></textarea>
+                                <label for="tujuan" class="col-form-label">Tujuan</label>
+                                <textarea name="tujuan" id="tujuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -180,12 +169,11 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan_renstra.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.tujuan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
-            $('#id_sasaran').val(data.id_sasaran);
-            $('#id_perangkat_daerah').val(data.id_perangkat_daerah);
-            $('#tujuan_renstra').val(data.tujuan_renstra).focus();
+            $('#id_misi').val(data.id_misi);
+            $('#tujuan').val(data.tujuan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -201,7 +189,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan_renstra.store') }}" : "{{ route('setup.tujuan_renstra.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.tujuan.store') }}" : "{{ route('setup.tujuan.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -240,13 +228,13 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.tujuan_renstra.api') }}",
+            url: "{{ route('setup.tujuan.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'tujuan_renstra', name: 'tujuan_renstra'},
-            {data: 'tujuan_renstra_indikator_count', name: 'tujuan_renstra_indikator_count'},
+            {data: 'tujuan', name: 'tujuan'},
+            {data: 'tujuan_indikator_count', name: 'tujuan_indikator_count'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -282,7 +270,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan_renstra.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.tujuan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

@@ -58,6 +58,7 @@
                                         <tr>
                                             <td width="15%">#</td>
                                             <td>Tujuan</td>
+                                            <td>Jumlah Indikator Tujuan</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -170,7 +171,7 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.tujuan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
+            $('#tahun').val(data.id_visi);
             $('#id_misi').val(data.id_misi);
             $('#tujuan').val(data.tujuan).focus();
             $('#form-modal').modal('show');
@@ -178,7 +179,6 @@
             reload();
         });
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -233,7 +233,7 @@
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'tujuan', name: 'tujuan'},
-            // {data: 'no_urut', name: 'no_urut'},
+            {data: 'tujuan_indikator_count', name: 'tujuan_indikator_count'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}

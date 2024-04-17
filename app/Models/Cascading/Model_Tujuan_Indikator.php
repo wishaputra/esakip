@@ -9,8 +9,13 @@ class Model_Tujuan_Indikator extends Model
     protected $table = "cascading_tujuan_indikator";
     protected $fillable = ['id_tujuan', 'indikator', 'creator', 'created_at', 'updated_at'];
 
-    // public function misi()
-    // {
-    //     return $this->hasMany(Model_Misi::class, 'id_visi');
-    // }
+    public function tujuan()
+    {
+        return $this->belongsTo(Model_Tujuan::class, 'id');
+    }
+
+    public function tujuan_nilai()
+    {
+        return $this->hasMany(Model_Tujuan_Nilai::class, 'id_indikator_tujuan');
+    }
 }
