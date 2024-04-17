@@ -55,6 +55,8 @@ use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
+use App\Models\Model_Tujuan;
+use App\Models\Model_Sasaran;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
 use App\Models\CategoryBusiness;
@@ -63,7 +65,6 @@ use App\Models\Section\Pricing;
 use App\Models\TextContent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
-use App\Models\model_tujuan;
 
 
 /*
@@ -134,6 +135,11 @@ Route::get('/tujuan_renstra_nilai', function () {
     return view('cascading.tujuan_renstra_nilai.index');
 })->name('tujuan_renstra_nilai');
 
+Route::get('/tujuan-nodes', function () {
+    $tujuanNodes = Model_Tujuan::all();
+    return response()->json($tujuanNodes);
+});
+
 Route::get('/sasaran_renstra', function () {
     return view('cascading.sasaran_renstra.index');
 })->name('sasaran_renstra');
@@ -145,6 +151,11 @@ Route::get('/sasaran_renstra_indikator', function () {
 Route::get('/sasaran_renstra_nilai', function () {
     return view('cascading.sasaran_renstra_nilai.index');
 })->name('sasaran_renstra_nilai');
+
+Route::get('/sasaran-nodes', function () {
+    $sasaran = Model_Sasaran::all();
+    return response()->json($sasaran);
+});
 
 Route::get('/program', function () {
     return view('cascading.program.index');
@@ -181,6 +192,16 @@ Route::get('/subkegiatan_indikator', function () {
 Route::get('/subkegiatan_nilai', function () {
     return view('cascading.subkegiatan_nilai.index');
 })->name('subkegiatan_nilai');
+
+//treeview
+Route::get('/tree-data', function () {
+    $nodes = TreeNode::all();
+    return response()->json($nodes);
+});
+Route::get('/child-nodes', function () {
+    $childNodes = ChildNode::all();
+    return response()->json($childNodes);
+});
 
 //---------------- CASCADING END ---------------- //
 
