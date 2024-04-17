@@ -55,14 +55,13 @@ use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
-use App\Models\Model_Tujuan;
-use App\Models\Model_Sasaran;
+use App\Models\Cascading\Model_Tujuan;
+use App\Models\Cascading\Model_Sasaran;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
 use App\Models\Frontend;
 use App\Models\Section\Pricing;
 use App\Models\TextContent;
-use App\Models\Cascading\model_tujuan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 
