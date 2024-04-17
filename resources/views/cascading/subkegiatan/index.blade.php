@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Data</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Sub Kegiatan</a>
                     </li>
 
 
@@ -56,12 +56,10 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td>#</td>
-                                            <td width="20%">Nama</td>
-                                            <td>No Urut</td>
-                                            <td>Route</td>
-                                            <td>Submenu</td>
-
+                                            <td width="15%">#</td>
+                                            <td>Kode Sub Kegiatan</td>
+                                            <td>Sub Kegiatan</td>
+                                            <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -75,10 +73,6 @@
 
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 </div>
@@ -100,18 +94,43 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
-
                     <div class="form-row">
-                            <div class="col-md-4">
-                                <div class="form-group col-md-12">
-                                    <label for="misi" class="col-form-label">Sasaran</label>
-                                    <textarea name="misi" id="misi" class="form-control" rows="3"></textarea>
-                                </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="tahun" class="col-form-label">Periode Tahun</label>
+                                <select name="tahun" id="tahun" class="form-control">
+                                    <option value="">Pilih</option>
+                                    @foreach ($tahun as $item)
+                                        <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="id_kegiatan" class="col-form-label">Kegiatan</label>
+                                <select name="id_kegiatan" id="id_kegiatan" class="form-control">
+                                    <option value="">Pilih</option>
+                                    @foreach ($kegiatan as $item)
+                                        <option value="{{ $item->id }}">{{ $item->kegiatan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="kode_sub_kegiatan" class="col-form-label">Kode Sub Kegiatan</label>
+                                <input type="text" name="kode_sub_kegiatan" id="kode_sub_kegiatan" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="sub_kegiatan" class="col-form-label">Sub Kegiatan</label>
+                                <textarea name="sub_kegiatan" id="sub_kegiatan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
-                        <!-- </div>
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Nama</label>
                                 <input type="text" name="nama" id="nama" class="form-control">
@@ -119,18 +138,12 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">sasaran</label>
+                                <label for="" class="col-form-label">Tujuan</label>
                                 <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
                             </div>
                         </div> -->
 
                     </div>
-
-
-
-
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -154,34 +167,26 @@
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-        
-            
-       
     }
     
     function edit(id){
         save_method = 'edit';
         $('#alert').html('');
         $('#form').trigger('reset');
-        
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.menu.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.sub_kegiatan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#nama').val(data.nama).focus();
-            $('#no_urut').val(data.no_urut);
-            $('#route').val(data.route);
-           
+            $('#tahun').val(data.tahun_awal);
+            $('#id_kegiatan').val(data.id_kegiatan);
+            $('#kode_sub_kegiatan').val(data.kode_sub_kegiatan).focus();
+            $('#sub_kegiatan').val(data.sub_kegiatan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
         });
-
-       
-        
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -191,7 +196,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.menu.store') }}" : "{{ route('setup.menu.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.sub_kegiatan.store') }}" : "{{ route('setup.sub_kegiatan.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -230,17 +235,15 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.menu.api') }}",
+            url: "{{ route('setup.sub_kegiatan.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'nama', name: 'nama'},
-            {data: 'no_urut', name: 'no_urut'},
-            {data: 'route', name: 'route'},
-            {data: 'submenu_count', name: 'submenu_count'},
-            
-            
+            {data: 'kode_sub_kegiatan', name: 'kode_sub_kegiatan'},
+            {data: 'sub_kegiatan', name: 'sub_kegiatan'},
+            {data: 'subkegiatan_indikator_count', name: 'subkegiatan_indikator_count'},
+            // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
@@ -259,8 +262,6 @@
 	});
     });
 
-    
-
         function remove(id){
         $.confirm({
             title: '',
@@ -276,7 +277,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.menu.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.sub_kegiatan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

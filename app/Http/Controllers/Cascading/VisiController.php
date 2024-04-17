@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Cascading;
 
-use App\Models\model_misi;
-use App\Models\model_visi;
+use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_Misi;
+use App\Models\Cascading\Model_Visi;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 
@@ -11,12 +12,12 @@ class VisiController extends Controller
 {
     public function api()
     {
-        $visi = model_visi::orderBy('id', 'ASC')->get();
+        $visi = Model_Visi::orderBy('id', 'ASC')->get();
         return DataTables::of($visi)
 
             ->addColumn('misi_count', function ($p) {
                 $count = $p->misi->count();
-                return "<a  href='".route('setup.misi.index')."?visi_id=".$p->id."'  title='misi'>".$count."</a>";
+                return "<a href='".route('setup.misi.index')."?id_visi=".$p->id."'  title='Misi'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -35,7 +36,7 @@ class VisiController extends Controller
     {
         $title = "visi";
         
-        return view('visi.index', compact('title'));
+        return view('cascading.visi.index', compact('title'));
     }
 
     /**
@@ -60,7 +61,7 @@ class VisiController extends Controller
             
         ]);
 
-        model_visi::create([
+        Model_Visi::create([
             "tahun_awal" => $request->tahun_awal,
             "tahun_akhir" => $request->tahun_akhir,
             "visi" => $request->visi,
@@ -85,7 +86,7 @@ class VisiController extends Controller
      */
     public function edit($id)
     {
-        return model_visi::find($id);
+        return Model_Visi::find($id);
     }
 
     /**
@@ -97,7 +98,7 @@ class VisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $menu = model_visi::find($id);
+        $menu = Model_Visi::find($id);
         $request->validate([
             "tahun_awal" => 'required',
             "tahun_akhir" => 'required',
@@ -120,7 +121,7 @@ class VisiController extends Controller
      */
     public function destroy($id)
     {
-        $visi  = model_visi::find($id);
+        $visi  = Model_Visi::find($id);
         if ($visi->misi->count() > 0) {
             return response()->json(["message" => "<center>Hapus misi terlebih dahulu</center>"], 500);
         }

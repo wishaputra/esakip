@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Data</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Program</a>
                     </li>
 
 
@@ -56,12 +56,10 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td>#</td>
-                                            <td width="20%">visi</td>
-                                            <td>misi</td>
-                                            <td>tujuan</td>
-                                            
-
+                                            <td width="15%">#</td>
+                                            <td>Kode Program</td>
+                                            <td>Program</td>
+                                            <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -75,10 +73,6 @@
 
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 </div>
@@ -100,31 +94,56 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
-
-                    <div class="col-md-6">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">visi</label>
-                                <input type="hidden" name="creator" id="creator" value="{{ Auth::user()->id}}">
-                                <input value="{{ $visi->id}}"  type="hidden" name="id_visi" id="id_visi"  class="form-control" >
-                                <input value="{{ $visi->visi}}"  type="text" name="visi" id="visi"  class="form-control" readonly>
-                            </div>
-                        </div>
-
-
-
                     <div class="form-row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="misi" class="col-form-label">Misi</label>
-                                <textarea name="misi" id="misi" class="form-control" rows="3"></textarea>
+                                <label for="tahun" class="col-form-label">Periode Tahun</label>
+                                <select name="tahun" id="tahun" class="form-control">
+                                    <option value="">Pilih</option>
+                                    @foreach ($tahun as $item)
+                                        <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="id_sasaran_renstra" class="col-form-label">Sasaran Renstra</label>
+                                <select name="id_sasaran_renstra" id="id_sasaran_renstra" class="form-control">
+                                    <option value="">Pilih</option>
+                                    @foreach ($sasaran_renstra as $item)
+                                        <option value="{{ $item->id }}">{{ $item->sasaran_renstra }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="kode_program" class="col-form-label">Kode Program</label>
+                                <input type="text" name="kode_program" id="kode_program" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="program" class="col-form-label">Program</label>
+                                <textarea name="program" id="program" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Nama</label>
+                                <input type="text" name="nama" id="nama" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Tujuan</label>
+                                <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
+                            </div>
+                        </div> -->
+
                     </div>
-
-
-
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -148,33 +167,25 @@
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-        
-            
-       
     }
     
     function edit(id){
         save_method = 'edit';
         $('#alert').html('');
         $('#form').trigger('reset');
-        
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.misi.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.program.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#visi').val(data.visi).focus();
-            $('#misi').val(data.misi);
-            $('#creator').val(data.creator);
-
-           
+            $('#tahun').val(data.tahun_awal);
+            $('#id_sasaran_renstra').val(data.id_sasaran_renstra);
+            $('#kode_program').val(data.kode_program).focus();
+            $('#program').val(data.program).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
         });
-
-       
-        
     }
 
    
@@ -186,7 +197,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.misi.store') }}" : "{{ route('setup.misi.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.program.store') }}" : "{{ route('setup.program.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -225,16 +236,15 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.misi.api') }}",
+            url: "{{ route('setup.program.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'id_visi', name: 'id_visi'},
-            {data: 'misi', name: 'misi'},
-            {data: 'tujuan_count', name: 'tujuan_count'},
-           
-            
+            {data: 'kode_program', name: 'kode_program'},
+            {data: 'program', name: 'program'},
+            {data: 'program_indikator_count', name: 'program_indikator_count'},
+            // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
@@ -253,8 +263,6 @@
 	});
     });
 
-    
-
         function remove(id){
         $.confirm({
             title: '',
@@ -270,7 +278,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.misi.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.program.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

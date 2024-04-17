@@ -1,24 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Cascading;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\model_misi;
-use App\Models\model_visi;
+use App\Models\Cascading\Model_Visi;
+use App\Models\Cascading\Model_Misi;
+use App\Models\Cascading\Model_SubKegiatan;
+use App\Models\Cascading\Model_SubKegiatan_Indikator;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
-class MisiController extends Controller
+class SubKegiatanNilaiController extends Controller
 {
     public function api(Request $request)
     {
-        $visi = model_misi::where($request->visi_id)->orderBy('id', 'ASC')->get();
-        return DataTables::of($visi)
+        // $visi   = Model_Visi::find($request->id_visi)->misi;
+        $subkegiatan_indikator   = Model_SubKegiatan_Indikator::all();
+        return DataTables::of($subkegiatan_indikator)
+            ->addColumn('subkegiatan_nilai_count', function ($p) {
+                $count = $p->kegiatan_nilai->count();
+                return "<a  href='".route('setup.sub_kegiatan_nilai.index')."?subkegiatan_nilai_id=".$p->id."'  title='Nilai Sub Kegiatan'>".$count."</a>";
+            })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
+            ->rawColumns(['subkegiatan_nilai_count', 'action'])
             ->toJson();
     }
     /**
@@ -28,16 +38,18 @@ class MisiController extends Controller
      */
     public function index(Request $request)
     {
-        $visi_id = $request->visi_id;
-        if (!$visi_id || !model_visi::whereid($visi_id)->first()) {
-            return redirect()->route('setup.visi.index');
-        }
+        // $id_visi = $request->id_visi;
+        // if (!$id_visi || !Model_SubKegiatan::whereid($id_visi)->first()) {
+        //     return redirect()->route('setup.subkegiatan_indikator.index');
+        // }
 
-        $visi = model_visi::find($visi_id);
-        $title = "misi " . $visi->awal_tahun;
+        // $visi = Model_SubKegiatan::find($id_visi);
+        // $title = "Tujuan " . $visi->tujuan;
+        $tahun  = Model_Visi::all();
+        $misi   = Model_Misi::all();
 
-
-        return view('misi.index', compact('title', 'visi_id', 'visi'));
+        // return view('cascading.subkegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
+        return view('cascading.subkegiatan_indikator.index', compact('tahun','misi'));
     }
 
     /**
@@ -60,19 +72,14 @@ class MisiController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_visi" => 'required',
-            "misi" => 'required',
-            "creator" => 'required',
-           
+            "id_misi" => 'required',
+            "tujuan" => 'required',
         ]);
 
-
-
-        model_misi::create([
-
-            "id_visi" => $request->id_visi,
-            "misi" => $request->misi,
-            "creator" => $request->creator,
+        Model_SubKegiatan::create([
+            "id_misi" => $request->id_misi,
+            "tujuan" => $request->tujuan,
+            "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
@@ -96,7 +103,7 @@ class MisiController extends Controller
      */
     public function edit($id)
     {
-        return model_misi::find($id);
+        return Model_SubKegiatan::find($id);
     }
 
     /**
@@ -108,28 +115,16 @@ class MisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = model_misi::find($id);
-
+        $misi  = Model_SubKegiatan::find($id);
         $rule = [
-            
-            "misi" => 'required',
-            "creator" => 'required',
-            
-
+            "tujuan" => 'required',
         ];
 
         $request->validate($rule);
 
-
-
-
-
         $misi->update([
-
-            
-            "misi" => $request->misi,
+            "tujuan" => $request->tujuan,
             "creator" => Auth::user()->id,
-           
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
@@ -142,10 +137,10 @@ class MisiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $visi  = model_misi::find($id);
+    $misi  = Model_SubKegiatan::find($id);
 
-    if ($visi && $visi->misi && is_iterable($visi->misi)) {
-        $count = $visi->misi->count();
+    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
+        $count = $misi->tujuan->count();
     } else {
         $count = 0;
     }
@@ -154,7 +149,7 @@ class MisiController extends Controller
         return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
     }
 
-    $visi->delete();
+    $misi->delete();
     return response()->json(["message" => "Berhasil menghapus data!"], 200);
 }
 }
