@@ -15,7 +15,7 @@ function init() {
       nodeIndentPastParent: 1.0,
       nodeSpacing: 0,
       setsPortSpot: false,
-      setsChildPortSpot: false
+      setsChildPortSpot: true
     })
   });
 
@@ -54,7 +54,8 @@ function init() {
   }, $(go.TextBlock, {
     font: '9pt Verdana, sans-serif',
     margin: new go.Margin(0, 0, 0, 4)
-  }, new go.Binding("text", "visi")), $(go.TextBlock, {
+  }, new go.Binding("text", "visi")), 
+  $(go.TextBlock, {
     font: '9pt Verdana, sans-serif',
     margin: new go.Margin(0, 0, 0, 4)
   }, new go.Binding("text", "misi")), $(go.TextBlock, {
@@ -133,11 +134,16 @@ function addChildNode(diagram, childNodeData) {
   diagram.startTransaction('add node');
   diagram.model.addNodeData(childNodeData);
 
-  var parentKey = childNodeData.parent_id; // Assuming 'parent_id' is the new column in 'cascading_misi'
+  var parentKey = childNodeData.parent_id;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
     var linkData = { from: parentKey, to: childNodeData.key };
     diagram.model.addLinkData(linkData);
+
+    // Add the child node to the parent node's children array
+    var children = parentNode.data.children || [];
+    children.push(childNodeData.key);
+    parentNode.data.children = children;
   }
 
   diagram.commitTransaction('add node');
@@ -157,12 +163,11 @@ function addTujuanNode(diagram, tujuanNodeData) {
   diagram.commitTransaction('add node');
 }
 
-
 function addSasaranNode(diagram, sasaranNodeData) {
   diagram.startTransaction('add node');
   diagram.model.addNodeData(sasaranNodeData);
 
-  var parentKey = sasaranNodeData.id_tujuan; // Assuming 'id_tujuan' is the correct foreign key in 'cascading_sasaran'
+  var parentKey = sasaranNodeData.id_tujuan;
   var parentNode = diagram.findNodeForKey(parentKey);
   if (parentNode !== null) {
     var linkData = { from: parentKey, to: sasaranNodeData.key };
