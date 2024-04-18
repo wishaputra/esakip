@@ -9,6 +9,11 @@ class Model_Sasaran extends Model
     protected $table = "cascading_sasaran";
     protected $fillable = ['id_tujuan', 'sasaran', 'creator', 'created_at', 'updated_at'];
 
+    public function tujuan()
+    {
+        return $this->belongsTo(Model_Tujuan::class, 'id');
+    }
+
     public function sasaran_indikator()
     {
         return $this->hasMany(Model_Sasaran_Indikator::class, 'id_sasaran');

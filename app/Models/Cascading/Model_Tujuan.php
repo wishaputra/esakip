@@ -18,4 +18,9 @@ class Model_Tujuan extends Model
     {
         return $this->hasMany(Model_Tujuan_Indikator::class, 'id_tujuan');
     }
+
+    public function sasaran()
+    {
+        return $this->hasMany(Model_Sasaran::class, 'id_tujuan');
+    }
 }
