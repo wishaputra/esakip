@@ -29,8 +29,20 @@
         </div>
     </div>
 
+    <form action="" class="form-inline mt-2 justify-content-center">
+        <div class="form-group mb-3">
+            <h5 class="ml-3"><label for="periode">Pilih Periode Tahun</label></h5>
+            <select name="periode" id="periode" class="form-control ml-3">
+                <option value="">Pilih</option>
+                @foreach ($visi as $item)
+                    <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
+                @endforeach
+            </select>
+        </div>
+    </form>
+
     <!-- Organization Chart container -->
-    <div id="myDiagramDiv" style="background-color: white; border: 1px solid black; height: 550px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"></div>
+    <div id="myDiagramDiv" style="background-color: white; border: 0.5px solid black; height: 550px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"></div>
 
     <script>
         var orgChartData = [];

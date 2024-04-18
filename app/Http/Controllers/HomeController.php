@@ -191,11 +191,11 @@ class HomeController extends Controller
     }
     public function Chart()
     {
-        
         $breadcrumbs = ['chart'];
         $title = "Cascading Struktur";
+        $visi   = Model_Visi::all();
         // Make sure 'section.treeview.index' is the correct path to your view file.
-        return view('front.custom_page.struktur', compact('title',));
+        return view('front.custom_page.struktur', compact('title','visi'));
     
     }
 
