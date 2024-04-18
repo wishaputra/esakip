@@ -10,8 +10,6 @@
 
 @section('content')
 
-
-
 <div class="page has-sidebar-left bg-light">
     <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
@@ -33,10 +31,7 @@
                         <a class="nav-link " onclick="add()" href="#">
                             <i class="icon icon-plus-circle"></i>Tambah Tujuan</a>
                     </li>
-
-
                 </ul>
-
             </div>
         </div>
     </header>
@@ -44,13 +39,10 @@
     <div class="container-fluid relative animatedParent animateOnce">
         <div class="tab-content pb-3" id="v-pills-tabContent">
             <div class="tab-pane animated fadeInUpShort show active" id="v-pills-1">
-
                 <div class="row">
-
                     <div class="col-md-12">
                         <div class="card mb-3 mt-3 shadow r-0">
                             <div class="card-header white">
-
                             </div>
                             <div class="card-body">
                                 <table class="table" id="menu-table">
@@ -63,13 +55,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -110,9 +100,6 @@
                                 <label for="id_misi" class="col-form-label">Misi</label>
                                 <select name="id_misi" id="id_misi" class="form-control">
                                     <option value="">Pilih</option>
-                                    @foreach ($misi as $item)
-                                        <option value="{{ $item->id }}">{{ $item->misi }}</option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -122,20 +109,6 @@
                                 <textarea name="tujuan" id="tujuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-
-                        <!-- <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Nama</label>
-                                <input type="text" name="nama" id="nama" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Tujuan</label>
-                                <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
-                            </div>
-                        </div> -->
-
                     </div>
             </div>
             <div class="modal-footer">
@@ -154,27 +127,28 @@
 <script>
     
     $(document).ready(function() {
-    $('#tahun').on('change', function() {
-        var tahunId = $(this).val();
-        if (tahunId) {
-            $.ajax({
-                url: '{{ route("getMisiByTahun", ":id") }}'.replace(':id', tahunId),
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#id_misi').empty();
-                    $('#id_misi').append('<option value="">Pilih</option>');
-                    $.each(data, function(key, value) {
-                        $('#id_misi').append('<option value="' + key + '">' + value + '</option>');
-                    });
-                }
-            });
-        } else {
-            $('#id_misi').empty();
-            $('#id_misi').append('<option value="">Pilih</option>');
-        }
+        $('#tahun').on('change', function() {
+            var tahunId = $(this).val();
+            if (tahunId) {
+                $.ajax({
+                    url: '{{ route("getMisiByTahun", ":id") }}'.replace(':id', tahunId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#id_misi').empty();
+                        $('#id_misi').append('<option value="">Pilih</option>');
+                        $.each(data, function(key, value) {
+                            $('#id_misi').append('<option value="' + value.id + '">' + value.misi + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#id_misi').empty();
+                $('#id_misi').append('<option value="">Pilih</option>');
+            }
+        });
     });
-});
+
 
 
 

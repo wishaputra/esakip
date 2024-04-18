@@ -37,12 +37,10 @@ class TujuanController extends Controller
      */
 
      public function getMisiByTahun($id)
-     {
-         $id_visi = $id;
-         $misi = Model_Misi::where('id_visi', $id_visi)->get();
-         return response()->json($misi);
-     }
-
+{
+    $misi = Model_Misi::where('id_visi', $id)->get(['id', 'misi']);
+    return response()->json($misi);
+}
 
     public function index(Request $request)
     {
