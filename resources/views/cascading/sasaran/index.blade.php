@@ -58,10 +58,7 @@
                                         <tr>
                                             <td width="15%">#</td>
                                             <td>Sasaran</td>
-<<<<<<< HEAD
-=======
                                             <td>Jumlah Indikator Sasaran</td>
->>>>>>> 751b01cd460ea8935c13b92c0c134a3f55d25f96
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -155,6 +152,52 @@
 @push('script')
 
 <script>
+
+$(document).ready(function() {
+    $('#tahun').on('change', function() {
+        var tahunId = $(this).val();
+        if (tahunId) {
+            $.ajax({
+                url: '{{ route("getTujuanByTahun", ":id") }}'.replace(':id', tahunId),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_tujuan').empty();
+                    $('#id_tujuan').append('<option value="">Pilih</option>');
+                    $.each(data, function(key, value) {
+                        $('#id_tujuan').append('<option value="' + value.id + '">' + value.tujuan + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#id_tujuan').empty();
+            $('#id_tujuan').append('<option value="">Pilih</option>');
+        }
+    });
+});
+
+$('#tahun').on('change', function() {
+    var tahunId = $(this).val();
+    if (tahunId) {
+        $.ajax({
+            url: '{{ route("getTujuanByTahun", ":id") }}'.replace(':id', tahunId),
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#id_tujuan').empty();
+                $('#id_tujuan').append('<option value="">Pilih</option>');
+                $.each(data, function(key, value) {
+                    $('#id_tujuan').append('<option value="' + key + '">' + value + '</option>');
+                });
+            }
+        });
+    } else {
+        $('#id_tujuan').empty();
+        $('#id_tujuan').append('<option value="">Pilih</option>');
+    }
+});
+
+
     function add(){
         $('#alert').html('');
         save_method = "add";
@@ -183,6 +226,7 @@
         });
     }
 
+    
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -237,11 +281,7 @@
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'sasaran', name: 'sasaran'},
-<<<<<<< HEAD
-            // {data: 'no_urut', name: 'no_urut'},
-=======
             {data: 'sasaran_indikator_count', name: 'sasaran_indikator_count'},
->>>>>>> 751b01cd460ea8935c13b92c0c134a3f55d25f96
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}

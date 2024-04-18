@@ -36,6 +36,17 @@ class SasaranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function getTujuanByTahun($id)
+{
+    $tujuan = Model_Tujuan::whereHas('misi', function ($query) use ($id) {
+        $query->where('id_visi', $id);
+    })->get();
+
+    return response()->json($tujuan);
+}
+
+
     public function index(Request $request)
     {
         // $id_visi = $request->id_visi;
