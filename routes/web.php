@@ -86,6 +86,9 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 
 //---------------- CASCADING START ---------------- //
 
+Route::get('/getMisiByTahun/{id}', 'TujuanController@getMisiByTahun')->name('getMisiByTahun');
+Route::get('/getMisiByTahun/{id}', [TujuanController::class, 'getMisiByTahun'])->name('getMisiByTahun');
+
 
 Route::get('/visi', function () {
     return view('cascading.visi.index');

@@ -11,7 +11,6 @@
 @section('content')
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <div class="page has-sidebar-left bg-light">
     <header class="blue accent-3 relative nav-sticky">
@@ -153,48 +152,30 @@
 @push('script')
 
 <script>
-
-$(document).ready(function() {
+    
+    $(document).ready(function() {
     $('#tahun').on('change', function() {
-        var tahunId = $(this).val(); // Mendapatkan nilai id tahun yang dipilih
+        var tahunId = $(this).val();
         if (tahunId) {
             $.ajax({
-                url: '/api/get-misi-by-tahun/' + tahunId, // URL endpoint untuk mendapatkan misi berdasarkan tahun
+                url: '{{ route("getMisiByTahun", ":id") }}'.replace(':id', tahunId),
                 type: 'GET',
+                dataType: 'json',
                 success: function(data) {
-                    $('#id_misi').empty(); // Mengosongkan opsi misi sebelum menambahkan opsi yang baru
+                    $('#id_misi').empty();
+                    $('#id_misi').append('<option value="">Pilih</option>');
                     $.each(data, function(key, value) {
-                        $('#id_misi').append('<option value="' + key + '">' + value + '</option>'); // Menambahkan opsi misi yang baru
+                        $('#id_misi').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
             });
         } else {
-            $('#id_misi').empty(); // Jika tidak ada tahun yang dipilih, mengosongkan opsi misi
-        }
-    });
-});
-
-$('#tahun').change(function() {
-    var tahunId = $(this).val();
-
-    $.ajax({
-        url: '/getMisiByTahun/' + tahunId,
-        type: 'GET',
-        success: function(data) {
             $('#id_misi').empty();
-            $('#id_misi').append($('<option>', {
-                value: '',
-                text: 'Pilih'
-            }));
-            $.each(data, function(index, item) {
-                $('#id_misi').append($('<option>', {
-                    value: item.id,
-                    text: item.misi
-                }));
-            });
+            $('#id_misi').append('<option value="">Pilih</option>');
         }
     });
 });
+
 
 
     function add(){

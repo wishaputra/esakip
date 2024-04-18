@@ -30,16 +30,18 @@ class TujuanController extends Controller
             ->rawColumns(['tujuan_indikator_count', 'action'])
             ->toJson();
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
-    public function getMisiByTahun($Id)
-{
-    $misi = Model_Misi::whereHas('visi', function($query) use ($Id) {
-        $query->where('id', $Id);
-    })->get();
-
-    return response()->json($misi);
-}
-
+     public function getMisiByTahun($id)
+     {
+         $id_visi = $id;
+         $misi = Model_Misi::where('id_visi', $id_visi)->get();
+         return response()->json($misi);
+     }
 
 
     public function index(Request $request)
