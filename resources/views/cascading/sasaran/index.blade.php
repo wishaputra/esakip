@@ -58,7 +58,10 @@
                                         <tr>
                                             <td width="15%">#</td>
                                             <td>Sasaran</td>
+<<<<<<< HEAD
+=======
                                             <td>Jumlah Indikator Sasaran</td>
+>>>>>>> 751b01cd460ea8935c13b92c0c134a3f55d25f96
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -234,7 +237,11 @@
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'sasaran', name: 'sasaran'},
+<<<<<<< HEAD
+            // {data: 'no_urut', name: 'no_urut'},
+=======
             {data: 'sasaran_indikator_count', name: 'sasaran_indikator_count'},
+>>>>>>> 751b01cd460ea8935c13b92c0c134a3f55d25f96
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
