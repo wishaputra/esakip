@@ -163,6 +163,36 @@
 @push('script')
 
 <script>
+
+$(document).ready(function() {
+    $('#tahun').on('change', function() {
+        var tahunId = $(this).val();
+        if (tahunId) {
+            $.ajax({
+                url: '{{ route("getSasaranByTahun", ":id") }}'.replace(':id', tahunId),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#id_sasaran').empty();
+                    $('#id_sasaran').append('<option value="">Pilih</option>');
+                    $.each(data, function(key, value) {
+                        $('#id_sasaran').append('<option value="' + value.id + '">' + value.sasaran + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        } else {
+            $('#id_sasaran').empty();
+            $('#id_sasaran').append('<option value="">Pilih</option>');
+        }
+    });
+});
+  
+
+
+
     function add(){
         $('#alert').html('');
         save_method = "add";
