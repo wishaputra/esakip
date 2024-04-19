@@ -152,6 +152,9 @@
 @push('script')
 
 <script>
+
+
+
     function add(){
         $('#alert').html('');
         save_method = "add";
