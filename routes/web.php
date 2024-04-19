@@ -86,7 +86,6 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 
 //---------------- CASCADING START ---------------- //
 
-Route::get('/getMisiByTahun/{id}', 'TujuanController@getMisiByTahun')->name('getMisiByTahun');
 Route::get('/getMisiByTahun/{id}', [TujuanController::class, 'getMisiByTahun'])->name('getMisiByTahun');
 Route::get('/get-tujuan-by-tahun/{id}', [SasaranController::class, 'getTujuanByTahun'])->name('getTujuanByTahun');
 

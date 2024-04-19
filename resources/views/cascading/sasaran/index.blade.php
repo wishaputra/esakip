@@ -154,18 +154,18 @@
 <script>
 
 $(document).ready(function() {
-    $('#tahun').on('change', function() {
-        var tahunId = $(this).val();
-        if (tahunId) {
+    $('#id_visi').on('change', function() {
+        var visiId = $(this).val();
+        if (visiId) {
             $.ajax({
-                url: '{{ route("getTujuanByTahun", ":id") }}'.replace(':id', tahunId),
+                url: '{{ route("getTujuanByTahun", ":id") }}'.replace(':id', visiId),
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
                     $('#id_tujuan').empty();
                     $('#id_tujuan').append('<option value="">Pilih</option>');
                     $.each(data, function(key, value) {
-                        $('#id_tujuan').append('<option value="' + value.id + '">' + value.tujuan + '</option>');
+                        $('#id_tujuan').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
             });
@@ -176,11 +176,12 @@ $(document).ready(function() {
     });
 });
 
+
 $('#tahun').on('change', function() {
     var tahunId = $(this).val();
     if (tahunId) {
         $.ajax({
-            url: '{{ route("getTujuanByTahun", ":id") }}'.replace(':id', tahunId),
+            url: '{{ route("getTujuanByTahun", ["id" => ":id"]) }}'.replace(':id', tahunId),
             type: 'GET',
             dataType: 'json',
             success: function(data) {
