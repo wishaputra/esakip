@@ -173,14 +173,16 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data); // Log data to console for debugging
                     $('#id_sasaran').empty();
                     $('#id_sasaran').append('<option value="">Pilih</option>');
                     $.each(data, function(key, value) {
-                        $('#id_sasaran').append('<option value="' + value.id + '">' + value.sasaran + '</option>');
+                        console.log(key, value); // Log key and value for each item
+                        $('#id_sasaran').append('<option value="' + key + '">' + value + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
+                    console.error(xhr.responseText); // Log error message to console
                 }
             });
         } else {
@@ -189,9 +191,6 @@ $(document).ready(function() {
         }
     });
 });
-  
-
-
 
     function add(){
         $('#alert').html('');
