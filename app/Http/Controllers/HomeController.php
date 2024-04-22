@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Section\Tree;
 use App\Models\Business;
+use App\Models\Cascading\Model_Visi;
 use App\Models\Chart;
 use App\Models\Category;
 use App\Models\CategoryBusiness;
@@ -181,20 +182,20 @@ class HomeController extends Controller
     
     public function treeview()
     {
-        
         $breadcrumbs = ['treeview'];
-        $title = "Tree";
+        $title = "Cascading Tree";
+        $visi   = Model_Visi::all();
         // Make sure 'section.treeview.index' is the correct path to your view file.
-        return view('front.custom_page.treeview', compact('title',));
+        return view('front.custom_page.treeview', compact('title','visi'));
     
     }
     public function Chart()
     {
-        
         $breadcrumbs = ['chart'];
-        $title = "Struktur";
+        $title = "Cascading Struktur";
+        $visi   = Model_Visi::all();
         // Make sure 'section.treeview.index' is the correct path to your view file.
-        return view('front.custom_page.struktur', compact('title',));
+        return view('front.custom_page.struktur', compact('title','visi'));
     
     }
 

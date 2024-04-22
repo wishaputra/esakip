@@ -215,8 +215,6 @@ Route::get('/child-nodes', function () {
 
 //---------------- CASCADING END ---------------- //
 
-
-
 Route::get('tree-view', function () {
     return view('tree-view');
 })->name('tree-view');
@@ -238,8 +236,6 @@ Route::get('/load-chart', [ChartController::class, 'loadChart']);
 Route::post('/tree', [TreeController::class, 'store'])->name('tree.store'); 
 Route::put('/tree/{id}', [TreeController::class, 'update'])->name('tree.update');
 Route::delete('/tree/{id}', [TreeController::class, 'delete'])->name('tree.delete');
-
-
 
 Route::get('download2', [HomeController::class, 'download2'])->name('main.download');
 Route::get('displaypdf3', [HomeController::class, 'displaypdf3'])->name('main.displaypdf');

@@ -5,67 +5,44 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
 
 @section('content')
-
-
-    @section('content')
-
     <header id="header" class="ex-header">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <h1>{{$title}}</h1>
+                </div>
+            </div>
+        </div>
+    </header>
 
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </header> <!-- end of ex-header -->
-    <!-- end of header -->
     <div class="ex-basic-1">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumbs">
                         <a href="{{URL::to('/')}}">Home</a>
-
-                    
                         <i class="fa fa-angle-double-right"></i>
-                        <a href="{{URL::to('/struktur')}}">struktur</a>
-                    </div> <!-- end of breadcrumbs -->
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </div> <!-- end of ex-basic-1 -->
-
-
-
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        
-    </head>
-    <body>
-    <div id="allSampleContent" class="p-4 w-full">
-    <!-- Organization Chart container -->
-    <div id="myDiagramDiv" style="background-color: white; border: 1px solid black; height: 550px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"></div>
-
-        <!-- Buttons -->
-         <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-    </div>
-
-        <!-- Properties Panel -->
-        <div id="propertiesPanel" style="display: none; background-color: aliceblue; border: solid 1px black">
-            <b>Properties</b><br>
-            Name: <input type="text" id="name" value="" onchange="updateData(this.value, 'name')"><br>
-            Title: <input type="text" id="title" value="" onchange="updateData(this.value, 'title')"><br>
-            Comments: <input type="text" id="comments" value="" onchange="updateData(this.value, 'comments')"><br>
+                        <a href="{{URL::to('/struktur')}}">Cascading Struktur</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Instructions -->
-       
     </div>
+
+    <form action="" class="form-inline mt-2 justify-content-center">
+        <div class="form-group mb-3">
+            <h5 class="ml-3"><label for="periode">Pilih Periode Tahun</label></h5>
+            <select name="periode" id="periode" class="form-control ml-3">
+                <option value="">Pilih</option>
+                @foreach ($visi as $item)
+                    <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
+                @endforeach
+            </select>
+        </div>
+    </form>
+
+    <!-- Organization Chart container -->
+    <div id="myDiagramDiv" style="background-color: white; border: 0.5px solid black; height: 550px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"></div>
 
     <script>
         var orgChartData = [];
@@ -73,33 +50,25 @@
 
         // Function to initialize the diagram
         function init() {
-            myDiagram =
-                go.GraphObject.make(go.Diagram, "myDiagramDiv", {
-                    initialContentAlignment: go.Spot.Center,
-                    "undoManager.isEnabled": true,
-                    layout: go.GraphObject.make(go.TreeLayout, { angle: 90, layerSpacing: 80 })
-                });
+            myDiagram = go.GraphObject.make(go.Diagram, "myDiagramDiv", {
+                            initialContentAlignment: go.Spot.Center,
+                            "undoManager.isEnabled": true,
+                            layout: go.GraphObject.make(go.TreeLayout, { angle: 90, layerSpacing: 80 })
+                        });
 
             // Define the template for a simple node
             // Define the template for a simple node
-            myDiagram.nodeTemplate =
-    go.GraphObject.make(go.Node, "Auto",
-        go.GraphObject.make(go.Shape, "RoundedRectangle",
-            {
-                fill: "white", // Background color of node
-                portId: "", // Important for linking
-                cursor: "pointer" // Cursor style
-            }
-        )
-        // No TextBlock included here means no text will be displayed within the node
-    );
-
-
-
+            myDiagram.nodeTemplate = go.GraphObject.make(go.Node, "Auto", go.GraphObject.make(go.Shape, "RoundedRectangle",
+                                        {
+                                            fill: "white", // Background color of node
+                                            portId: "", // Important for linking
+                                            cursor: "pointer" // Cursor style
+                                        }
+                                    )
+            // No TextBlock included here means no text will be displayed within the node
+                                    );
             // Define the template for a link
-            myDiagram.linkTemplate =
-                go.GraphObject.make(go.Link,
-                    go.GraphObject.make(go.Shape));
+            myDiagram.linkTemplate = go.GraphObject.make(go.Link, go.GraphObject.make(go.Shape));
 
             // Load chart data
             loadChart();
@@ -107,84 +76,73 @@
 
         // Function to add a new node to the organization chart 
         function addNode() {
-        var nextKey = (myDiagram.model.nodeDataArray.length + 1).toString();
-        var newNodeData = { key: nextKey, name: "", title: "" };
-        myDiagram.model.addNodeData(newNodeData);
+            var nextKey = (myDiagram.model.nodeDataArray.length + 1).toString();
+            var newNodeData = { key: nextKey, name: "", title: "" };
+            myDiagram.model.addNodeData(newNodeData);
 
-        // Find the currently selected node
-        var selectedNode = myDiagram.selection.first();
-        if (selectedNode !== null) {
-            // Add a new link between the selected node and the newly created node
-            var newLinkData = { from: selectedNode, to: myDiagram.model.findNodeDataForKey(nextKey) };
-            myDiagram.model.addLinkData(newLinkData);
+            // Find the currently selected node
+            var selectedNode = myDiagram.selection.first();
+            if (selectedNode !== null) {
+                // Add a new link between the selected node and the newly created node
+                var newLinkData = { from: selectedNode, to: myDiagram.model.findNodeDataForKey(nextKey) };
+                myDiagram.model.addLinkData(newLinkData);
 
-            // Add a new link between the parent node and the newly created node
-            var parentNode = myDiagram.model.findParentNodeForKey(selectedNode.data.key);
-            if (parentNode) {
-                var newParentLinkData = { from: parentNode, to: myDiagram.model.findNodeDataForKey(nextKey) };
-                myDiagram.model.addLinkData(newParentLinkData);
+                // Add a new link between the parent node and the newly created node
+                var parentNode = myDiagram.model.findParentNodeForKey(selectedNode.data.key);
+                if (parentNode) {
+                    var newParentLinkData = { from: parentNode, to: myDiagram.model.findNodeDataForKey(nextKey) };
+                    myDiagram.model.addLinkData(newParentLinkData);
+                }
             }
+
+            // Save the chart data after adding the new node and link
+            saveChart();
         }
 
-        // Save the chart data after adding the new node and link
-        saveChart();
-    }   
-
         // Function to remove a node from the organization chart
-        
-
         // Function to save the organization chart data
         // Function to save the organization chart data
         function saveChart() {
-    var chartData = { nodeDataArray: myDiagram.model.nodeDataArray, linkDataArray: myDiagram.model.linkDataArray };
-    var jsonData = JSON.stringify({ chartData: chartData });
+            var chartData = { nodeDataArray: myDiagram.model.nodeDataArray, linkDataArray: myDiagram.model.linkDataArray };
+            var jsonData = JSON.stringify({ chartData: chartData });
 
-    $.ajax({
-        type: "POST", // Ensure you're using POST method
-        url: "/save-chart", // Adjust the URL to match your route
-        data: jsonData,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(response) {
-            console.log('Chart data saved successfully:', response);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error saving chart data:', error);
+            $.ajax({
+                type: "POST", // Ensure you're using POST method
+                url: "/save-chart", // Adjust the URL to match your route
+                data: jsonData,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    console.log('Chart data saved successfully:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving chart data:', error);
+                }
+            });
         }
-    });
-}
 
-
-
-
-function loadChart() {
-    $.ajax({
-        url: "/load-chart",
-        type: 'GET',
-        success: function(response) {
-            console.log('Chart data loaded successfully', response);
-            // Assuming response is the object with nodeDataArray and linkDataArray
-            myDiagram.model = new go.GraphLinksModel(response.nodeDataArray, response.linkDataArray);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error loading chart data:', error);
+        function loadChart() {
+            $.ajax({
+                url: "/load-chart",
+                type: 'GET',
+                success: function(response) {
+                    console.log('Chart data loaded successfully', response);
+                    // Assuming response is the object with nodeDataArray and linkDataArray
+                    myDiagram.model = new go.GraphLinksModel(response.nodeDataArray, response.linkDataArray);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading chart data:', error);
+                }
+            });
         }
-    });
-}
-
-
-
-
         // Load chart data when the page loads
         window.onload = function() {
-        loadChart();
-    };
+            loadChart();
+        };
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/gojs@2.3.14/release/go.js"></script>
     <script src="{{ asset('js/orgchart2.js') }}"></script>   
     
-    </body>
-    </html>
-    @endsection
+@endsection

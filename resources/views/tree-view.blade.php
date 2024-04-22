@@ -33,7 +33,7 @@
     
     <!-- Description box -->
     <div id="descriptionBox">
-        <h2>Description</h2>
+        <h2>Descriptionnnnn</h2>
         <p id="descriptionContent"></p>
     </div>
 
