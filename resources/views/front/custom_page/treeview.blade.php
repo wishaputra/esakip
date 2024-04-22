@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <form action="" class="form-inline mt-2 justify-content-center">
+    <form action="" class="form-inline mt-4 justify-content-center">
         <div class="form-group mb-3">
             <h5 class="ml-3">Pilih Periode Tahun</h5>
             <select name="periode" id="periode" class="form-control ml-3">
@@ -175,45 +175,53 @@
 
         // Set visi in description box
         function visi(){
-            document.getElementById("deskripsi").innerHTML = $("#visi").text();
+            $("#deskripsi").html($("#visi").text());
         }
         
         // Set misi in description box
         function misi(){
-            document.getElementById("judul").innerHTML = "Misi";
-            document.getElementById("deskripsi").innerHTML = $("#misi").text();
+            $("#judul").html("Misi");
+            $("#deskripsi").html($("#misi").text());
         }
         
         // Set tujuan in description box
         function tujuan(){
-            document.getElementById("judul").innerHTML = "Tujuan";
-            document.getElementById("deskripsi").innerHTML = $("#tujuan").text();
+            $("#judul").html("Tujuan");
+            $("#deskripsi").html($("#tujuan").text());
             $('#tabel').show();
             $('#dataTable').DataTable();
         }
         
         // Set sasaran in description box
         function sasaran(){
-            document.getElementById("judul").innerHTML = "Sasaran";
-            document.getElementById("deskripsi").innerHTML = $("#sasaran").text();
+            $("#judul").html("Sasaran");
+            $("#deskripsi").html($("#sasaran").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
         }
         
         // Set program in description box
         function program(){
-            document.getElementById("judul").innerHTML = "Program";
-            document.getElementById("deskripsi").innerHTML = $("#program").text();
+            $("#judul").html("Program");
+            $("#deskripsi").html($("#program").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
         }
         
         // Set kegiatan in description box
         function kegiatan(){
-            document.getElementById("judul").innerHTML = "Kegiatan";
-            document.getElementById("deskripsi").innerHTML = $("#kegiatan").text();
+            $("#judul").html("Kegiatan");
+            $("#deskripsi").html($("#kegiatan").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
         }
         
         // Set subkegiatan in description box
         function subkegiatan(){
-            document.getElementById("judul").innerHTML = "Sub Kegiatan";
-            document.getElementById("deskripsi").innerHTML = $("#subkegiatan").text();
+            $("#judul").html("Sub Kegiatan");
+            $("#deskripsi").html($("#subkegiatan").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
         }
     </script>
 @endsection
