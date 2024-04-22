@@ -86,6 +86,7 @@ class SasaranController extends Controller
         ]);
 
         Model_Sasaran::create([
+            "id_visi" => $request->tahun,
             "id_tujuan" => $request->id_tujuan,
             "sasaran" => $request->sasaran,
             "creator" => Auth::user()->id,

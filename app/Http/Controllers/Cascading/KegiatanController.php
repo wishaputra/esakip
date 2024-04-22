@@ -92,6 +92,7 @@ class KegiatanController extends Controller
         ]);
 
         Model_Kegiatan::create([
+            "id_visi" => $request->tahun,
             "id_program"    => $request->id_program,
             "kode_kegiatan"=> $request->kode_kegiatan,
             "kegiatan"=> $request->kegiatan,

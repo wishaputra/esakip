@@ -87,6 +87,7 @@ class ProgramController extends Controller
         ]);
 
         Model_Program::create([
+            "id_visi" => $request->tahun,
             "id_sasaran_renstra"    => $request->id_sasaran_renstra,
             "kode_program"=> $request->kode_program,
             "program"=> $request->program,

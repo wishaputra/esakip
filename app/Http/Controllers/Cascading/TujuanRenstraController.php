@@ -88,6 +88,7 @@ class TujuanRenstraController extends Controller
         ]);
 
         Model_Tujuan_Renstra::create([
+            "id_visi" => $request->tahun,
             "id_sasaran"    => $request->id_sasaran,
             "id_perangkat_daerah"        => $request->id_perangkat_daerah,
             "tujuan_renstra"=> $request->tujuan_renstra,

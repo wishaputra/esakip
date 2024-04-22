@@ -88,6 +88,7 @@ class SasaranRenstraController extends Controller
         ]);
 
         Model_Sasaran_Renstra::create([
+            "id_visi" => $request->tahun,
             "id_tujuan_renstra"    => $request->id_tujuan_renstra,
             "sasaran_renstra"=> $request->sasaran_renstra,
             "creator"       => Auth::user()->id,

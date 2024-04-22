@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Model_Sasaran extends Model
 {
     protected $table = "cascading_sasaran";
-    protected $fillable = ['id_tujuan', 'sasaran', 'creator', 'created_at', 'updated_at'];
+    protected $fillable = ['id_tujuan','id_visi', 'sasaran', 'creator', 'created_at', 'updated_at'];
 
     public function tujuan()
     {

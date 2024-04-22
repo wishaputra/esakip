@@ -93,6 +93,7 @@ class SubKegiatanController extends Controller
         ]);
 
         Model_SubKegiatan::create([
+            "id_visi" => $request->tahun,
             "id_kegiatan"    => $request->id_kegiatan,
             "kode_sub_kegiatan"=> $request->kode_sub_kegiatan,
             "sub_kegiatan"=> $request->sub_kegiatan,
