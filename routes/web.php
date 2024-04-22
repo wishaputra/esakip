@@ -89,6 +89,9 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 Route::get('/getMisiByTahun/{id}', [TujuanController::class, 'getMisiByTahun'])->name('getMisiByTahun');
 Route::get('/get-tujuan-by-tahun/{id}', [SasaranController::class, 'getTujuanByTahun'])->name('getTujuanByTahun');
 Route::get('/get-sasaran-by-tahun/{id}', [TujuanRenstraController::class,'getSasaranByTahun'])->name('getSasaranByTahun');
+Route::get('/getTujuanRenstraByTahun/{id}', [SasaranRenstraController::class,'getTujuanRenstraByTahun'])->name('getTujuanRenstraByTahun');
+Route::get('/get-sasaran-renstra-by-tahun/{id}', [ProgramController::class,'getSasaranRenstraByTahun'])->name('getSasaranRenstraByTahun');
+
 
 
 Route::get('/visi', function () {

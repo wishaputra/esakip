@@ -37,6 +37,16 @@ class SasaranRenstraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function getTujuanRenstraByTahun($id)
+     {
+         $tujuan_renstras = Model_Tujuan_Renstra::where('id_visi', $id)->pluck('tujuan_renstra', 'id')->toArray();
+         return response()->json($tujuan_renstras);
+     }
+     
+
+
+
     public function index(Request $request)
     {
         // $id_visi = $request->id_visi;
