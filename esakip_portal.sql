@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2024 at 04:07 AM
+-- Generation Time: Apr 22, 2024 at 05:06 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -78,12 +78,21 @@ CREATE TABLE `business_gallery` (
 CREATE TABLE `cascading_kegiatan` (
   `id` int(11) NOT NULL,
   `id_program` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `kode_kegiatan` varchar(255) NOT NULL,
   `kegiatan` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_kegiatan`
+--
+
+INSERT INTO `cascading_kegiatan` (`id`, `id_program`, `id_visi`, `kode_kegiatan`, `kegiatan`, `creator`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'LJ01', 'testing 3', '1', '2024-04-22 02:31:22', '2024-04-22 02:31:22'),
+(2, 2, 4, 'LO01', 'testing 4', '1', '2024-04-22 02:32:01', '2024-04-22 02:32:01');
 
 -- --------------------------------------------------------
 
@@ -138,8 +147,12 @@ CREATE TABLE `cascading_misi` (
 --
 
 INSERT INTO `cascading_misi` (`id`, `id_visi`, `misi`, `creator`, `created_at`, `updated_at`) VALUES
-(3, 2, 'testing10', '1', '2024-03-26 08:27:29', '2024-03-27 01:23:28'),
-(4, 2, 'testing 2', '1', '2024-03-26 08:36:41', '2024-03-26 08:36:41');
+(5, 1, 'PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL', '1', '2024-04-05 02:56:35', '2024-04-05 02:56:35'),
+(6, 1, 'PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI', '1', '2024-04-05 02:56:51', '2024-04-05 02:56:51'),
+(7, 1, 'MEMBANGUN KOTA YANG LESTARI', '1', '2024-04-05 02:57:04', '2024-04-05 02:57:04'),
+(8, 1, 'MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF', '1', '2024-04-05 02:57:17', '2024-04-05 02:57:17'),
+(9, 1, 'MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN', '1', '2024-04-05 02:57:27', '2024-04-05 02:57:27'),
+(11, 4, 'name', '1', '2024-04-18 01:02:16', '2024-04-18 01:02:16');
 
 -- --------------------------------------------------------
 
@@ -155,6 +168,13 @@ CREATE TABLE `cascading_perangkat_daerah` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `cascading_perangkat_daerah`
+--
+
+INSERT INTO `cascading_perangkat_daerah` (`id`, `perangkat_daerah`, `creator`, `created_at`, `updated_at`) VALUES
+(2, 'test', '1', '2024-04-17 07:47:12', '2024-04-17 07:47:12');
+
 -- --------------------------------------------------------
 
 --
@@ -164,12 +184,21 @@ CREATE TABLE `cascading_perangkat_daerah` (
 CREATE TABLE `cascading_program` (
   `id` int(11) NOT NULL,
   `id_sasaran_renstra` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `kode_program` varchar(255) NOT NULL,
   `program` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_program`
+--
+
+INSERT INTO `cascading_program` (`id`, `id_sasaran_renstra`, `id_visi`, `kode_program`, `program`, `creator`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'LG01', 'testing 1', '1', '2024-04-22 02:09:43', '2024-04-22 02:09:43'),
+(2, 2, 4, 'LB01', 'testing 2', '1', '2024-04-22 02:11:05', '2024-04-22 02:11:05');
 
 -- --------------------------------------------------------
 
@@ -213,11 +242,25 @@ CREATE TABLE `cascading_program_nilai` (
 CREATE TABLE `cascading_sasaran` (
   `id` int(11) NOT NULL,
   `id_tujuan` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `sasaran` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_sasaran`
+--
+
+INSERT INTO `cascading_sasaran` (`id`, `id_tujuan`, `id_visi`, `sasaran`, `creator`, `created_at`, `updated_at`, `parent_id`) VALUES
+(1, 1, 1, 'Meningkatnya kualitas layanan dan akses pendidikan', '1', '2024-04-05 03:01:01', '2024-04-05 03:01:01', 1),
+(2, 2, 1, 'Meningkatnya Derajat Kesehatan Masyarakat', '1', '2024-04-05 03:01:16', '2024-04-05 03:01:16', 2),
+(3, 3, 1, 'Meningkatnya Kesejahteraan Keluarga', '1', '2024-04-05 03:01:30', '2024-04-05 03:01:30', 3),
+(4, 4, 1, 'Meningkatkan Daya Saing Pemuda', '1', '2024-04-05 03:01:46', '2024-04-05 03:01:46', 4),
+(5, 5, 1, 'Meningkatkan Kualitas Pembangunan Berbasis Gender', '1', '2024-04-05 03:02:30', '2024-04-05 03:02:30', 5),
+(6, 7, 4, 'test 3', '1', '2024-04-19 02:36:50', '2024-04-19 02:36:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -261,11 +304,20 @@ CREATE TABLE `cascading_sasaran_nilai` (
 CREATE TABLE `cascading_sasaran_renstra` (
   `id` int(11) NOT NULL,
   `id_tujuan_renstra` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `sasaran_renstra` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_sasaran_renstra`
+--
+
+INSERT INTO `cascading_sasaran_renstra` (`id`, `id_tujuan_renstra`, `id_visi`, `sasaran_renstra`, `creator`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'halo 1', '1', '2024-04-22 01:12:03', '2024-04-22 01:12:03'),
+(2, 3, 4, 'halo 2', '1', '2024-04-22 01:12:16', '2024-04-22 01:12:16');
 
 -- --------------------------------------------------------
 
@@ -316,6 +368,14 @@ CREATE TABLE `cascading_sub_kegiatan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `cascading_sub_kegiatan`
+--
+
+INSERT INTO `cascading_sub_kegiatan` (`id`, `id_kegiatan`, `kode_sub_kegiatan`, `sub_kegiatan`, `creator`, `created_at`, `updated_at`) VALUES
+(1, 1, 'LG03', 'testing 5', '1', '2024-04-22 03:03:39', '2024-04-22 03:05:45'),
+(2, 2, 'LJ02', 'testing 6', '1', '2024-04-22 03:05:26', '2024-04-22 03:05:26');
+
 -- --------------------------------------------------------
 
 --
@@ -358,11 +418,25 @@ CREATE TABLE `cascading_sub_kegiatan_nilai` (
 CREATE TABLE `cascading_tujuan` (
   `id` int(11) NOT NULL,
   `id_misi` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `tujuan` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_tujuan`
+--
+
+INSERT INTO `cascading_tujuan` (`id`, `id_misi`, `id_visi`, `tujuan`, `creator`, `created_at`, `updated_at`, `parent_id`) VALUES
+(1, 5, 1, 'Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing', '1', '2024-04-05 02:58:04', '2024-04-05 02:58:04', 5),
+(2, 6, 1, 'Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi', '1', '2024-04-05 02:58:04', '2024-04-05 02:58:04', 6),
+(3, 7, 1, 'Meningkatkan Kualitas Kota Sebagai Kota Layak Huni', '1', '2024-04-05 02:58:52', '2024-04-05 02:58:52', 7),
+(4, 8, 1, 'Meningkatkan Perekonomian dan Daya Saing Ekonomi Daerah', '1', '2024-04-05 02:59:25', '2024-04-05 02:59:25', 8),
+(5, 9, 1, 'Mewujudkan Birokrasi Yang Efektif dan Efisien', '1', '2024-04-05 02:59:46', '2024-04-05 02:59:46', 9),
+(7, 11, 4, 'test 2', '1', '2024-04-18 07:32:28', '2024-04-18 07:32:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -407,11 +481,20 @@ CREATE TABLE `cascading_tujuan_renstra` (
   `id` int(11) NOT NULL,
   `id_sasaran` int(11) NOT NULL,
   `id_perangkat_daerah` int(11) NOT NULL,
+  `id_visi` int(11) NOT NULL,
   `tujuan_renstra` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `cascading_tujuan_renstra`
+--
+
+INSERT INTO `cascading_tujuan_renstra` (`id`, `id_sasaran`, `id_perangkat_daerah`, `id_visi`, `tujuan_renstra`, `creator`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 1, 'test', '1', '2024-04-17 07:47:30', '2024-04-17 07:47:30'),
+(3, 6, 2, 4, 'test 4', '1', '2024-04-19 07:30:49', '2024-04-19 07:30:49');
 
 -- --------------------------------------------------------
 
@@ -459,16 +542,17 @@ CREATE TABLE `cascading_visi` (
   `visi` varchar(255) NOT NULL,
   `creator` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `has_child` tinyint(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `cascading_visi`
 --
 
-INSERT INTO `cascading_visi` (`id`, `tahun_awal`, `tahun_akhir`, `visi`, `creator`, `created_at`, `updated_at`) VALUES
-(2, 2019, 2023, 'test', '1', '2024-03-26 06:34:41', '2024-03-26 06:34:41'),
-(3, 2019, 2023, 'TERWUJUDNYA KOTA TANGERANG YANG SEJAHTERA, BERAKHLAKUL KARIMAH DAN BERDAYA SAING', '1', '2024-03-26 07:49:16', '2024-03-27 01:19:41');
+INSERT INTO `cascading_visi` (`id`, `tahun_awal`, `tahun_akhir`, `visi`, `creator`, `created_at`, `updated_at`, `has_child`) VALUES
+(1, 2019, 2023, 'TERWUJUDNYA KOTA TANGERANG YANG SEJAHTERA, BERAKHLAKUL KARIMAH DAN BERDAYA SAING', '1', '2024-03-26 07:49:16', '2024-03-27 01:19:41', 3),
+(4, 2013, 2018, 'test 1', '1', '2024-04-17 07:48:09', '2024-04-17 07:48:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -569,7 +653,8 @@ INSERT INTO `charts` (`id`, `nodeDataArray`, `linkDataArray`, `created_at`, `upd
 (137, NULL, NULL, '2024-03-28 02:50:53', '2024-03-28 02:50:53', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"82\",\"name\":\"()\",\"title\":null,\"__gohashid\":840},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682}]}'),
 (138, NULL, NULL, '2024-03-28 02:52:29', '2024-03-28 02:52:29', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"82\",\"name\":\"()\",\"title\":null,\"__gohashid\":840},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682},{\"category\":\"Support\",\"text\":\"100%\",\"__gohashid\":23256,\"from\":\"19\",\"to\":\"18\"}]}'),
 (139, NULL, NULL, '2024-03-28 02:55:09', '2024-03-28 02:55:09', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665},{\"key\":\"20\",\"name\":\"()\",\"title\":\"Meningkatkan Perekonomian dan Daya Saing Ekonomi Daerah\",\"__gohashid\":1331},{\"key\":\"21\",\"name\":\"()\",\"title\":\"Meningkatnya Sektor Ekonomi Kreatif\",\"__gohashid\":3538},{\"key\":\"22\",\"name\":\"()\",\"title\":\"Meningkatnya Investasi\",\"__gohashid\":6106},{\"key\":\"23\",\"name\":\"()\",\"title\":\"Meningkatnya Produktifitas  Tenaga Kerja\",\"__gohashid\":8692},{\"key\":\"232\",\"name\":\"()\",\"title\":null,\"__gohashid\":9850},{\"key\":\"24\",\"name\":\"()\",\"title\":\"Mewujudkan Birokrasi Yang Efektif dan Efisien\",\"__gohashid\":10077},{\"key\":\"25\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Penyelenggaraan Pemerintah Daerah\",\"__gohashid\":11377}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682},{\"from\":\"6\",\"to\":\"20\",\"__gohashid\":1348},{\"from\":\"20\",\"to\":\"21\",\"__gohashid\":3555},{\"from\":\"21\",\"to\":\"22\",\"__gohashid\":6123},{\"from\":\"22\",\"to\":\"23\",\"__gohashid\":8709},{\"from\":\"7\",\"to\":\"24\",\"__gohashid\":10094},{\"from\":\"24\",\"to\":\"25\",\"__gohashid\":11394}]}'),
-(140, NULL, NULL, '2024-03-28 02:55:09', '2024-03-28 02:55:09', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665},{\"key\":\"20\",\"name\":\"()\",\"title\":\"Meningkatkan Perekonomian dan Daya Saing Ekonomi Daerah\",\"__gohashid\":1331},{\"key\":\"21\",\"name\":\"()\",\"title\":\"Meningkatnya Sektor Ekonomi Kreatif\",\"__gohashid\":3538},{\"key\":\"22\",\"name\":\"()\",\"title\":\"Meningkatnya Investasi\",\"__gohashid\":6106},{\"key\":\"23\",\"name\":\"()\",\"title\":\"Meningkatnya Produktifitas  Tenaga Kerja\",\"__gohashid\":8692},{\"key\":\"232\",\"name\":\"()\",\"title\":null,\"__gohashid\":9850},{\"key\":\"24\",\"name\":\"()\",\"title\":\"Mewujudkan Birokrasi Yang Efektif dan Efisien\",\"__gohashid\":10077},{\"key\":\"25\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Penyelenggaraan Pemerintah Daerah\",\"__gohashid\":11377}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682},{\"from\":\"6\",\"to\":\"20\",\"__gohashid\":1348},{\"from\":\"20\",\"to\":\"21\",\"__gohashid\":3555},{\"from\":\"21\",\"to\":\"22\",\"__gohashid\":6123},{\"from\":\"22\",\"to\":\"23\",\"__gohashid\":8709},{\"from\":\"7\",\"to\":\"24\",\"__gohashid\":10094},{\"from\":\"24\",\"to\":\"25\",\"__gohashid\":11394}]}');
+(140, NULL, NULL, '2024-03-28 02:55:09', '2024-03-28 02:55:09', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665},{\"key\":\"20\",\"name\":\"()\",\"title\":\"Meningkatkan Perekonomian dan Daya Saing Ekonomi Daerah\",\"__gohashid\":1331},{\"key\":\"21\",\"name\":\"()\",\"title\":\"Meningkatnya Sektor Ekonomi Kreatif\",\"__gohashid\":3538},{\"key\":\"22\",\"name\":\"()\",\"title\":\"Meningkatnya Investasi\",\"__gohashid\":6106},{\"key\":\"23\",\"name\":\"()\",\"title\":\"Meningkatnya Produktifitas  Tenaga Kerja\",\"__gohashid\":8692},{\"key\":\"232\",\"name\":\"()\",\"title\":null,\"__gohashid\":9850},{\"key\":\"24\",\"name\":\"()\",\"title\":\"Mewujudkan Birokrasi Yang Efektif dan Efisien\",\"__gohashid\":10077},{\"key\":\"25\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Penyelenggaraan Pemerintah Daerah\",\"__gohashid\":11377}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682},{\"from\":\"6\",\"to\":\"20\",\"__gohashid\":1348},{\"from\":\"20\",\"to\":\"21\",\"__gohashid\":3555},{\"from\":\"21\",\"to\":\"22\",\"__gohashid\":6123},{\"from\":\"22\",\"to\":\"23\",\"__gohashid\":8709},{\"from\":\"7\",\"to\":\"24\",\"__gohashid\":10094},{\"from\":\"24\",\"to\":\"25\",\"__gohashid\":11394}]}'),
+(141, NULL, NULL, '2024-04-05 03:09:52', '2024-04-05 03:09:52', '{\"nodeDataArray\":[{\"key\":\"1\",\"name\":null,\"title\":\"TERWUJUDNYA TANGSEL UNGGUL, MENUJU KOTA LESTARI, SALING TERKONEKSI, EFEKTIF DAN EFISIEN\",\"__gohashid\":1124},{\"key\":\"3\",\"name\":\"()\",\"title\":\"PEMBANGUNAN SUMBER DAYA MANUSIA (SDM) YANG UNGGUL\",\"__gohashid\":601},{\"key\":\"4\",\"name\":\"()\",\"title\":\"PEMBANGUNAN INFRASTRUKTUR YANG SALING TERKONEKSI\",\"__gohashid\":746},{\"key\":\"5\",\"name\":\"()\",\"title\":\"MEMBANGUN KOTA YANG LESTARI\",\"__gohashid\":2545},{\"key\":\"6\",\"name\":\"()\",\"title\":\"MENINGKATKAN EKONOMI BERBASIS NILAI TAMBAH TINGGI DI SEKTOR EKONOMI KREATIF\",\"__gohashid\":4149},{\"key\":\"7\",\"name\":\"()\",\"title\":\"MEMBANGUN BIROKRASI YANG EFEKTIF DAN EFISIEN\",\"__gohashid\":6721},{\"key\":\"8\",\"name\":\"()\",\"title\":\"Meningkatkan Sumber Daya Manusia yang berkualitas dan berdaya saing\",\"__gohashid\":2862},{\"key\":\"9\",\"name\":\"()\",\"title\":\"Meningkatnya kualitas layanan dan akses pendidikan\",\"__gohashid\":961},{\"key\":\"10\",\"name\":\"()\",\"title\":\"Meningkatnya Derajat Kesehatan Masyarakat\",\"__gohashid\":3529},{\"key\":\"11\",\"name\":\"()\",\"title\":\"Meningkatnya Kesejahteraan Keluarga\",\"__gohashid\":4058},{\"key\":\"12\",\"name\":\"()\",\"title\":\"Meningkatkan Daya Saing Pemuda\",\"__gohashid\":4589},{\"key\":\"13\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Pembangunan Berbasis Gender\",\"__gohashid\":5126},{\"key\":\"14\",\"name\":\"()\",\"title\":\"Meningkatkan Konektivitas dan Aksesibilitas Infrastruktur Transportasi\",\"__gohashid\":10583},{\"key\":\"15\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Transportasi dan Jaringan Jalan Perkotaan\",\"__gohashid\":12620},{\"key\":\"16\",\"name\":\"()\",\"title\":\"Meningkatkan Kualitas Kota Sebagai Kota Layak Huni\",\"__gohashid\":15148,\"comments\":null},{\"key\":\"17\",\"name\":\"()\",\"title\":\"Meningkatnya Kualitas Lingkungan Perkotaan\",\"__gohashid\":17142},{\"key\":\"18\",\"name\":\"()\",\"title\":\"Meningkatnya Ketentraman dan Ketertiban Umum, Pendidikan Politik, Serta Wawasan Kebangsaan\",\"__gohashid\":19692},{\"key\":\"19\",\"name\":\"()\",\"title\":\"Meningkatnya Pencegahan dan Penanganan Bencana Alam dan Non Alam\",\"__gohashid\":20665},{\"key\":\"20\",\"name\":\"()\",\"title\":\"Meningkatkan Perekonomian dan Daya Saing Ekonomi Daerah\",\"__gohashid\":1331},{\"key\":\"21\",\"name\":\"()\",\"title\":\"Meningkatnya Sektor Ekonomi Kreatif\",\"__gohashid\":3538},{\"key\":\"22\",\"name\":\"()\",\"title\":\"Meningkatnya Investasi\",\"__gohashid\":6106},{\"key\":\"23\",\"name\":\"()\",\"title\":\"Meningkatnya Produktifitas  Tenaga Kerja\",\"__gohashid\":8692},{\"key\":\"24\",\"name\":\"()\",\"title\":\"Mewujudkan Birokrasi Yang Efektif dan Efisien\",\"__gohashid\":10077},{\"key\":\"25\",\"name\":\"()\",\"title\":\"Meningkatnya Kinerja Penyelenggaraan Pemerintah Daerah\",\"__gohashid\":11377}],\"linkDataArray\":[{\"from\":\"1\",\"to\":\"3\",\"__gohashid\":618},{\"from\":\"1\",\"to\":\"4\",\"__gohashid\":763},{\"from\":\"1\",\"to\":\"5\",\"__gohashid\":2562},{\"from\":\"1\",\"to\":\"6\",\"__gohashid\":6387},{\"from\":\"1\",\"to\":\"7\",\"__gohashid\":6738},{\"from\":\"3\",\"to\":\"8\",\"__gohashid\":2879},{\"from\":\"8\",\"to\":\"9\",\"__gohashid\":978},{\"from\":\"8\",\"to\":\"10\",\"__gohashid\":3546},{\"from\":\"8\",\"to\":\"11\",\"__gohashid\":4075},{\"from\":\"8\",\"to\":\"12\",\"__gohashid\":4606},{\"from\":\"8\",\"to\":\"13\",\"__gohashid\":5143},{\"from\":\"4\",\"to\":\"14\",\"__gohashid\":10600},{\"from\":\"14\",\"to\":\"15\",\"__gohashid\":12637},{\"from\":\"5\",\"to\":\"16\",\"__gohashid\":15165},{\"from\":\"16\",\"to\":\"17\",\"__gohashid\":17159},{\"from\":\"17\",\"to\":\"18\",\"__gohashid\":19709},{\"from\":\"18\",\"to\":\"19\",\"__gohashid\":20682},{\"from\":\"6\",\"to\":\"20\",\"__gohashid\":1348},{\"from\":\"20\",\"to\":\"21\",\"__gohashid\":3555},{\"from\":\"21\",\"to\":\"22\",\"__gohashid\":6123},{\"from\":\"22\",\"to\":\"23\",\"__gohashid\":8709},{\"from\":\"7\",\"to\":\"24\",\"__gohashid\":10094},{\"from\":\"24\",\"to\":\"25\",\"__gohashid\":11394}]}');
 
 -- --------------------------------------------------------
 
@@ -2348,7 +2433,7 @@ ALTER TABLE `business_gallery`
 -- AUTO_INCREMENT for table `cascading_kegiatan`
 --
 ALTER TABLE `cascading_kegiatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cascading_kegiatan_indikator`
@@ -2366,19 +2451,19 @@ ALTER TABLE `cascading_kegiatan_nilai`
 -- AUTO_INCREMENT for table `cascading_misi`
 --
 ALTER TABLE `cascading_misi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cascading_perangkat_daerah`
 --
 ALTER TABLE `cascading_perangkat_daerah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cascading_program`
 --
 ALTER TABLE `cascading_program`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cascading_program_indikator`
@@ -2396,7 +2481,7 @@ ALTER TABLE `cascading_program_nilai`
 -- AUTO_INCREMENT for table `cascading_sasaran`
 --
 ALTER TABLE `cascading_sasaran`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cascading_sasaran_indikator`
@@ -2414,7 +2499,7 @@ ALTER TABLE `cascading_sasaran_nilai`
 -- AUTO_INCREMENT for table `cascading_sasaran_renstra`
 --
 ALTER TABLE `cascading_sasaran_renstra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cascading_sasaran_renstra_indikator`
@@ -2432,7 +2517,7 @@ ALTER TABLE `cascading_sasaran_renstra_nilai`
 -- AUTO_INCREMENT for table `cascading_sub_kegiatan`
 --
 ALTER TABLE `cascading_sub_kegiatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cascading_sub_kegiatan_indikator`
@@ -2450,7 +2535,7 @@ ALTER TABLE `cascading_sub_kegiatan_nilai`
 -- AUTO_INCREMENT for table `cascading_tujuan`
 --
 ALTER TABLE `cascading_tujuan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `cascading_tujuan_indikator`
@@ -2468,7 +2553,7 @@ ALTER TABLE `cascading_tujuan_nilai`
 -- AUTO_INCREMENT for table `cascading_tujuan_renstra`
 --
 ALTER TABLE `cascading_tujuan_renstra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cascading_tujuan_renstra_indikator`
@@ -2486,7 +2571,7 @@ ALTER TABLE `cascading_tujuan_renstra_nilai`
 -- AUTO_INCREMENT for table `cascading_visi`
 --
 ALTER TABLE `cascading_visi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -2504,7 +2589,7 @@ ALTER TABLE `category_business`
 -- AUTO_INCREMENT for table `charts`
 --
 ALTER TABLE `charts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `contact`

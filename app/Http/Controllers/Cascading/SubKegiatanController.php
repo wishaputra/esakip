@@ -59,6 +59,19 @@ class SubKegiatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function getKegiatanByTahun($id)
+     {
+         $kegiatan = Model_Kegiatan::where('id_visi', $id)->pluck('kegiatan', 'id')->toArray();
+         return response()->json($kegiatan);
+     }
+     
+     //  public function getSasaranRenstraByTahun($id)
+    //  {
+    //      $sasaranRenstra = Model_Sasaran_Renstra::where('id_visi', $id)->pluck('sasaran_renstra', 'id')->toArray();
+    //      return response()->json($sasaranRenstra);
+    //  }
+
     public function create()
     {
         //

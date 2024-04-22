@@ -37,6 +37,19 @@ class KegiatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function getProgramByTahun($id)
+     {
+         $programs = Model_Program::where('id_visi', $id)->pluck('program', 'id')->toArray();
+         return response()->json($programs);
+     }
+
+    //  public function getSasaranRenstraByTahun($id)
+    //  {
+    //      $sasaranRenstra = Model_Sasaran_Renstra::where('id_visi', $id)->pluck('sasaran_renstra', 'id')->toArray();
+    //      return response()->json($sasaranRenstra);
+    //  }
+
     public function index(Request $request)
     {
         // $id_visi = $request->id_visi;

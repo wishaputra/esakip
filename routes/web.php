@@ -91,6 +91,9 @@ Route::get('/get-tujuan-by-tahun/{id}', [SasaranController::class, 'getTujuanByT
 Route::get('/get-sasaran-by-tahun/{id}', [TujuanRenstraController::class,'getSasaranByTahun'])->name('getSasaranByTahun');
 Route::get('/getTujuanRenstraByTahun/{id}', [SasaranRenstraController::class,'getTujuanRenstraByTahun'])->name('getTujuanRenstraByTahun');
 Route::get('/get-sasaran-renstra-by-tahun/{id}', [ProgramController::class,'getSasaranRenstraByTahun'])->name('getSasaranRenstraByTahun');
+Route::get('/get-program-by-tahun/{id}', [KegiatanController::class,'getProgramByTahun'])->name('getProgramByTahun');
+Route::get('/get-kegiatan-by-tahun/{id}', [SubKegiatanController::class,'getKegiatanByTahun'])->name('getKegiatanByTahun');
+
 
 
 

@@ -159,6 +159,37 @@
 @push('script')
 
 <script>
+    $(document).ready(function() {
+        $('#tahun').on('change', function() {
+            var tahunId = $(this).val();
+            if (tahunId) {
+                $.ajax({
+                    url: '{{ route("getKegiatanByTahun", ":id") }}'.replace(':id', tahunId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data); // Log data to console for debugging
+                        $('#id_kegiatan').empty();
+                        $('#id_kegiatan').append('<option value="">Pilih</option>');
+                        $.each(data, function(key, value) {
+                            console.log(key, value); // Log key and value for each item
+                            $('#id_kegiatan').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText); // Log error message to console
+                    }
+                });
+            } else {
+                $('#id_kegiatan').empty();
+                $('#id_kegiatan').append('<option value="">Pilih</option>');
+            }
+        });
+    });
+
+
+
+
     function add(){
         $('#alert').html('');
         save_method = "add";
