@@ -2,6 +2,8 @@
 @push('styles')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.4/css/dataTables.dataTables.css" />
+  
     <style>
         /* h5, h6 {
             text-align: center;
@@ -37,7 +39,7 @@
         .active {
             display: block;
         }
-        #myDiagramDiv {
+        #diagramBox {
             width: 30%; /* Adjust width as needed */
             height: 500px;
             border: 0.5px solid black;
@@ -81,9 +83,9 @@
         </div>
     </div>
 
-    <form action="" class="form-inline mt-2">
+    <form action="" class="form-inline mt-4 justify-content-center">
         <div class="form-group mb-3">
-            <h5 class="ml-3"><label for="periode">Pilih Periode Tahun</label></h5>
+            <h5 class="ml-3">Pilih Periode Tahun</h5>
             <select name="periode" id="periode" class="form-control ml-3">
                 <option value="">Pilih</option>
                 @foreach ($visi as $item)
@@ -93,19 +95,19 @@
         </div>
     </form>
     
-    <!-- Diagram container -->
-    <div id="myDiagramDiv">
+    <!-- Diagram box -->
+    <div id="diagramBox">
         <h5 class="ml-3 mt-2">Pohon Kinerja</h5><hr>
         <ul id="myUL">
-            <li class="ml-3"><span class="caret" id="visi" onclick="visi()">VISI: {{ $visi }}</span>
+            <li class="ml-3"><span class="caret" id="visi" onclick="visi()">VISI: </span>
                 <ul class="nested">
                     <li>MISI: 1</li>
                     <li>Misi: 2</li>
-                    <li><span class="caret">Misi: 3</span>
+                    <li><span class="caret" id="misi" onclick="misi()">Misi: 3</span>
                         <ul class="nested">
                             <li>TUJUAN RPD: 1</li>
                             <li>Tujuan: 2</li>
-                            <li><span class="caret">Tujuan: 3</span>
+                            <li><span class="caret" id="tujuan" onclick="tujuan()">Tujuan: 3</span>
                                 <ul class="nested">
                                     <li>SASARAN RPD: 1</li>
                                     <li>Sasaran: 2</li>
@@ -133,11 +135,27 @@
         <p class="ml-3 mt-2" id="deskripsi">Info detail</p>
         
         {{-- Tabel --}}
-        
+        <div id="tabel" class="table-responsive mx-3" style="display: none">
+            <table class="table table-bordered" id="dataTable">
+                <thead class="card-header">
+                    <tr>
+                        <th width="250px">Indikator</th>
+                        <th width="90px">Satuan</th>
+                        <th width="90px">Tahun 1</th>
+                        <th width="90px">Tahun 2</th>
+                        <th width="90px">Tahun 3</th>
+                        <th width="90px">Tahun 4</th>
+                        <th width="90px">Tahun 5</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/2.0.4/js/dataTables.js"></script>
     <script>
+        // START tree view in diagram box
         var toggler = document.getElementsByClassName("caret");
         var i;
         
@@ -147,19 +165,63 @@
             this.classList.toggle("caret-down");
           });
         }
+        // END tree view in diagram box
 
-        // Set periode text label
+        // Set periode on change
         $('#periode').change(function(){
-            document.getElementById("textPeriode").innerHTML = "Periode " + $('#periode').find(":selected").text();;
-            console.log("Ubah");
+            $("#textPeriode").html("Periode " + $('#periode').find(":selected").text());
+            $("#visi").html("ID VISI: " + $('#periode').find(":selected").val());
         });
 
+        // Set visi in description box
         function visi(){
-            document.getElementById("deskripsi").innerHTML = document.getElementById("visi").value;
+            $("#deskripsi").html($("#visi").text());
         }
         
+        // Set misi in description box
         function misi(){
-            document.getElementById("deskripsi").innerHTML = document.getElementById("misi").value;
+            $("#judul").html("Misi");
+            $("#deskripsi").html($("#misi").text());
+        }
+        
+        // Set tujuan in description box
+        function tujuan(){
+            $("#judul").html("Tujuan");
+            $("#deskripsi").html($("#tujuan").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
+        }
+        
+        // Set sasaran in description box
+        function sasaran(){
+            $("#judul").html("Sasaran");
+            $("#deskripsi").html($("#sasaran").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
+        }
+        
+        // Set program in description box
+        function program(){
+            $("#judul").html("Program");
+            $("#deskripsi").html($("#program").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
+        }
+        
+        // Set kegiatan in description box
+        function kegiatan(){
+            $("#judul").html("Kegiatan");
+            $("#deskripsi").html($("#kegiatan").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
+        }
+        
+        // Set subkegiatan in description box
+        function subkegiatan(){
+            $("#judul").html("Sub Kegiatan");
+            $("#deskripsi").html($("#subkegiatan").text());
+            $('#tabel').show();
+            $('#dataTable').DataTable();
         }
     </script>
 @endsection

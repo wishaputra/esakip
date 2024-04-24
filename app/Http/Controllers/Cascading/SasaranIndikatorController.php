@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_Tujuan_Indikator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -39,19 +40,23 @@ class SasaranIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan.index');
+        // $id_sasaran = $request->id_sasaran;
+        // if (!$id_sasaran || !Model_sasaran_Indikator::whereid($id_sasaran)->first()) {
+        //     return redirect()->route('setup.sasaran_indikator.index');
         // }
 
-        // $visi = Model_Tujuan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $tujuan = Model_Tujuan::all();
+        // $tujuan = Model_Tujuan::find($id_tujuan);
+        // $title = "Tujuan " . $tujuan->tujuan;
+        $indikator  = Model_Sasaran_Indikator::all();
+        $sasaran = Model_Sasaran::all();
+        $id_sasaran = Model_Sasaran_Indikator::all();
 
-        return view('cascading.sasaran_indikator.index', compact('tahun','tujuan'));
+        return view('cascading.sasaran_indikator.index', compact('indikator','sasaran', 'id_sasaran'));
     }
 
+
+
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -72,12 +77,12 @@ class SasaranIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_tujuan" => 'required',
+            
             "sasaran" => 'required',
         ]);
 
         Model_Sasaran::create([
-            "id_tujuan" => $request->id_tujuan,
+           
             "sasaran" => $request->sasaran,
             "creator" => Auth::user()->id,
         ]);

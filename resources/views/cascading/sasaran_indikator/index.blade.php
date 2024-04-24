@@ -92,30 +92,18 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="tahun" class="col-form-label">Periode Tahun</label>
-                                <select name="tahun" id="tahun" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($tahun as $item)
-                                        <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="id_tujuan" class="col-form-label">Tujuan</label>
-                                <select name="id_tujuan" id="id_tujuan" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($tujuan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->tujuan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                    <div class="col-md-12">
+                    <div class="col-md-12">
+    <div class="form-group col-md-12">
+        <label for="sasaran" class="col-form-label">sasaran</label>
+        @foreach ($sasaran->unique('id') as $item)
+            <textarea name="sasaran" id="sasaran" class="form-control" readonly>{{ $item->sasaran }}</textarea>
+            @break
+        @endforeach
+    </div>
+</div>
+
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="sasaran" class="col-form-label">Sasaran</label>
@@ -169,10 +157,9 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.sasaran.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.sasaran_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
-            $('#id_tujuan').val(data.id_tujuan);
             $('#sasaran').val(data.sasaran).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
@@ -189,7 +176,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.sasaran.store') }}" : "{{ route('setup.sasaran.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.sasaran_indikator.store') }}" : "{{ route('setup.sasaran_indikator.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -228,7 +215,7 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.sasaran.api') }}",
+            url: "{{ route('setup.sasaran_indikator.api') }}",
             method: 'POST'
         },
         columns: [
@@ -270,7 +257,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.sasaran.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.sasaran_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

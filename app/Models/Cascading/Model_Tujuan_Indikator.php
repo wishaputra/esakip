@@ -11,7 +11,7 @@ class Model_Tujuan_Indikator extends Model
 
     public function tujuan()
     {
-        return $this->belongsTo(Model_Tujuan::class, 'id');
+        return $this->belongsTo(Model_Tujuan::class, 'id_tujuan');
     }
 
     public function tujuan_nilai()

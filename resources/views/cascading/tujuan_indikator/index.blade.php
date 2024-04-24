@@ -92,34 +92,26 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="tahun" class="col-form-label">Periode Tahun</label>
-                                <select name="tahun" id="tahun" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($tahun as $item)
-                                        <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="id_misi" class="col-form-label">Misi</label>
-                                <select name="id_misi" id="id_misi" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($misi as $item)
-                                        <option value="{{ $item->id }}">{{ $item->misi }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        <div class="col-md-12">
+                        <div class="col-md-12">
+    <div class="form-group col-md-12">
+        <label for="id_tujuan" class="col-form-label">Tujuan</label>
+        <input type="text" id="id_tujuan" class="form-control" value="{{ $tujuan->first()->tujuan }}" readonly>
+    </div>
+</div>
+
+
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="tujuan" class="col-form-label">Tujuan</label>
-                                <textarea name="tujuan" id="tujuan" class="form-control" rows="3"></textarea>
+                                <label for="indikator" class="col-form-label">Indikator</label>
+                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -169,7 +161,7 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.tujuan_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
             $('#id_misi').val(data.id_misi);
@@ -189,7 +181,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan.store') }}" : "{{ route('setup.tujuan.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.tujuan_indikator.store') }}" : "{{ route('setup.tujuan_indikator.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -228,7 +220,7 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.tujuan.api') }}",
+            url: "{{ route('setup.tujuan_indikator.api') }}",
             method: 'POST'
         },
         columns: [
@@ -270,7 +262,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.tujuan_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

@@ -47,9 +47,8 @@ class TujuanIndikatorController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $misi   = Model_Misi::all();
-
-        // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_indikator.index', compact('tahun','misi'));
+        $tujuan = Model_Tujuan::all();    // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
+        return view('cascading.tujuan_indikator.index', compact('tujuan','misi'));
     }
 
     /**
