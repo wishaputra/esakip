@@ -229,7 +229,7 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.tujuan_nilai.api') }}",
+            url: "{{ route('setup.tujuan_indikator.api') }}",
             method: 'POST'
         },
         columns: [

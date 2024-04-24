@@ -46,12 +46,10 @@ class TujuanRenstraIndikatorController extends Controller
 
         // $visi = Model_Tujuan_Renstra::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $sasaran   = Model_Sasaran::all();
-        $opd    = Model_Perangkat_Daerah::all();
+        $tujuan_renstra   = Model_Tujuan_Renstra::all();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_renstra.index', compact('tahun','sasaran','opd'));
+        return view('cascading.tujuan_renstra_indikator.index', compact('tujuan_renstra'));
     }
 
     /**
@@ -71,22 +69,20 @@ class TujuanRenstraIndikatorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // dd($request->file('file_kmz')->getMimeType());
-        $request->validate([
-            "id_sasaran" => 'required',
-            "id_perangkat_daerah" => 'required',
-            "tujuan_renstra" => 'required',
-        ]);
+{
+    $request->validate([
+       
+        "indikator" => 'required',
+    ]);
 
-        Model_Tujuan_Renstra::create([
-            "id_sasaran"    => $request->id_sasaran,
-            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
-            "tujuan_renstra"=> $request->tujuan_renstra,
-            "creator"       => Auth::user()->id,
-        ]);
-        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
-    }
+    Model_Tujuan_Renstra_Indikator::create([
+        "id_tujuan_renstra" => $request->id_tujuan_renstra,
+        "indikator" => $request->indikator,
+        "creator" => Auth::user()->id,
+    ]);
+
+    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+}
 
     /**
      * Display the specified resource.
