@@ -127,7 +127,7 @@ class SasaranRenstraIndikatorController extends Controller
         $request->validate($rule);
 
         $misi->update([
-            "id_sasaran_renstra" => $request->id_sasaran_rensta,
+            "id_sasaran_renstra_indikator" => $request->id_sasaran_rensta_indikator,
             "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
