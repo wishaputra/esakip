@@ -63,7 +63,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                    @foreach ($sasaran_renstra as $sasaran)
+                                    <tr data-id="{{ $sasaran->id }}" onclick="selectSasaran({{ $sasaran->id }})">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $sasaran->data }}</td>
+                                        <td>{{ $sasaran->count }}</td>
+                                    </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>

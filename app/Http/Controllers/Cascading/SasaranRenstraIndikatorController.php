@@ -22,7 +22,7 @@ class SasaranRenstraIndikatorController extends Controller
         $sasaran_renstra_indikator   = Model_Sasaran_Renstra_Indikator::all();
         return DataTables::of($sasaran_renstra_indikator)
             ->addColumn('sasaran_renstra_nilai_count', function ($p) {
-                $count = $p->sasaran_nilai->count();
+                $count = $p->sasaran_renstra_nilai->count();
                 return "<a  href='".route('setup.sasaran_renstra_nilai.index')."?sasaran_renstra_nilai_id=".$p->id."'  title='Nilai Sasaran Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
@@ -121,13 +121,14 @@ class SasaranRenstraIndikatorController extends Controller
     {
         $misi  = Model_Sasaran_Renstra_Indikator::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "sasaran" => $request->sasaran,
+            "id_sasaran_renstra" => $request->id_sasaran_rensta,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);

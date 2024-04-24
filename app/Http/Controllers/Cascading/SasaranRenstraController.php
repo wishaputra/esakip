@@ -58,9 +58,10 @@ class SasaranRenstraController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $tujuan_renstra   = Model_Tujuan_Renstra::all();
+        $sasaran_renstra   = Model_Sasaran_Renstra::all();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.sasaran_renstra.index', compact('tahun','tujuan_renstra'));
+        return view('cascading.sasaran_renstra.index', compact('tahun','tujuan_renstra', 'sasaran_renstra'));
     }
 
     /**
