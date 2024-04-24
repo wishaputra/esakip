@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Indikator Tujuan</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Indikator nilai</a>
                     </li>
 
 
@@ -57,8 +57,7 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Indikator Tujuan</td>
-                                            <td>Jumlah Nilai Tujuan</td>
+                                            <td>Nilai Tujuan</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -101,16 +100,12 @@
                         <div class="col-md-12">
                         <div class="col-md-12">
                         <div class="col-md-12">
-    <!-- <div class="form-group col-md-12">
-        <label for="id_tujuan" class="col-form-label">Tujuan</label>
-        <input type="text" id="id_tujuan" class="form-control" value="{{ $tujuan->first()->tujuan }}" readonly>
-    </div>
-</div> -->
+   
 
 <div class="form-group col-md-12">
-    <label for="indikator" class="col-form-label">Indikator</label>
-    @foreach ($tujuan->unique('id') as $item)
-        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->tujuan }}</textarea>
+    <label for="sasaran" class="col-form-label">tujuan</label>
+    @foreach ($indikator->unique('id') as $item)
+        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
         <input type="hidden" name="id_indikator" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
         @break
     @endforeach
@@ -119,8 +114,8 @@
 
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">Indikator</label>
-                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
+                                <label for="nilai" class="col-form-label">Nilai</label>
+                                <textarea name="nilai" id="nilai" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -170,11 +165,11 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan_indikator.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.tujuan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            // $('#tahun').val(data.tahun_awal);
-            $('#id_indikator').val(data.id_indikator);
-            $('#nilai').val(data.nilai).focus();
+            $('#tahun').val(data.tahun_awal);
+            $('#id_misi').val(data.id_misi);
+            $('#tujuan').val(data.tujuan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -234,8 +229,7 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'indikator', name: 'indikator'},
-            {data: 'tujuan_nilai_count', name: 'tujuan_nilai_count'},
+            {data: 'nilai', name: 'nilai'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -271,7 +265,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.tujuan_nilai.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

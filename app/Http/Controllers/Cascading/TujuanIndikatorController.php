@@ -51,6 +51,9 @@ class TujuanIndikatorController extends Controller
         return view('cascading.tujuan_indikator.index', compact('tujuan','misi'));
     }
 
+
+    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -71,13 +74,13 @@ class TujuanIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
+            "id_tujuan" => 'required',
             "tujuan" => 'required',
         ]);
 
-        Model_Tujuan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_Tujuan_Indikator::create([
+            "id_tujuan" => $request->id_tujuan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);

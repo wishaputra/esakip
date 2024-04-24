@@ -74,20 +74,20 @@ class SasaranIndikatorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // dd($request->file('file_kmz')->getMimeType());
-        $request->validate([
-            
-            "sasaran" => 'required',
-        ]);
+{
+    $request->validate([
+        "id_sasaran" => 'required',
+        "indikator" => 'required',
+    ]);
 
-        Model_Sasaran::create([
-           
-            "sasaran" => $request->sasaran,
-            "creator" => Auth::user()->id,
-        ]);
-        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
-    }
+    Model_Sasaran_Indikator::create([
+        "id_sasaran" => $request->id_sasaran,
+        "indikator" => $request->indikator,
+        "creator" => Auth::user()->id,
+    ]);
+
+    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+}
 
     /**
      * Display the specified resource.
@@ -108,7 +108,7 @@ class SasaranIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Sasaran::find($id);
+        return Model_Sasaran_Indikator::find($id);
     }
 
     /**
@@ -120,15 +120,15 @@ class SasaranIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran::find($id);
+        $misi  = Model_Sasaran_indikator::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "sasaran" => $request->sasaran,
+            "indikator" => $request->sasaran,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -142,10 +142,10 @@ class SasaranIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Sasaran::find($id);
+    $sasaran  = Model_Sasaran_Indikator::find($id);
 
-    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
-        $count = $misi->tujuan->count();
+    if ($sasaran && $sasaran->indikator && is_iterable($sasaran->indikator)) {
+        $count = $sasaran->indikator->count();
     } else {
         $count = 0;
     }
@@ -154,7 +154,7 @@ class SasaranIndikatorController extends Controller
         return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
     }
 
-    $misi->delete();
+    $sasaran->delete();
     return response()->json(["message" => "Berhasil menghapus data!"], 200);
 }
 }

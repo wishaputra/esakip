@@ -8,6 +8,7 @@ use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Tujuan_Indikator;
+use App\Models\Cascading\Model_Tujuan_Nilai;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +18,8 @@ class TujuanNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $tujuan_indikator   = Model_Tujuan_Indikator::all();
-        return DataTables::of($tujuan_indikator)
+        $tujuan_nilai   = Model_Tujuan_Nilai::all();
+        return DataTables::of($tujuan_nilai)
             ->addColumn('tujuan_nilai_count', function ($p) {
                 $count = $p->tujuan_nilai->count();
                 return "<a  href='".route('setup.tujuan_nilai.index')."?tujuan_nilai_id=".$p->id."'  title='Nilai Tujuan'>".$count."</a>";
@@ -47,10 +48,12 @@ class TujuanNilaiController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $misi   = Model_Misi::all();
-
-        // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_indikator.index', compact('tahun','misi'));
+        $indikator = Model_Tujuan_Indikator::all();    // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
+        return view('cascading.tujuan_nilai.index', compact('indikator','misi'));
     }
+
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -69,20 +72,20 @@ class TujuanNilaiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // dd($request->file('file_kmz')->getMimeType());
-        $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
-        ]);
+{
+    $request->validate([
+        "id_indikator_tujuan" => 'required',
+        "nilai" => 'required',
+    ]);
 
-        Model_Tujuan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
-            "creator" => Auth::user()->id,
-        ]);
-        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
-    }
+    Model_Tujuan_Nilai::create([
+        "id_indikator_tujuan" => $request->id_indikator_tujuan,
+        "nilai" => $request->nilai,
+        "creator" => Auth::user()->id,
+    ]);
+
+    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+}
 
     /**
      * Display the specified resource.

@@ -95,19 +95,19 @@
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="col-md-12">
-    <div class="form-group col-md-12">
-        <label for="sasaran" class="col-form-label">sasaran</label>
-        @foreach ($sasaran->unique('id') as $item)
-            <textarea name="sasaran" id="sasaran" class="form-control" readonly>{{ $item->sasaran }}</textarea>
-            @break
-        @endforeach
-    </div>
+                    <div class="form-group col-md-12">
+    <label for="sasaran" class="col-form-label">sasaran</label>
+    @foreach ($sasaran->unique('id') as $item)
+        <textarea name="sasaran" id="sasaran" class="form-control" readonly>{{ $item->sasaran }}</textarea>
+        <input type="hidden" name="id_sasaran" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+        @break
+    @endforeach
 </div>
 
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="sasaran" class="col-form-label">Sasaran</label>
-                                <textarea name="sasaran" id="sasaran" class="form-control" rows="3"></textarea>
+                                <label for="indikator" class="col-form-label">Indikator</label>
+                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -140,15 +140,16 @@
 @push('script')
 
 <script>
-    function add(){
-        $('#alert').html('');
-        save_method = "add";
-        $('#form').trigger('reset');
-        $('.modal-title').html('Tambah Data')
-        $('input[name=_method]').val('POST');
-        $('#form-modal').modal('show');
-        $('#nama').focus();
-    }
+    function add(id_sasaran){
+    $('#alert').html('');
+    save_method = "add";
+    $('#form').trigger('reset');
+    $('.modal-title').html('Tambah Data')
+    $('input[name=_method]').val('POST');
+    $('#id_sasaran').val(id_sasaran);
+    $('#form-modal').modal('show');
+    $('#indikator').focus();
+}
     
     function edit(id){
         save_method = 'edit';
@@ -211,22 +212,20 @@
     });
 
     var table = $('#menu-table').dataTable({
-        processing: true,
-        serverSide: true,
-        order: [2, 'asc'],
-        ajax: {
-            url: "{{ route('setup.sasaran_indikator.api') }}",
-            method: 'POST'
-        },
-        columns: [
-            {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'sasaran', name: 'sasaran'},
-            {data: 'sasaran_nilai_count', name: 'sasaran_nilai_count'},
-            // {data: 'route', name: 'route'},
-            // {data: 'submenu_count', name: 'submenu_count'},            
-            {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
-        ]
-    });
+    processing: true,
+    serverSide: true,
+    order: [2, 'asc'],
+    ajax: {
+        url: "{{ route('setup.sasaran_indikator.api') }}",
+        method: 'POST'
+    },
+    columns: [
+        {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
+        {data: 'indikator', name: 'indikator'},
+        {data: 'sasaran_nilai_count', name: 'sasaran_nilai_count'},
+        {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+    ]
+});
 
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();
