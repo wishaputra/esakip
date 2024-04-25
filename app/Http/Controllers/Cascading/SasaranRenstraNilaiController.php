@@ -8,6 +8,8 @@ use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Sasaran_Renstra;
+use App\Models\Cascading\Model_Sasaran_Renstra_Indikator;
+use App\Models\Cascading\Model_Sasaran_Renstra_Nilai;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -47,8 +49,9 @@ class SasaranRenstraNilaiController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $tujuan = Model_Tujuan::all();
+        $sasaran_renstra = Model_Sasaran_Renstra::all();
 
-        return view('cascading.sasaran_indikator.index', compact('tahun','tujuan'));
+        return view('cascading.sasaran_renstra_nilai.index', compact('tahun','tujuan','sasaran_renstra'));
     }
 
     /**
@@ -75,7 +78,7 @@ class SasaranRenstraNilaiController extends Controller
             "sasaran" => 'required',
         ]);
 
-        Model_Sasaran::create([
+        Model_Sasaran_Renstra_Nilai::create([
             "id_tujuan" => $request->id_tujuan,
             "sasaran" => $request->sasaran,
             "creator" => Auth::user()->id,

@@ -40,16 +40,16 @@ class ProgramIndikatorController extends Controller
     {
         // $id_visi = $request->id_visi;
         // if (!$id_visi || !Model_Program::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.program_indikator.index');
+        //     return redirect()->route('setup.tujuan.index');
         // }
 
         // $visi = Model_Program::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $misi   = Model_Misi::all();
-
-        // return view('cascading.program_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.program_indikator.index', compact('tahun','misi'));
+        $program = Model_Program::all();
+        
+        // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
+        return view('cascading.program_indikator.index', compact('tahun','program'));
     }
 
     /**
@@ -72,13 +72,13 @@ class ProgramIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_program" => 'required',
+            "indikator" => 'required',
         ]);
 
-        Model_Program::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_Program_Indikator::create([
+            "id_program" => $request->id_program,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -115,15 +115,17 @@ class ProgramIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Program::find($id);
+        $misi  = Model_Program_indikator::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "indikator" => 'required',
+            "id_program" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "id_program" => $request->id_program,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -137,7 +139,7 @@ class ProgramIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Program::find($id);
+    $misi  = Model_Program_Indikator::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();
