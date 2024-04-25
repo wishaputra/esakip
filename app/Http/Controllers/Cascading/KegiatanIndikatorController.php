@@ -8,6 +8,7 @@ use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_Kegiatan;
 use App\Models\Cascading\Model_Kegiatan_Indikator;
+use App\Models\Cascading\Model_program;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -46,10 +47,10 @@ class KegiatanIndikatorController extends Controller
         // $visi = Model_Kegiatan::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $misi   = Model_Misi::all();
-
+        $program   = Model_Program::all();
+        $kegiatan = Model_Kegiatan::all();
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_indikator.index', compact('tahun','misi'));
+        return view('cascading.kegiatan_indikator.index', compact('tahun','program','kegiatan'));
     }
 
     /**
@@ -72,13 +73,13 @@ class KegiatanIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_kegiatan" => 'required',
+            "indikator" => 'required',
         ]);
 
-        Model_Kegiatan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_Kegiatan_indikator::create([
+            "id_kegiatan" => $request->id_kegiatan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -115,15 +116,17 @@ class KegiatanIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Kegiatan::find($id);
+        $misi  = Model_Kegiatan_indikator::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "kegiatan" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "kegiatan" => $request->tujuan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -137,7 +140,7 @@ class KegiatanIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Kegiatan::find($id);
+    $misi  = Model_Kegiatan_indikator::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

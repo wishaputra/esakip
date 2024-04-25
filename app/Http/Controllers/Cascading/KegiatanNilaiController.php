@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_Kegiatan_Nilai;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -16,12 +17,11 @@ class KegiatanNilaiController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $kegiatan_indikator   = Model_Kegiatan_Indikator::all();
-        return DataTables::of($kegiatan_indikator)
+        $kegiatan_nilai = Model_Kegiatan_Nilai::all();
+    
+        return DataTables::of($kegiatan_nilai)
             ->addColumn('kegiatan_nilai_count', function ($p) {
-                $count = $p->kegiatan_nilai->count();
-                return "<a  href='".route('setup.kegiatan_nilai.index')."?kegiatan_nilai_id=".$p->id."'  title='Nilai Kegiatan'>".$count."</a>";
+                return "<a  href='".route('setup.kegiatan_nilai.index')."?kegiatan_nilai_id=".$p->id."'  title='Nilai Kegiatan'>". $p->kegiatan_nilai->count() ."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -46,10 +46,11 @@ class KegiatanNilaiController extends Controller
         // $visi = Model_Kegiatan::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $misi   = Model_Misi::all();
+        $indikator   = Model_Kegiatan_Indikator::all();
+
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_indikator.index', compact('tahun','misi'));
+        return view('cascading.kegiatan_nilai.index', compact('tahun','indikator'));
     }
 
     /**
@@ -72,13 +73,19 @@ class KegiatanNilaiController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_indikator_kegiatan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
-        Model_Kegiatan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_Kegiatan_Nilai::create([
+            "id_indikator_kegiatan" => $request->id_indikator,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->target,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -103,7 +110,7 @@ class KegiatanNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Kegiatan::find($id);
+        return Model_Kegiatan_nilai::find($id);
     }
 
     /**
@@ -115,7 +122,7 @@ class KegiatanNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Kegiatan::find($id);
+        $misi  = Model_Kegiatan_nilai::find($id);
         $rule = [
             "tujuan" => 'required',
         ];
@@ -137,7 +144,7 @@ class KegiatanNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Kegiatan::find($id);
+    $misi  = Model_Kegiatan_nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

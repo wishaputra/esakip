@@ -57,8 +57,10 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>indikator Kegiatan</td>
-                                            <td>Jumlah Nilai</td>
+                                            <td>Satuan</td>
+                                            <td>Tahun</td>
+                                            <td>Target</td>
+                                            <td>capaian</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -93,43 +95,43 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
-                    <input type="hidden" name="id_kegiatan" id="id_kegiatan">
+                    <input type="hidden" name="id_indikator_kegiatan" id="id_indikator_kegiatan">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="kegiatan" class="col-form-label">Kegiatan</label>
-                    @foreach ($kegiatan->unique('id') as $item)
-                        <textarea name="kegiatan" id="kegiatan" class="form-control" readonly>{{ $item->kegiatan }}</textarea>
-                        <input type="hidden" name="id_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                    <label for="indikator_kegiatan" class="col-form-label">Indikator Kegiatan</label>
+                    @foreach ($indikator->unique('id') as $item)
+                        <textarea name="indikator_kegiatan" id="indikator_kegiatan" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <input type="hidden" name="id_indikator_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">indikator Kegiatan</label>
-                                <input type="text" name="indikator" id="indikator" class="form-control">
+                                <label for="satuan class="col-form-label">Satuan</label>
+                                <input type="text" name="satuan" id="satuan" class="form-control">
                             </div>
                         </div>
-                        <!-- <div class="col-md-12">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="kegiatan" class="col-form-label">Kegiatan</label>
-                                <textarea name="kegiatan" id="kegiatan" class="form-control" rows="3"></textarea>
+                                <label for="tahun" class="col-form-label">Tahun</label>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
                             </div>
-                        </div> -->
+                        </div>
 
-                        <!-- <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Nama</label>
-                                <input type="text" name="nama" id="nama" class="form-control">
-                            </div>
-                        </div>
                         <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Tujuan</label>
-                                <input type="text" name="route" id="route" placeholder="#div or routename" class="form-control">
+                                <label for="target" class="col-form-label">Target</label>
+                                <input type="text" name="target" id="target" class="form-control">
                             </div>
-                        </div> -->
+                        </div>
 
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="capaian" class="col-form-label">Capaian</label>
+                                <input type="text" name="capaian" id="capaian" class="form-control">
+                            </div>
+                        </div>
                     </div>
             </div>
             <div class="modal-footer">
@@ -185,7 +187,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.kegiatan_indikator.store') }}" : "{{ route('setup.kegiatan_indikator.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.kegiatan_nilai.store') }}" : "{{ route('setup.kegiatan_nilai.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -224,13 +226,15 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.kegiatan_indikator.api') }}",
+            url: "{{ route('setup.kegiatan_nilai.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'indikator', name: 'indikator'},
-            {data: 'kegiatan_nilai_count', name: 'kegiatan_nilai_count'},
+            {data: 'satuan', name: 'satuan'},
+            {data: 'tahun', name: 'tahun'},
+            {data: 'target', name: 'target'},
+            {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
