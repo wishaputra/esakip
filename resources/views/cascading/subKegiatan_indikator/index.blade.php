@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Kegiatan</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Sub Kegiatan</a>
                     </li>
 
 
@@ -57,9 +57,8 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Kode Kegiatan</td>
-                                            <td>Kegiatan</td>
-                                            <td>Jumlah Indikator</td>
+                                            <td>indikator Sub Kegiatan</td>
+                                            <td>Jumlah Nilai</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -93,27 +92,27 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="id_kegiatan" id="id_kegiatan">
+                    <input type="hidden" name="id_sub_kegiatan" id="id_sub_kegiatan">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="kegiatan" class="col-form-label">Kegiatan</label>
-                    @foreach ($kegiatan->unique('id') as $item)
-                        <textarea name="kegiatan" id="kegiatan" class="form-control" readonly>{{ $item->kegiatan }}</textarea>
-                        <input type="hidden" name="id_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                    <label for="sub_kegiatan" class="col-form-label">Sub Kegiatan</label>
+                    @foreach ($sub_kegiatan->unique('id') as $item)
+                        <textarea name="sub_kegiatan" id="sub_kegiatan" class="form-control" readonly>{{ $item->sub_kegiatan }}</textarea>
+                        <input type="hidden" name="id_sub_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">indikator Kegiatan</label>
-                                <input type="text" name="indikator" id="indikator" class="form-control">
+                                <label for="indikator" class="col-form-label">indikator</label>
+                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <!-- <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="kegiatan" class="col-form-label">Kegiatan</label>
-                                <textarea name="kegiatan" id="kegiatan" class="form-control" rows="3"></textarea>
+                                <label for="sub_kegiatan" class="col-form-label">Sub Kegiatan</label>
+                                <textarea name="sub_kegiatan" id="sub_kegiatan" class="form-control" rows="3"></textarea>
                             </div>
                         </div> -->
 
@@ -146,7 +145,7 @@
 @push('script')
 
 <script>
-
+    
     function add(){
         $('#alert').html('');
         save_method = "add";
@@ -164,18 +163,17 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.kegiatan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.sub_kegiatan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
-            $('#id_program').val(data.id_program);
-            $('#kode_kegiatan').val(data.kode_kegiatan).focus();
-            $('#kegiatan').val(data.kegiatan).focus();
+            $('#id_kegiatan').val(data.id_kegiatan);
+            $('#kode_sub_kegiatan').val(data.kode_sub_kegiatan).focus();
+            $('#sub_kegiatan').val(data.sub_kegiatan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
         });
     }
-
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -185,7 +183,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.kegiatan_indikator.store') }}" : "{{ route('setup.kegiatan_indikator.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.sub_kegiatan_indikator.store') }}" : "{{ route('setup.sub_kegiatan_indikator.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -224,13 +222,13 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.kegiatan_indikator.api') }}",
+            url: "{{ route('setup.sub_kegiatan_indikator.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'indikator', name: 'indikator'},
-            {data: 'kegiatan_nilai_count', name: 'kegiatan_nilai_count'},
+            {data: 'subkegiatan_nilai_count', name: 'subkegiatan_nilai_count'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
@@ -265,7 +263,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.kegiatan_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.sub_kegiatan_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

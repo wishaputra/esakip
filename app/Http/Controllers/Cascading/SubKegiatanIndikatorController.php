@@ -15,22 +15,22 @@ use Illuminate\Support\Facades\DB;
 class SubKegiatanIndikatorController extends Controller
 {
     public function api(Request $request)
-    {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $subkegiatan_indikator   = Model_SubKegiatan_Indikator::all();
-        return DataTables::of($subkegiatan_indikator)
-            ->addColumn('subkegiatan_nilai_count', function ($p) {
-                $count = $p->kegiatan_nilai->count();
-                return "<a  href='".route('setup.sub_kegiatan_nilai.index')."?subkegiatan_nilai_id=".$p->id."'  title='Nilai Sub Kegiatan'>".$count."</a>";
-            })
-            ->addColumn('action', function ($p) {
-                return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
-            })
-            ->rawColumns(['subkegiatan_nilai_count', 'action'])
-            ->toJson();
-    }
+{
+    $sub_kegiatan_indikator = Model_SubKegiatan_Indikator::all();
+
+    return DataTables::of($sub_kegiatan_indikator)
+        ->addColumn('subkegiatan_nilai_count', function ($p) {
+            $count = $p->sub_kegiatan_nilai ? $p->sub_kegiatan_nilai->count() : 0;
+            return "<a  href='".route('setup.sub_kegiatan_nilai.index')."?subkegiatan_nilai_id=".$p->id."'  title='Nilai Sub Kegiatan'>".$count."</a>";
+        })
+        ->addColumn('action', function ($p) {
+            return "
+                <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
+        })
+        ->rawColumns(['subkegiatan_nilai_count', 'action'])
+        ->toJson();
+}
     /**
      * Display a listing of the resource.
      *
@@ -46,10 +46,10 @@ class SubKegiatanIndikatorController extends Controller
         // $visi = Model_SubKegiatan::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $misi   = Model_Misi::all();
+        $sub_kegiatan   = Model_SubKegiatan::all();
 
         // return view('cascading.subkegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_indikator.index', compact('tahun','misi'));
+        return view('cascading.subkegiatan_indikator.index', compact('tahun','sub_kegiatan'));
     }
 
     /**
@@ -72,13 +72,13 @@ class SubKegiatanIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_sub_kegiatan" => 'required',
+            "indikator" => 'required',
         ]);
 
-        Model_SubKegiatan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_SubKegiatan_Indikator::create([
+            "id_sub_kegiatan" => $request->id_sub_kegiatan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -115,15 +115,15 @@ class SubKegiatanIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_SubKegiatan::find($id);
+        $misi  = Model_SubKegiatan_indikator::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -137,7 +137,7 @@ class SubKegiatanIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_SubKegiatan::find($id);
+    $misi  = Model_SubKegiatan_Indikator ::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();
