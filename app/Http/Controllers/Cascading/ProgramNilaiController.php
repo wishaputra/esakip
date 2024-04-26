@@ -19,10 +19,6 @@ class ProgramNilaiController extends Controller
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $program_indikator   = Model_Program_Indikator::all();
         return DataTables::of($program_indikator)
-            ->addColumn('program_nilai_count', function ($p) {
-                $count = $p->program_nilai->count();
-                return "<a  href='".route('setup.program_nilai.index')."?program_nilai_id=".$p->id."'  title='Nilai Program'>".$count."</a>";
-            })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>

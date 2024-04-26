@@ -21,10 +21,6 @@ class SasaranRenstraNilaiController extends Controller
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $sasaran_renstra   = Model_Sasaran_Renstra::all();
         return DataTables::of($sasaran_renstra)
-            ->addColumn('sasaran_renstra_nilai_count', function ($p) {
-                $count = $p->sasaran_nilai->count();
-                return "<a  href='".route('setup.sasaran_renstra_nilai.index')."?sasaran_renstra_nilai_id=".$p->id."'  title='Nilai Sasaran Renstra'>".$count."</a>";
-            })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>

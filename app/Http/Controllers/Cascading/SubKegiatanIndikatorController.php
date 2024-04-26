@@ -47,9 +47,10 @@ class SubKegiatanIndikatorController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $sub_kegiatan   = Model_SubKegiatan::all();
+        $sub_kegiatan_indikator   = Model_SubKegiatan_Indikator::all();
 
         // return view('cascading.subkegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_indikator.index', compact('tahun','sub_kegiatan'));
+        return view('cascading.subkegiatan_indikator.index', compact('tahun','sub_kegiatan','sub_kegiatan_indikator'));
     }
 
     /**

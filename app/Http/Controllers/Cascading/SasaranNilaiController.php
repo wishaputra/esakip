@@ -20,10 +20,6 @@ class SasaranNilaiController extends Controller
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $sasaran   = Model_Sasaran::all();
         return DataTables::of($sasaran)
-            ->addColumn('sasaran_nilai_count', function ($p) {
-                $count = $p->sasaran_nilai->count();
-                return "<a  href='".route('setup.sasaran_nilai.index')."?sasaran_nilai_id=".$p->id."'  title='Nilai Sasaran'>".$count."</a>";
-            })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>

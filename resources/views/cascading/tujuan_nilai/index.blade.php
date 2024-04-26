@@ -56,8 +56,11 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td width="15%">#</td>
-                                            <td>Nilai Tujuan</td>
+                                        <td width="15%">#</td>
+                                            <td>satuan</td>
+                                            <td>tahun</td>
+                                            <td>target</td>
+                                            <td>capaian</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -90,32 +93,39 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="id_indikator_tujuan" id="id_indikator_tujuan">
                     <div class="form-row">
+                    <div class="col-md-12">
+                    <div class="form-group col-md-12">
+                    <label for="indikator" class="col-form-label">Indikator</label>
+                    @foreach ($indikator->unique('id') as $item)
+                        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <input type="hidden" name="id_indikator_tujuan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                        @break
+                    @endforeach
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                </select>
+                                <label for="satuan" class="col-form-label">satuan</label>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
-                        <div class="col-md-12">
-                        <div class="col-md-12">
-   
-
-<div class="form-group col-md-12">
-    <label for="sasaran" class="col-form-label">tujuan</label>
-    @foreach ($indikator->unique('id') as $item)
-        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
-        <input type="hidden" name="id_indikator" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
-        @break
-    @endforeach
-</div>
-
-
+                            <div class="form-group col-md-12">
+                                <label for="tahun" class="col-form-label">tahun</label>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="nilai" class="col-form-label">Nilai</label>
-                                <textarea name="nilai" id="nilai" class="form-control" rows="3"></textarea>
+                                <label for="target" class="col-form-label">target</label>
+                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="capaian" class="col-form-label">capaian</label>
+                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -229,12 +239,15 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'nilai', name: 'nilai'},
-            // {data: 'route', name: 'route'},
+            {data: 'satuan', name: 'satuan'},
+            {data: 'tahun', name: 'tahun'},
+            {data: 'target', name: 'target'},
+            {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
+    
 
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();

@@ -20,10 +20,6 @@ class TujuanNilaiController extends Controller
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $tujuan_nilai   = Model_Tujuan_Nilai::all();
         return DataTables::of($tujuan_nilai)
-            ->addColumn('tujuan_nilai_count', function ($p) {
-                $count = $p->tujuan_nilai->count();
-                return "<a  href='".route('setup.tujuan_nilai.index')."?tujuan_nilai_id=".$p->id."'  title='Nilai Tujuan'>".$count."</a>";
-            })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -75,13 +71,19 @@ class TujuanNilaiController extends Controller
 {
     $request->validate([
         "id_indikator_tujuan" => 'required',
-        "nilai" => 'required',
+        "satuan" => 'required',
+        "tahun" => 'required',
+        "target" => 'required',
+        "capaian" => 'required',
     ]);
 
     Model_Tujuan_Nilai::create([
         "id_indikator_tujuan" => $request->id_indikator_tujuan,
-        "nilai" => $request->nilai,
-        "creator" => Auth::user()->id,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
+            "creator" => Auth::user()->id,
     ]);
 
     return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -106,7 +108,7 @@ class TujuanNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        return Model_Tujuan_nilai::find($id);
     }
 
     /**
@@ -118,15 +120,21 @@ class TujuanNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan::find($id);
+        $misi  = Model_Tujuan_Nilai::find($id);
         $rule = [
-            "tujuan" => 'required',
+        "satuan" => 'required',
+        "tahun" => 'required',
+        "target" => 'required',
+        "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -140,7 +148,7 @@ class TujuanNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Tujuan::find($id);
+    $misi  = Model_Tujuan_nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

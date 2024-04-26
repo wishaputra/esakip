@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_SubKegiatan_Nilai;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -17,12 +18,8 @@ class SubKegiatanNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $subkegiatan_indikator   = Model_SubKegiatan_Indikator::all();
-        return DataTables::of($subkegiatan_indikator)
-            ->addColumn('subkegiatan_nilai_count', function ($p) {
-                $count = $p->kegiatan_nilai->count();
-                return "<a  href='".route('setup.sub_kegiatan_nilai.index')."?subkegiatan_nilai_id=".$p->id."'  title='Nilai Sub Kegiatan'>".$count."</a>";
-            })
+        $subkegiatan_nilai   = Model_SubKegiatan_Nilai::all();
+        return DataTables::of($subkegiatan_nilai)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -47,9 +44,9 @@ class SubKegiatanNilaiController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $misi   = Model_Misi::all();
-
+        $indikator   = Model_SubKegiatan_Indikator::all();
         // return view('cascading.subkegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_indikator.index', compact('tahun','misi'));
+        return view('cascading.subkegiatan_nilai.index', compact('tahun','misi','indikator'));
     }
 
     /**
@@ -72,13 +69,19 @@ class SubKegiatanNilaiController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_indikator_sub_kegiatan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
-        Model_SubKegiatan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_SubKegiatan_Nilai::create([
+            "id_indikator_sub_kegiatan" => $request->id_indikator_sub_kegiatan,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -103,7 +106,7 @@ class SubKegiatanNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_SubKegiatan::find($id);
+        return Model_SubKegiatan_Nilai::find($id);
     }
 
     /**
@@ -115,15 +118,21 @@ class SubKegiatanNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_SubKegiatan::find($id);
+        $nilai  = Model_SubKegiatan_Nilai::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
-        $misi->update([
-            "tujuan" => $request->tujuan,
+        $nilai->update([
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -137,7 +146,7 @@ class SubKegiatanNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_SubKegiatan::find($id);
+    $misi  = Model_SubKegiatan_Nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();
