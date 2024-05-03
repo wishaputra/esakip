@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cascading\Model_Sasaran_Indikator;
+use App\Models\Cascading\Model_Sasaran_Nilai;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -18,7 +19,7 @@ class SasaranNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran   = Model_Sasaran::all();
+        $sasaran   = Model_Sasaran_Nilai::all();
         return DataTables::of($sasaran)
             ->addColumn('action', function ($p) {
                 return "
@@ -64,12 +65,18 @@ class SasaranNilaiController extends Controller
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
             "id_tujuan_indikator" => 'required',
-            "sasaran" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
-        Model_Sasaran_Indikator::create([
+        Model_Sasaran_Nilai::create([
             "id_tujuan" => $request->id_tujuan,
-            "sasaran" => $request->sasaran,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
@@ -94,7 +101,7 @@ class SasaranNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Sasaran::find($id);
+        return Model_Sasaran_Nilai::find($id);
     }
 
     /**
@@ -106,7 +113,7 @@ class SasaranNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran::find($id);
+        $misi  = Model_Sasaran_Nilai::find($id);
         $rule = [
             "sasaran" => 'required',
         ];
@@ -128,7 +135,7 @@ class SasaranNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Sasaran::find($id);
+    $misi  = Model_Sasaran_nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();
