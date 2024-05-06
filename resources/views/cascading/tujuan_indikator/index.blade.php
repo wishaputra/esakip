@@ -107,14 +107,19 @@
     </div>
 </div> -->
 
-                        <div class="form-group col-md-12">
-                            <label for="tujuan" class="col-form-label">Tujuan</label>
-                            @foreach ($tujuan->unique('id') as $item)
-                                <textarea name="tujuan" id="tujuan" class="form-control" readonly>{{ $item->tujuan }}</textarea>
-                                <input type="hidden" name="id_tujuan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
-                                @break
-                            @endforeach
-                        </div>
+<input type="hidden" name="id_tujuan" id="id_tujuan">
+<div class="form-group col-md-12">
+    <label for="tujuan" class="col-form-label">Tujuan</label>
+    <div>
+        @foreach ($tujuan->unique('id') as $item)
+            <textarea name="tujuan" id="tujuan" class="form-control" readonly>{{ $item->tujuan }}</textarea>
+            <input type="hidden" name="id_tujuan" value="{{ $item->id }}">
+            @break
+        @endforeach
+    </div>
+</div>
+
+
 
 
                         <div class="col-md-12">

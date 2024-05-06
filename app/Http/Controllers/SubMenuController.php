@@ -131,7 +131,6 @@ class SubMenuController extends Controller
 
 
 
-
         $submenu->update([
 
             "menu_id" => $request->menu_id,
