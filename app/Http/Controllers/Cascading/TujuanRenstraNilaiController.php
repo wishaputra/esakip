@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_Tujuan_Renstra_Nilai;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -17,12 +18,8 @@ class TujuanRenstraNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::all();
-        return DataTables::of($tujuan_renstra_indikator)
-            ->addColumn('tujuan_renstra_nilai_count', function ($p) {
-                $count = $p->tujuan_nilai->count();
-                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?tujuan_renstra_nilai_id=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
-            })
+        $tujuan_renstra_nilai   = Model_Tujuan_Renstra_Nilai::all();
+        return DataTables::of($tujuan_renstra_nilai)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -45,11 +42,11 @@ class TujuanRenstraNilaiController extends Controller
 
         // $visi = Model_Tujuan::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
+        $indikator  = Model_Tujuan_Renstra_Indikator::all();
         $misi   = Model_Misi::all();
 
         // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_indikator.index', compact('tahun','misi'));
+        return view('cascading.tujuan_renstra_nilai.index', compact('indikator','misi'));
     }
 
     /**
@@ -70,17 +67,23 @@ class TujuanRenstraNilaiController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_indikator_tujuan_renstra" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
-        Model_Tujuan::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_Tujuan_Renstra_Nilai::create([
+            "id_indikator_tujuan_renstra" => $request->id_indikator_tujuan_renstra,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 
@@ -103,7 +106,7 @@ class TujuanRenstraNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        return Model_Tujuan_Renstra_Nilai::find($id);
     }
 
     /**
@@ -113,21 +116,28 @@ class TujuanRenstraNilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Model_Tujuan_Renstra_Nilai $tujuanNilairenstra)
     {
-        $misi  = Model_Tujuan::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
-        $misi->update([
-            "tujuan" => $request->tujuan,
+        $tujuanNilairenstra->update([
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -137,7 +147,7 @@ class TujuanRenstraNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Tujuan::find($id);
+    $misi  = Model_Tujuan_Renstra_Nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

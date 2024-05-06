@@ -21,7 +21,7 @@ class TujuanRenstraIndikatorController extends Controller
         $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::all();
         return DataTables::of($tujuan_renstra_indikator)
             ->addColumn('tujuan_renstra_nilai_count', function ($p) {
-                $count = $p->tujuan_nilai->count();
+                $count = $p->tujuan_renstra_nilai->count();
                 return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?tujuan_renstra_nilai_id=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
@@ -72,6 +72,7 @@ class TujuanRenstraIndikatorController extends Controller
 {
     $request->validate([
        
+        "id_tujuan_renstra" => 'required',
         "indikator" => 'required',
     ]);
 
@@ -103,7 +104,7 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan_Renstra::find($id);
+        return Model_Tujuan_Renstra_Indikator::find($id);
     }
 
     /**
@@ -115,17 +116,15 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan_Renstra::find($id);
+        $misi  = Model_Tujuan_Renstra_Indikator::find($id);
         $rule = [
-            "tujuan_renstra" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "id_sasaran"    => $request->id_sasaran,
-            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
-            "tujuan_renstra"=> $request->tujuan_renstra,
+            "indikator"    => $request->indikator,
             "creator"       => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -139,7 +138,7 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Tujuan_Renstra::find($id);
+    $misi  = Model_Tujuan_Renstra_Indikator::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

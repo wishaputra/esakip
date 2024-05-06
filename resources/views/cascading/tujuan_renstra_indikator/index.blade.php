@@ -93,15 +93,26 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
                     <div class="form-row">
-                    <div class="col-md-12">
-                    <div class="form-group col-md-12">
-                    <label for="tujuan_renstra" class="col-form-label">Tujuan Renstra</label>
-                    @foreach ($tujuan_renstra->unique('id') as $item)
-                        <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" readonly>{{ $item->tujuan_renstra }}</textarea>
-                        <input type="hidden" name="id_tujuan_restra" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
-                        @break
-                    @endforeach
-                </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                        <div class="col-md-12">
+                        <div class="col-md-12">
+                            <input type="hidden" name="id_tujuan_renstra" id="id_tujuan_renstra">
+                            <div class="form-group col-md-12">
+                                <label for="tujuan_renstra" class="col-form-label">Tujuan renstra</label>
+                                <div>
+                                    @foreach ($tujuan_renstra->unique('id') as $item)
+                                        <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" readonly>{{ $item->tujuan_renstra }}</textarea>
+                                        <input type="hidden" name="id_tujuan_renstra" value="{{ $item->id }}">
+                                        @break
+                                    @endforeach
+                                </div>
+                            </div>
+                    
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="indikator" class="col-form-label">Indikator</label>
@@ -155,7 +166,7 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan_renstra.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.tujuan_renstra_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#id_tujuan_renstra').val(data.id_sasaran);
             $('#tujuan_renstra_indikator').val(data.tujuan_renstra).focus();
@@ -253,7 +264,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan_renstra.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.tujuan_renstra_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',
