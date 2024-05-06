@@ -30,17 +30,18 @@ class MisiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $id_visi = $request->id_visi;
-        if (!$id_visi || !Model_Visi::whereid($id_visi)->first()) {
-            return redirect()->route('setup.visi.index');
-        }
-
-        $visi = Model_Visi::find($id_visi);
-        $title = "Misi " . $visi->tahun_awal;
-
-        return view('cascading.misi.index', compact('title', 'id_visi', 'visi'));
+{
+    $id_visi = $request->id_visi;
+    if (!$id_visi || !Model_Visi::whereid($id_visi)->first()) {
+        return redirect()->route('setup.visi.index');
     }
+
+    $visi = Model_Visi::find($id_visi);
+    $title = "Misi " . $visi->tahun_awal;
+    $misi = Model_Misi::whereid_visi($id_visi)->orderBy('id', 'ASC')->get();
+
+    return view('cascading.misi.index', compact('title', 'id_visi', 'visi', 'misi'));
+}
 
     /**
      * Show the form for creating a new resource.

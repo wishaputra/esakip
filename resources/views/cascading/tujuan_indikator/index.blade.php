@@ -107,14 +107,14 @@
     </div>
 </div> -->
 
-<div class="form-group col-md-12">
-    <label for="indikator" class="col-form-label">Indikator</label>
-    @foreach ($tujuan->unique('id') as $item)
-        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->tujuan }}</textarea>
-        <input type="hidden" name="id_indikator" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
-        @break
-    @endforeach
-</div>
+                        <div class="form-group col-md-12">
+                            <label for="tujuan" class="col-form-label">Tujuan</label>
+                            @foreach ($tujuan->unique('id') as $item)
+                                <textarea name="tujuan" id="tujuan" class="form-control" readonly>{{ $item->tujuan }}</textarea>
+                                <input type="hidden" name="id_tujuan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                                @break
+                            @endforeach
+                        </div>
 
 
                         <div class="col-md-12">
@@ -190,7 +190,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan_nilai.store') }}" : "{{ route('setup.tujuan_nilai.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.tujuan_indikator.store') }}" : "{{ route('setup.tujuan_indikator.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',

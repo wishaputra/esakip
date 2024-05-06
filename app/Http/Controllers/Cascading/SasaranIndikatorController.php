@@ -120,7 +120,7 @@ class SasaranIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran_indikator::find($id);
+        $misi  = Model_Sasaran_Indikator::find($id);
         $rule = [
             "indikator" => 'required',
         ];
@@ -128,7 +128,7 @@ class SasaranIndikatorController extends Controller
         $request->validate($rule);
 
         $misi->update([
-            "indikator" => $request->sasaran,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);

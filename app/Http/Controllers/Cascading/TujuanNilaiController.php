@@ -28,11 +28,7 @@ class TujuanNilaiController extends Controller
             ->rawColumns(['tujuan_nilai_count', 'action'])
             ->toJson();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
         // $id_visi = $request->id_visi;
@@ -47,105 +43,68 @@ class TujuanNilaiController extends Controller
         $indikator = Model_Tujuan_Indikator::all();    // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
         return view('cascading.tujuan_nilai.index', compact('indikator','misi'));
     }
-
-
-    
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        // implement create logic or remove this method if not needed
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
-{
-    $request->validate([
-        "id_indikator_tujuan" => 'required',
-        "satuan" => 'required',
-        "tahun" => 'required',
-        "target" => 'required',
-        "capaian" => 'required',
-    ]);
-
-    Model_Tujuan_Nilai::create([
-        "id_indikator_tujuan" => $request->id_indikator_tujuan,
-            "satuan" => $request->satuan,
-            "tahun" => $request->tahun,
-            "target" => $request->target,
-            "capaian" => $request->capaian,
-            "creator" => Auth::user()->id,
-    ]);
-
-    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
-}
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
     {
-        //
-    }
+        $request->validate([
+            "id_indikator_tujuan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return Model_Tujuan_nilai::find($id);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $misi  = Model_Tujuan_Nilai::find($id);
-        $rule = [
-        "satuan" => 'required',
-        "tahun" => 'required',
-        "target" => 'required',
-        "capaian" => 'required',
-        ];
-
-        $request->validate($rule);
-
-        $misi->update([
+        Model_Tujuan_Nilai::create([
+            "id_indikator_tujuan" => $request->id_indikator_tujuan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
+        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+    }
+
+    public function show(Model_Tujuan_Nilai $tujuannilai)
+    {
+        // implement show logic or remove this method if not needed
+    }
+
+   public function edit($id)
+{
+    $tujuanNilai = Model_Tujuan_Nilai::find($id);
+    if (!$tujuanNilai) {
+        abort(404, 'Model not found');
+    }
+    return response()->json($tujuanNilai);
+}
+    public function update(Request $request, Model_Tujuan_Nilai $tujuanNilai)
+    {
+        $rule = [
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
+        ];
+
+        $request->validate($rule);
+
+        $tujuanNilai->update([
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
+            "creator" => Auth::user()->id,
+        ]);
+
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
 {
     $misi  = Model_Tujuan_nilai::find($id);

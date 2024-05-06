@@ -93,7 +93,7 @@ Route::get('/getTujuanRenstraByTahun/{id}', [SasaranRenstraController::class,'ge
 Route::get('/get-sasaran-renstra-by-tahun/{id}', [ProgramController::class,'getSasaranRenstraByTahun'])->name('getSasaranRenstraByTahun');
 Route::get('/get-program-by-tahun/{id}', [KegiatanController::class,'getProgramByTahun'])->name('getProgramByTahun');
 Route::get('/get-kegiatan-by-tahun/{id}', [SubKegiatanController::class,'getKegiatanByTahun'])->name('getKegiatanByTahun');
-
+Route::get('tujuan-nilai/{id}/edit', [TujuanNilaiController::class, 'edit'])->name('tujuan-nilai.edit');
 
 
 
@@ -235,9 +235,7 @@ Route::any('/save-chart', [ChartController::class, 'saveChart']);
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
 
 //treview
-Route::post('/tree', [TreeController::class, 'store'])->name('tree.store'); 
-Route::put('/tree/{id}', [TreeController::class, 'update'])->name('tree.update');
-Route::delete('/tree/{id}', [TreeController::class, 'delete'])->name('tree.delete');
+
 
 
 

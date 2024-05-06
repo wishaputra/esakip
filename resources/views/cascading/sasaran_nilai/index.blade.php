@@ -100,7 +100,7 @@
                     <div class="form-group col-md-12">
                     <label for="indikator" class="col-form-label">Indikator</label>
                     @foreach ($indikator->unique('id') as $item)
-                        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <textarea name="indikator_sasaran" id="indikator_sasaran" class="form-control" readonly>{{ $item->indikator }}</textarea>
                         <input type="hidden" name="id_indikator_sasaran" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
@@ -158,15 +158,14 @@
 @push('script')
 
 <script>
-    function add(id_indikator){
-    $('#alert').html('');
-    save_method = "add";
-    $('#form').trigger('reset');
-    $('.modal-title').html('Tambah Data')
-    $('input[name=_method]').val('POST');
-    $('#id_indikator').val(id_sasaran);
-    $('#form-modal').modal('show');
-    $('#indikator').focus();
+    function add(){
+        $('#alert').html('');
+        save_method = "add";
+        $('#form').trigger('reset');
+        $('.modal-title').html('Tambah Data')
+        $('input[name=_method]').val('POST');
+        $('#form-modal').modal('show');
+        $('#nama').focus();
 }
     
     function edit(id){
@@ -277,7 +276,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.sasaran_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.sasaran_nilai.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

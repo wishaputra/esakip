@@ -18,53 +18,34 @@ class SasaranNilaiController extends Controller
 {
     public function api(Request $request)
     {
-        // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran   = Model_Sasaran_Nilai::all();
+        $sasaran = Model_Sasaran_Nilai::all();
         return DataTables::of($sasaran)
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+                    <a href='#' onclick='edit(". $p->id. ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' onclick='remove(". $p->id. ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['sasaran_nilai_count', 'action'])
             ->toJson();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
-        
-        $indikator  = Model_Sasaran_Indikator::all();
+        $indikator = Model_Sasaran_Indikator::all();
         $sasaran = Model_Sasaran::all();
         $id_sasaran = Model_Sasaran_Indikator::all();
 
-        return view('cascading.sasaran_nilai.index', compact('indikator','sasaran', 'id_sasaran'));
+        return view('cascading.sasaran_nilai.index', compact('indikator', 'sasaran', 'id_sasaran'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_tujuan_indikator" => 'required',
+            "id_indikator_sasaran" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
             "target" => 'required',
@@ -72,82 +53,58 @@ class SasaranNilaiController extends Controller
         ]);
 
         Model_Sasaran_Nilai::create([
-            "id_tujuan" => $request->id_tujuan,
+            "id_indikator_sasaran" => $request->id_indikator_sasaran,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         return Model_Sasaran_Nilai::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $misi  = Model_Sasaran_Nilai::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "sasaran" => $request->sasaran,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
-{
-    $misi  = Model_Sasaran_nilai::find($id);
+    {
+        $misi = Model_Sasaran_Nilai::find($id);
 
-    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
-        $count = $misi->tujuan->count();
-    } else {
-        $count = 0;
+        if ($misi && $misi->tujuan && $misi->tujuan->count() > 0) {
+            return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
+        }
+
+        $misi->delete();
+        return response()->json(["message" => "Berhasil menghapus data!"], 200);
     }
-
-    if ($count > 0) {
-        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
-    }
-
-    $misi->delete();
-    return response()->json(["message" => "Berhasil menghapus data!"], 200);
-}
 }

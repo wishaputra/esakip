@@ -111,7 +111,6 @@ class SubMenu2Controller extends Controller
     public function update(Request $request, SubMenu2 $submenu2)
     {
 
-
         $rule = [
             "sub_menu_id" => 'required',
             "nama" => 'required',
@@ -119,13 +118,7 @@ class SubMenu2Controller extends Controller
             "route" => 'required',
 
         ];
-
         $request->validate($rule);
-
-
-
-
-
         $submenu2->update([
 
             "sub_menu_id" => $request->sub_menu_id,

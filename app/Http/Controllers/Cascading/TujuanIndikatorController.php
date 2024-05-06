@@ -117,15 +117,15 @@ class TujuanIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan::find($id);
+        $misi  = Model_Tujuan_Indikator::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "indikator" => $request->indikator,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
