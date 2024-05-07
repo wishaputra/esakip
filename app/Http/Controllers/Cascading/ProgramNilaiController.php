@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cascading\Model_Program_Nilai;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -17,8 +18,8 @@ class ProgramNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $program_indikator   = Model_Program_Indikator::all();
-        return DataTables::of($program_indikator)
+        $program_nilai   = Model_Program_Nilai::all();
+        return DataTables::of($program_nilai)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -46,7 +47,7 @@ class ProgramNilaiController extends Controller
         $indikator = Model_Program_Indikator::all();
         
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.program_indikator.index', compact('tahun','program','indikator'));
+        return view('cascading.program_nilai.index', compact('tahun','program','indikator'));
     }
 
     /**
@@ -67,20 +68,25 @@ class ProgramNilaiController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_misi" => 'required',
-            "tujuan" => 'required',
+            "id_indikator_program" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
-        Model_Program::create([
-            "id_misi" => $request->id_misi,
-            "tujuan" => $request->tujuan,
+        Model_program_Nilai::create([
+            "id_indikator_program" => $request->id_indikator_program,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
-
     /**
      * Display the specified resource.
      *
@@ -100,7 +106,7 @@ class ProgramNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Program::find($id);
+        return Model_Program_Nilai::find($id);
     }
 
     /**
@@ -110,19 +116,25 @@ class ProgramNilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $programNilai)
     {
-        $misi  = Model_Program::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
-        $misi->update([
-            "tujuan" => $request->tujuan,
+        $programNilai->update([
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
 
@@ -134,7 +146,7 @@ class ProgramNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Program::find($id);
+    $misi  = Model_Program_nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

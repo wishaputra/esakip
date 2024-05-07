@@ -20,9 +20,6 @@ class KegiatanNilaiController extends Controller
         $kegiatan_nilai = Model_Kegiatan_Nilai::all();
     
         return DataTables::of($kegiatan_nilai)
-            ->addColumn('kegiatan_nilai_count', function ($p) {
-                return "<a  href='".route('setup.kegiatan_nilai.index')."?kegiatan_nilai_id=".$p->id."'  title='Nilai Kegiatan'>". $p->kegiatan_nilai->count() ."</a>";
-            })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -81,7 +78,7 @@ class KegiatanNilaiController extends Controller
         ]);
 
         Model_Kegiatan_Nilai::create([
-            "id_indikator_kegiatan" => $request->id_indikator,
+            "id_indikator_kegiatan" => $request->id_indikator_kegiatan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,
@@ -124,13 +121,19 @@ class KegiatanNilaiController extends Controller
     {
         $misi  = Model_Kegiatan_nilai::find($id);
         $rule = [
-            "tujuan" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "tujuan" => $request->tujuan,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);

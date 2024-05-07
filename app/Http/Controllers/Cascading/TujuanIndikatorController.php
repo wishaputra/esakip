@@ -17,7 +17,7 @@ class TujuanIndikatorController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $tujuan_indikator   = Model_Tujuan_Indikator::all();
+        $tujuan_indikator   = Model_Tujuan_Indikator::whereid_tujuan($request->id_tujuan)->get();
         return DataTables::of($tujuan_indikator)
             ->addColumn('tujuan_nilai_count', function ($p) {
                 $count = $p->tujuan_nilai->count();

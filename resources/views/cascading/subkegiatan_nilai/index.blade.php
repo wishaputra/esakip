@@ -176,7 +176,7 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.sub_kegiatan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.sub_kegiatan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
             $('#id_kegiatan').val(data.id_kegiatan);

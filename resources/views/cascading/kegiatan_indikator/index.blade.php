@@ -57,7 +57,6 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Kode Kegiatan</td>
                                             <td>Kegiatan</td>
                                             <td>Jumlah Indikator</td>
                                             <td width="10%">Aksi</td>

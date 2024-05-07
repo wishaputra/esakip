@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class TujuanController extends Controller
 {
-    public function api(Request $request)
+    public function api()
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $tujuan   = Model_Tujuan::all();

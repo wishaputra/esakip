@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Indikator Sasaran Renstra</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Nilai Sasaran</a>
                     </li>
 
 
@@ -56,10 +56,13 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td width="15%">#</td>
-                                            <td>Indikator Sasaran Renstra</td>
-                                            <td>Jumlah Nilai</td>
+                                        <td width="15%">#</td>
+                                            <td>satuan</td>
+                                            <td>tahun</td>
+                                            <td>target</td>
+                                            <td>capaian</td>
                                             <td width="10%">Aksi</td>
+                                        </tr>>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -91,24 +94,41 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id_sasaran" id="id_sasaran">
+                    <input type="hidden" name="id_indikator_sasaran_renstra" id="id_indikator_sasaran_renstra">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="sasaran_renstra" class="col-form-label">sasaran renstra</label>
-                    @foreach ($sasaran_renstra->unique('id') as $item)
-                        <textarea name="sasaran_renstra" id="sasaran_renstra" class="form-control" readonly>{{ $item->sasaran_renstra }}</textarea>
-                        <input type="hidden" name="id_sasaran_renstra" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                    <label for="indikator" class="col-form-label">Indikator</label>
+                    @foreach ($indikator->unique('id') as $item)
+                        <textarea name="indikator_sasaran_renstra" id="indikator_sasaran_renstra" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <input type="hidden" name="id_indikator_sasaran_renstra" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
-                </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">Indikator</label>
-                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
+                                <label for="satuan" class="col-form-label">satuan</label>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="tahun" class="col-form-label">tahun</label>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="target" class="col-form-label">target</label>
+                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="capaian" class="col-form-label">capaian</label>
+                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
                         <!-- <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Nama</label>
@@ -146,7 +166,7 @@
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-    }
+}
     
     function edit(id){
         save_method = 'edit';
@@ -155,10 +175,10 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.sasaran_renstra_indikator.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.sasaran_renstra_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#id_sasaran_renstra').val(data.id_sasaran_renstra);
-            $('#indikator').val(data.indikator).focus();
+            $('#tahun').val(data.tahun_awal);
+            $('#sasaran').val(data.sasaran).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -174,7 +194,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.sasaran_renstra_indikator.store') }}" : "{{ route('setup.sasaran_renstra_indikator.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.sasaran_renstra_nilai.store') }}" : "{{ route('setup.sasaran_renstra_nilai.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -209,20 +229,23 @@
     });
 
     var table = $('#menu-table').dataTable({
-        processing: true,
-        serverSide: true,
-        order: [2, 'asc'],
-        ajax: {
-            url: "{{ route('setup.sasaran_renstra_indikator.api') }}",
-            method: 'POST'
-        },
-        columns: [
-        {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-        {data: 'indikator', name: 'indikator'},
-        {data: 'sasaran_renstra_nilai_count', name: 'sasaran_renstra_nilai_count'},
-        {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
-    ]
-    });
+    processing: true,
+    serverSide: true,
+    order: [2, 'asc'],
+    ajax: {
+        url: "{{ route('setup.sasaran_renstra_nilai.api') }}",
+        method: 'POST'
+    },
+    columns: [
+            {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
+            {data: 'satuan', name: 'satuan'},
+            {data: 'tahun', name: 'tahun'},
+            {data: 'target', name: 'target'},
+            {data: 'capaian', name: 'capaian'},
+            // {data: 'submenu_count', name: 'submenu_count'},            
+            {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+        ]
+});
 
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();
@@ -253,7 +276,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.sasaran_renstra_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.sasaran_renstra_nilai.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

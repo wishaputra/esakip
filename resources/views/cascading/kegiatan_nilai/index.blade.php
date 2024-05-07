@@ -99,40 +99,36 @@
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="indikator_kegiatan" class="col-form-label">Indikator Kegiatan</label>
+                    <label for="indikator" class="col-form-label">Indikator Kegiatan</label>
                     @foreach ($indikator->unique('id') as $item)
                         <textarea name="indikator_kegiatan" id="indikator_kegiatan" class="form-control" readonly>{{ $item->indikator }}</textarea>
                         <input type="hidden" name="id_indikator_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
-                        </div>
-                        <div class="col-md-12">
+                    <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="satuan class="col-form-label">Satuan</label>
-                                <input type="text" name="satuan" id="satuan" class="form-control">
+                                <label for="satuan" class="col-form-label">satuan</label>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="tahun" class="col-form-label">Tahun</label>
+                                <label for="tahun" class="col-form-label">tahun</label>
                                 <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="target" class="col-form-label">Target</label>
-                                <input type="text" name="target" id="target" class="form-control">
+                                <label for="target" class="col-form-label">target</label>
+                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="capaian" class="col-form-label">Capaian</label>
-                                <input type="text" name="capaian" id="capaian" class="form-control">
+                                <label for="capaian" class="col-form-label">capaian</label>
+                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -166,7 +162,7 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.kegiatan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.kegiatan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#tahun').val(data.tahun_awal);
             $('#id_program').val(data.id_program);
@@ -269,7 +265,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.kegiatan_indikator.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.kegiatan_nilai.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

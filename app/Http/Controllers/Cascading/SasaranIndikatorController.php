@@ -48,8 +48,9 @@ class SasaranIndikatorController extends Controller
         // $tujuan = Model_Tujuan::find($id_tujuan);
         // $title = "Tujuan " . $tujuan->tujuan;
         $indikator  = Model_Sasaran_Indikator::all();
-        $sasaran = Model_Sasaran::all();
-        $id_sasaran = Model_Sasaran_Indikator::all();
+        $sasaran = Model_Sasaran::whereid(3)->get();
+        $id_sasaran = Model_Sasaran_Indikator::whereid_sasaran($request->id_sasaran)->get();
+        //$misi = Model_Misi::whereid_visi($id_visi)->orderBy('id', 'ASC')->get();
 
         return view('cascading.sasaran_indikator.index', compact('indikator','sasaran', 'id_sasaran'));
     }

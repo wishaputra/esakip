@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Program</a>
+                            <i class="icon icon-plus-circle"></i>Tambah nilai</a>
                     </li>
 
 
@@ -56,9 +56,11 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td width="15%">#</td>
-                                            <td>indikator program</td>
-                                            <td>Nilai</td>
+                                        <td width="15%">#</td>
+                                            <td>satuan</td>
+                                            <td>tahun</td>
+                                            <td>target</td>
+                                            <td>capaian</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -91,21 +93,39 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id_indikator" id="id_indikator">
+                    <input type="hidden" name="id_indikator_program" id="id_indikator_program">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
                     <label for="indikator" class="col-form-label">Indikator</label>
                     @foreach ($indikator->unique('id') as $item)
                         <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
-                        <input type="hidden" name="id_indikator" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                        <input type="hidden" name="id_indikator_program" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
-                </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">Nilai</label>
-                                <textarea name="indikator" id="indikator" class="form-control" rows="2"></textarea>
+                                <label for="satuan" class="col-form-label">satuan</label>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="tahun" class="col-form-label">tahun</label>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="target" class="col-form-label">target</label>
+                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="capaian" class="col-form-label">capaian</label>
+                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -138,7 +158,6 @@
 @push('script')
 
 <script>
-
     function add(){
         $('#alert').html('');
         save_method = "add";
@@ -158,7 +177,9 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.program_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#program').val(data.program).focus();
+            $('#tahun').val(data.tahun_awal);
+            $('#id_misi').val(data.id_misi);
+            $('#tujuan').val(data.tujuan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -218,12 +239,15 @@
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'indikator', name: 'indikator'},
-            {data: 'program_nilai_count', name: 'program_nilai_count'},
+            {data: 'satuan', name: 'satuan'},
+            {data: 'tahun', name: 'tahun'},
+            {data: 'target', name: 'target'},
+            {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
+    
 
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();

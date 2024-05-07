@@ -19,8 +19,8 @@ class SasaranRenstraNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran_renstra   = Model_Sasaran_Renstra::all();
-        return DataTables::of($sasaran_renstra)
+        $sasaran_renstra_nilai   = Model_Sasaran_Renstra_nilai::all();
+        return DataTables::of($sasaran_renstra_nilai)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
@@ -45,9 +45,9 @@ class SasaranRenstraNilaiController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
         $tujuan = Model_Tujuan::all();
-        $sasaran_renstra = Model_Sasaran_Renstra::all();
+        $indikator = Model_Sasaran_Renstra_Indikator::all();
 
-        return view('cascading.sasaran_renstra_nilai.index', compact('tahun','tujuan','sasaran_renstra'));
+        return view('cascading.sasaran_renstra_nilai.index', compact('tahun','tujuan','indikator'));
     }
 
     /**
@@ -68,17 +68,23 @@ class SasaranRenstraNilaiController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_tujuan" => 'required',
-            "sasaran" => 'required',
+            "id_indikator_sasaran_renstra" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ]);
 
         Model_Sasaran_Renstra_Nilai::create([
-            "id_tujuan" => $request->id_tujuan,
-            "sasaran" => $request->sasaran,
+            "id_indikator_sasaran_renstra" => $request->id_indikator_sasaran_renstra,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
+
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 
@@ -101,7 +107,7 @@ class SasaranRenstraNilaiController extends Controller
      */
     public function edit($id)
     {
-        return Model_Sasaran::find($id);
+        return Model_Sasaran_Renstra_Nilai::find($id);
     }
 
     /**
@@ -113,20 +119,25 @@ class SasaranRenstraNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran::find($id);
+        $misi  = Model_Sasaran_Renstra_Nilai::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "satuan" => 'required',
+            "tahun" => 'required',
+            "target" => 'required',
+            "capaian" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "sasaran" => $request->sasaran,
+            "satuan" => $request->satuan,
+            "tahun" => $request->tahun,
+            "target" => $request->target,
+            "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -135,7 +146,7 @@ class SasaranRenstraNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Sasaran::find($id);
+    $misi  = Model_Sasaran_Renstra_Nilai::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();
