@@ -22,7 +22,7 @@ class KegiatanIndikatorController extends Controller
         return DataTables::of($kegiatan_indikator)
             ->addColumn('kegiatan_nilai_count', function ($p) {
                 $count = $p->kegiatan_nilai->count();
-                return "<a  href='".route('setup.kegiatan_nilai.index')."?kegiatan_nilai_id=".$p->id."'  title='Nilai Kegiatan'>".$count."</a>";
+                return "<a  href='".route('setup.kegiatan_nilai.index')."?id_kegiatan_indikator=".$p->id."'  title='Nilai Kegiatan'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -39,18 +39,15 @@ class KegiatanIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Kegiatan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.kegiatan_indikator.index');
-        // }
+        $id_kegiatan = $request->id_kegiatan;
+        if (!$id_kegiatan || !Model_kegiatan::whereid($id_kegiatan)->first()) {
+            return redirect()->route('setup.kegiatan.index');
+        }
 
-        // $visi = Model_Kegiatan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $program   = Model_Program::all();
-        $kegiatan = Model_Kegiatan::all();
-        // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_indikator.index', compact('tahun','program','kegiatan'));
+      
+        $kegiatan = Model_kegiatan::whereid($id_kegiatan)->get();
+        
+        return view('cascading.kegiatan_indikator.index', compact('kegiatan'));
     }
 
     /**

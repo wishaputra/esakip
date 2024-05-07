@@ -20,10 +20,11 @@ class SasaranIndikatorController extends Controller
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $sasaran_indikator   = Model_Sasaran_Indikator::all();
+        // $menu = Sub_menu::wheremenu_id($request->menu_id)->orderBy('no_urut', 'ASC')->get();
         return DataTables::of($sasaran_indikator)
             ->addColumn('sasaran_nilai_count', function ($p) {
                 $count = $p->sasaran_nilai->count();
-                return "<a  href='".route('setup.sasaran_nilai.index')."?sasaran_nilai_id=".$p->id."'  title='Nilai Sasaran'>".$count."</a>";
+                return "<a  href='".route('setup.sasaran_nilai.index')."?id_indikator=".$p->id."'  title='Nilai Sasaran'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -40,19 +41,19 @@ class SasaranIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_sasaran = $request->id_sasaran;
-        // if (!$id_sasaran || !Model_sasaran_Indikator::whereid($id_sasaran)->first()) {
-        //     return redirect()->route('setup.sasaran_indikator.index');
-        // }
+        $id_sasaran = $request->id_sasaran;
+        if (!$id_sasaran || !Model_sasaran::whereid($id_sasaran)->first()) {
+            return redirect()->route('setup.sasaran.index');
+        }
 
         // $tujuan = Model_Tujuan::find($id_tujuan);
         // $title = "Tujuan " . $tujuan->tujuan;
-        $indikator  = Model_Sasaran_Indikator::all();
-        $sasaran = Model_Sasaran::whereid(3)->get();
-        $id_sasaran = Model_Sasaran_Indikator::whereid_sasaran($request->id_sasaran)->get();
+        // $indikator  = Model_Sasaran_Indikator::all();
+        $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
+        // $id_sasaran = Model_Sasaran_Indikator::whereid_sasaran($request->id_sasaran)->get();
         //$misi = Model_Misi::whereid_visi($id_visi)->orderBy('id', 'ASC')->get();
 
-        return view('cascading.sasaran_indikator.index', compact('indikator','sasaran', 'id_sasaran'));
+        return view('cascading.sasaran_indikator.index', compact('sasaran', 'id_sasaran'));
     }
 
 

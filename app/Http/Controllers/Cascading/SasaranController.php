@@ -21,7 +21,7 @@ class SasaranController extends Controller
         return DataTables::of($sasaran)
             ->addColumn('sasaran_indikator_count', function ($p) {
                 $count = $p->sasaran_indikator->count();
-                return "<a  href='".route('setup.sasaran_indikator.index')."?sasaran_indikator_id=".$p->id."'  title='Indikator Sasaran'>".$count."</a>";
+                return "<a  href='".route('setup.sasaran_indikator.index')."?id_sasaran=".$p->id."'  title='Indikator Sasaran'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "

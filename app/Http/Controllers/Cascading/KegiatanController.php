@@ -22,7 +22,7 @@ class KegiatanController extends Controller
         return DataTables::of($kegiatan)
             ->addColumn('kegiatan_indikator_count', function ($p) {
                 $count = $p->kegiatan_indikator->count();
-                return "<a  href='".route('setup.kegiatan_indikator.index')."?kegiatan_id=".$p->id."'  title='Indikator Kegiatan'>".$count."</a>";
+                return "<a  href='".route('setup.kegiatan_indikator.index')."?id_kegiatan=".$p->id."'  title='Indikator Kegiatan'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "

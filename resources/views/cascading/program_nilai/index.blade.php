@@ -93,7 +93,7 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id_indikator_program" id="id_indikator_program">
+                    <input type="hidden" name="id" id="id">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
@@ -125,7 +125,7 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="capaian" class="col-form-label">capaian</label>
-                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
+                                <textarea name="capaian" id="capaian" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -177,9 +177,10 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.program_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_misi').val(data.id_misi);
-            $('#tujuan').val(data.tujuan).focus();
+            $('#satuan').val(data.satuan);
+            $('#tahun').val(data.tahun).focus();
+            $('#target').val(data.target).focus();
+            $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

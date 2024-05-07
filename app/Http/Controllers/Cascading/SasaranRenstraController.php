@@ -22,7 +22,7 @@ class SasaranRenstraController extends Controller
         return DataTables::of($sasaran_renstra)
             ->addColumn('sasaran_renstra_indikator_count', function ($p) {
                 $count = $p->sasaran_renstra_indikator->count();
-                return "<a  href='".route('setup.sasaran_renstra_indikator.index')."?sasaran_renstra_indikator_id=".$p->id."'  title='Indikator Sasaran Renstra'>".$count."</a>";
+                return "<a  href='".route('setup.sasaran_renstra_indikator.index')."?id_sasaran_renstra=".$p->id."'  title='Indikator Sasaran Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "

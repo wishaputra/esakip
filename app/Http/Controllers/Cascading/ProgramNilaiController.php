@@ -116,8 +116,9 @@ class ProgramNilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $programNilai)
+    public function update(Request $request, $id)
     {
+        $program_nilai  = Model_program_Nilai::find($id);
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
@@ -127,7 +128,8 @@ class ProgramNilaiController extends Controller
 
         $request->validate($rule);
 
-        $programNilai->update([
+        $program_nilai->update([
+            "id_program_indikator" => $request->id_program_indikator,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,

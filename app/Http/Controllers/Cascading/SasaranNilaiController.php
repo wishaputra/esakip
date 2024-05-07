@@ -30,11 +30,17 @@ class SasaranNilaiController extends Controller
 
     public function index(Request $request)
     {
-        $indikator = Model_Sasaran_Indikator::all();
-        $sasaran = Model_Sasaran::all();
-        $id_sasaran = Model_Sasaran_Indikator::all();
+        $id_indikator = $request->id_indikator;
+        if (!$id_indikator || !Model_Sasaran_Indikator::whereid($id_indikator)->first()) {
+            return redirect()->route('setup.sasaran_indikator.index');
+        }
 
-        return view('cascading.sasaran_nilai.index', compact('indikator', 'sasaran', 'id_sasaran'));
+
+        $indikator = Model_Sasaran_Indikator::whereid($id_indikator)->get();
+        // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
+        // $id_sasaran = Model_Sasaran_Indikator::all();
+
+        return view('cascading.sasaran_nilai.index', compact('indikator'));
     }
 
     public function create()
@@ -76,7 +82,7 @@ class SasaranNilaiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $misi  = Model_Sasaran_Nilai::find($id);
+        $sasaran_nilai  = Model_Sasaran_Nilai::find($id);
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
@@ -86,7 +92,8 @@ class SasaranNilaiController extends Controller
 
         $request->validate($rule);
 
-        $misi->update([
+        $sasaran_nilai->update([
+            "id_indikator_sasaran" => $request->id_indikator_sasaran,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,

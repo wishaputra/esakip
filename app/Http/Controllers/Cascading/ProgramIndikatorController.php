@@ -38,15 +38,16 @@ class ProgramIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Program::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan.index');
-        // }
+        $id_program = $request->id_program;
+        if (!$id_program || !Model_program::whereid($id_program)->first()) {
+            return redirect()->route('setup.program.index');
+        }
 
         // $visi = Model_Program::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
         $tahun  = Model_Visi::all();
-        $program = Model_Program::all();
+        $program = Model_Program::whereid($id_program)->get();
+        // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
         
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
         return view('cascading.program_indikator.index', compact('tahun','program'));

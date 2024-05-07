@@ -92,13 +92,14 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="id_sasaran" value="{{$id_sasaran}}">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12"> 
                     <label for="sasaran" class="col-form-label">sasaran</label>
                     @foreach ($sasaran as $item)
                         <textarea name="sasaran" id="sasaran" class="form-control" readonly>{{ $item->sasaran }}</textarea>
-                        <input type="hidden" name="id_sasaran" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                        <!-- <input type="hidden" name="id_sasaran" value="{{ $item->id }}"> Add this line to include the id_sasaran field -->
                         
                     @endforeach
                 </div>
@@ -109,6 +110,9 @@
                             </div>
                         </div>
 
+
+
+                        
                         <!-- <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Nama</label>
@@ -158,7 +162,6 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.sasaran_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
             $('#sasaran').val(data.sasaran).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){

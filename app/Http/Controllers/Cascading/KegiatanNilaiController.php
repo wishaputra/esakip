@@ -35,19 +35,17 @@ class KegiatanNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Kegiatan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.kegiatan_indikator.index');
-        // }
+        $id_kegiatan_indikator = $request->id_kegiatan_indikator;
+        if (!$id_kegiatan_indikator || !Model_kegiatan::whereid($id_kegiatan_indikator)->first()) {
+            return redirect()->route('setup.kegiatan_indikator.index');
+        }
 
-        // $visi = Model_Kegiatan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $indikator   = Model_Kegiatan_Indikator::all();
+      
+        $indikator = Model_Kegiatan_Indikator::whereid($id_kegiatan_indikator)->get();
 
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_nilai.index', compact('tahun','indikator'));
+        return view('cascading.kegiatan_nilai.index', compact('indikator'));
     }
 
     /**
@@ -119,7 +117,7 @@ class KegiatanNilaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Kegiatan_nilai::find($id);
+        $kaegiatan_nilai  = Model_Kegiatan_nilai::find($id);
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
@@ -129,7 +127,8 @@ class KegiatanNilaiController extends Controller
 
         $request->validate($rule);
 
-        $misi->update([
+        $kaegiatan_nilai->update([
+            "id_indikator_kegiatan" => $request->id_indikator_kegiatan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,

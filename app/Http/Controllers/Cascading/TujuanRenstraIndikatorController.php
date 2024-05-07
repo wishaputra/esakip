@@ -22,7 +22,7 @@ class TujuanRenstraIndikatorController extends Controller
         return DataTables::of($tujuan_renstra_indikator)
             ->addColumn('tujuan_renstra_nilai_count', function ($p) {
                 $count = $p->tujuan_renstra_nilai->count();
-                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?tujuan_renstra_nilai_id=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
+                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?id_tujuan_renstra_indikator=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -39,14 +39,13 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan_Renstra::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan.index');
-        // }
+        $id_tujuan_renstra = $request->id_tujuan_renstra;
+        if (!$id_tujuan_renstra || !Model_tujuan_renstra::whereid($id_tujuan_renstra)->first()) {
+            return redirect()->route('setup.tujuan_renstra.index');
+        }
 
-        // $visi = Model_Tujuan_Renstra::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tujuan_renstra   = Model_Tujuan_Renstra::all();
+
+        $tujuan_renstra   = Model_Tujuan_Renstra::whereid($id_tujuan_renstra)->get();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
         return view('cascading.tujuan_renstra_indikator.index', compact('tujuan_renstra'));

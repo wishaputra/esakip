@@ -23,7 +23,7 @@ class SasaranRenstraIndikatorController extends Controller
         return DataTables::of($sasaran_renstra_indikator)
             ->addColumn('sasaran_renstra_nilai_count', function ($p) {
                 $count = $p->sasaran_renstra_nilai->count();
-                return "<a  href='".route('setup.sasaran_renstra_nilai.index')."?sasaran_renstra_nilai_id=".$p->id."'  title='Nilai Sasaran Renstra'>".$count."</a>";
+                return "<a  href='".route('setup.sasaran_renstra_nilai.index')."?id_sasaran_renstra_indikator=".$p->id."'  title='Nilai Sasaran Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -40,18 +40,15 @@ class SasaranRenstraIndikatorController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan.index');
-        // }
+        $id_sasaran_renstra = $request->id_sasaran_renstra;
+        if (!$id_sasaran_renstra || !Model_Sasaran_Renstra::whereid($id_sasaran_renstra)->first()) {
+            return redirect()->route('setup.sasaran_renstra.index');
+        }
 
-        // $visi = Model_Tujuan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $tujuan = Model_Tujuan::all();
-        $sasaran_renstra = Model_Sasaran_Renstra::all();
+        
+        $sasaran_renstra = Model_Sasaran_Renstra::whereid($id_sasaran_renstra)->get();
 
-        return view('cascading.sasaran_renstra_indikator.index', compact('tahun','tujuan','sasaran_renstra'));
+        return view('cascading.sasaran_renstra_indikator.index', compact('sasaran_renstra'));
     }
 
     /**

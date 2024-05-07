@@ -36,18 +36,15 @@ class SasaranRenstraNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan.index');
-        // }
+        $id_sasaran_renstra_indikator = $request->id_sasaran_renstra_indikator;
+        if (!$id_sasaran_renstra_indikator || !Model_Sasaran_Renstra_Indikator::whereid($id_sasaran_renstra_indikator)->first()) {
+            return redirect()->route('setup.sasaran_renstra_indikator.index');
+        }
 
-        // $visi = Model_Tujuan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $tujuan = Model_Tujuan::all();
-        $indikator = Model_Sasaran_Renstra_Indikator::all();
+        
+        $indikator = Model_Sasaran_Renstra_Indikator::whereid($id_sasaran_renstra_indikator)->get();
 
-        return view('cascading.sasaran_renstra_nilai.index', compact('tahun','tujuan','indikator'));
+        return view('cascading.sasaran_renstra_nilai.index', compact('indikator'));
     }
 
     /**

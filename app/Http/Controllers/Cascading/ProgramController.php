@@ -22,7 +22,7 @@ class ProgramController extends Controller
         return DataTables::of($program)
             ->addColumn('program_indikator_count', function ($p) {
                 $count = $p->program_indikator->count();
-                return "<a  href='".route('setup.program_indikator.index')."?program_id=".$p->id."'  title='Indikator Program'>".$count."</a>";
+                return "<a  href='".route('setup.program_indikator.index')."?id_program=".$p->id."'  title='Indikator Program'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "

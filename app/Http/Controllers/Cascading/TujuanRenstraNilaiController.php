@@ -35,18 +35,16 @@ class TujuanRenstraNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan_indikator.index');
-        // }
+        $id_tujuan_renstra_indikator = $request->id_tujuan_renstra_indikator;
+        if (!$id_tujuan_renstra_indikator || !Model_Tujuan_Renstra_Indikator::whereid($id_tujuan_renstra_indikator)->first()) {
+            return redirect()->route('setup.tujuan_renstra_indikator.index');
+        }
 
-        // $visi = Model_Tujuan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $indikator  = Model_Tujuan_Renstra_Indikator::all();
-        $misi   = Model_Misi::all();
+
+        $indikator   = Model_Tujuan_Renstra_Indikator::whereid($id_tujuan_renstra_indikator)->get();
 
         // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_renstra_nilai.index', compact('indikator','misi'));
+        return view('cascading.tujuan_renstra_nilai.index', compact('indikator'));
     }
 
     /**
@@ -116,8 +114,9 @@ class TujuanRenstraNilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Model_Tujuan_Renstra_Nilai $tujuanNilairenstra)
+    public function update(Request $request, $id)
     {
+        $tujuan_renstra_nilai = Model_Tujuan_Renstra_Nilai::find($id);
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
@@ -127,7 +126,7 @@ class TujuanRenstraNilaiController extends Controller
 
         $request->validate($rule);
 
-        $tujuanNilairenstra->update([
+        $tujuan_renstra_nilai->update([
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,

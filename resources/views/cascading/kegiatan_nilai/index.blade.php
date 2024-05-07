@@ -95,7 +95,7 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
-                    <input type="hidden" name="id_indikator_kegiatan" id="id_indikator_kegiatan">
+                    <input type="hidden" name="id" id="id">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
@@ -126,7 +126,7 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="capaian" class="col-form-label">capaian</label>
-                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
+                                <textarea name="capaian" id="capaian" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
             </div>
@@ -164,10 +164,10 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.kegiatan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_program').val(data.id_program);
-            $('#kode_kegiatan').val(data.kode_kegiatan).focus();
-            $('#kegiatan').val(data.kegiatan).focus();
+            $('#satuan').val(data.satuan);
+            $('#tahun').val(data.tahun).focus();
+            $('#target').val(data.target).focus();
+            $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
