@@ -20,7 +20,7 @@ class TujuanController extends Controller
         return DataTables::of($tujuan)
             ->addColumn('tujuan_indikator_count', function ($p) {
                 $count = $p->tujuan_indikator->count();
-                return "<a  href='".route('setup.tujuan_indikator.index')."?tujuan_id=".$p->id."'  title='Indikator Tujuan'>".$count."</a>";
+                return "<a  href='".route('setup.tujuan_indikator.index')."?id_tujuan=".$p->id."'  title='Indikator Tujuan'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "

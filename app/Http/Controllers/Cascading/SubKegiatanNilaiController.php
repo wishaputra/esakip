@@ -36,19 +36,16 @@ class SubKegiatanNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Kegiatan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.kegiatan_indikator.index');
-        // }
+        $id_indikator_sub_kegiatan = $request->id_indikator_sub_kegiatan;
+        if (!$id_indikator_sub_kegiatan || !Model_SubKegiatan_Indikator::whereid($id_indikator_sub_kegiatan)->first()) {
+            return redirect()->route('setup.subkegiatan_indikator.index');
+        }
 
-        // $visi = Model_Kegiatan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $indikator   = Model_subKegiatan_Indikator::all();
-
+      
+        $indikator_sub_kegiatan = Model_SubKegiatan_Indikator::whereid($id_indikator_sub_kegiatan)->get();
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_nilai.index', compact('tahun','indikator'));
+        return view('cascading.subkegiatan_nilai.index', compact('indikator_sub_kegiatan'));
     }
 
     /**
@@ -118,7 +115,7 @@ class SubKegiatanNilaiController extends Controller
      * @param  \App\Models\Cascading\Model_Kegiatan_Nilai $model_kegiatan_nilai
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id, Model_subKegiatan_Nilai $model_subKegiatan_Nilai)
+    public function update(Request $request, $id)
     {
         $model_subKegiatan_Nilai  = Model_subKegiatan_nilai::find($id);
         $rule = [
@@ -131,6 +128,7 @@ class SubKegiatanNilaiController extends Controller
         $request->validate($rule);
 
         $model_subKegiatan_Nilai->update([
+            "id_indikator_sub_kegiatan" => $request->id_indikator_sub_kegiatan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "target" => $request->target,

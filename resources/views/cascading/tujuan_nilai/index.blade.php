@@ -177,9 +177,10 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.tujuan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_misi').val(data.id_misi);
-            $('#tujuan').val(data.tujuan).focus();
+            $('#satuan').val(data.satuan);
+            $('#tahun').val(data.tahun);
+            $('#target').val(data.target).focus();
+            $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

@@ -225,18 +225,18 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.tujuan_indikator.api') }}",
-            method: 'POST'
+            method: 'POST',
+            
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'indikator', name: 'indikator'},
             {data: 'tujuan_nilai_count', name: 'tujuan_nilai_count'},
-            // {data: 'route', name: 'route'},
-            // {data: 'submenu_count', name: 'submenu_count'},            
+
+
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
-
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();
         table.api().column(0, {page: 'current'}).nodes().each(function (cell, i){

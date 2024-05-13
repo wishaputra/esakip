@@ -97,9 +97,9 @@
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="indikator" class="col-form-label">Indikator</label>
-                    @foreach ($indikator->unique('id') as $item)
-                        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                    <label for="indikator_sub_kegiatan" class="col-form-label">Indikator</label>
+                    @foreach ($indikator_sub_kegiatan->unique('id') as $item)
+                        <textarea name="indikator_sub_kegiatan" id="indikator_sub_kegiatan" class="form-control" readonly>{{ $item->indikator_sub_kegiatan }}</textarea>
                         <input type="hidden" name="id_indikator_sub_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
@@ -125,7 +125,7 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="capaian" class="col-form-label">capaian</label>
-                                <textarea name="capaian" id="target" class="form-control" rows="3"></textarea>
+                                <textarea name="capaian" id="capaian" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -178,10 +178,10 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.sub_kegiatan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_kegiatan').val(data.id_kegiatan);
-            $('#kode_sub_kegiatan').val(data.kode_sub_kegiatan).focus();
-            $('#sub_kegiatan').val(data.sub_kegiatan).focus();
+            $('#satuan').val(data.satuan);
+            $('#tahun').val(data.tahun);
+            $('#target').val(data.target).focus();
+            $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

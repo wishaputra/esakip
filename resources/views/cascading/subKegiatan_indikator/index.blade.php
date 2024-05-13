@@ -96,9 +96,9 @@
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="sub_kegiatan" class="col-form-label">Sub Kegiatan</label>
+                    <label for="sub_kegiatan" class="col-form-label">sub Kegiatan</label>
                     @foreach ($sub_kegiatan->unique('id') as $item)
-                        <textarea name="sub_kegiatan" id="sub_kegiatan" class="form-control" readonly>{{ $item->sub_kegiatan }}</textarea>
+                        <textarea name="kegiatan" id="sub_kegiatan" class="form-control" readonly>{{ $item->sub_kegiatan }}</textarea>
                         <input type="hidden" name="id_sub_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach

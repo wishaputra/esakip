@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cascading;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class TujuanIndikatorController extends Controller
 {
     public function api(Request $request)
     {
-        $tujuan_indikator = Model_Tujuan_Indikator::whereid_tujuan($request->id_tujuan)->orderBy('id_tujuan', 'ASC')->get();
+        $tujuan_indikator = Model_Tujuan_Indikator::whereid_indikator($request->id_indikator)->get();
         return DataTables::of($tujuan_indikator)
             ->addColumn('tujuan_nilai_count', function ($p) {
                 $count = $p->tujuan_nilai->count();
@@ -36,19 +36,18 @@ class TujuanIndikatorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-{
-    $id_tujuan = $request->id_tujuan;
-    if (!$id_tujuan ||!Model_Tujuan::whereId($id_tujuan)->first()) {
-        return redirect()->route('setup.tujuan.index');
+    {
+        $menu_id = $request->menu_id;
+        if (!$menu_id || !Menu::whereid($menu_id)->first()) {
+            return redirect()->route('setup.menu.index');
+        }
+
+        $menu = Menu::find($menu_id);
+        $title = "Sub Menu " . $menu->nama;
+
+
+        return view('submenu.index', compact('title', 'menu_id'));
     }
-
-    $tujuan = Model_Tujuan_Indikator::whereIdTujuan($id_tujuan)->get();
-
-    return view('cascading.tujuan_indikator.index', compact('tujuan'));
-}
-
-
-    
 
     /**
      * Show the form for creating a new resource.
@@ -70,14 +69,21 @@ class TujuanIndikatorController extends Controller
     {
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
-            "id_tujuan" => 'required',
-            "tujuan" => 'required',
+            "menu_id" => 'required',
+            "nama" => 'required',
+            "no_urut" => 'required|numeric',
+            "route" => 'required',
+
         ]);
 
-        Model_Tujuan_Indikator::create([
-            "id_tujuan" => $request->id_tujuan,
-            "indikator" => $request->indikator,
-            "creator" => Auth::user()->id,
+
+
+        Sub_menu::create([
+
+            "menu_id" => $request->menu_id,
+            "nama" => $request->nama,
+            "no_urut" => $request->no_urut,
+            "route" => $request->route
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
@@ -101,7 +107,7 @@ class TujuanIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        return Sub_menu::find($id);
     }
 
     /**
@@ -113,16 +119,28 @@ class TujuanIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan_Indikator::find($id);
+        $submenu  = Sub_menu::find($id);
+
         $rule = [
-            "indikator" => 'required',
+            "menu_id" => 'required',
+            "nama" => 'required',
+            "no_urut" => 'required|numeric',
+            "route" => 'required',
+
         ];
 
         $request->validate($rule);
 
-        $misi->update([
-            "indikator" => $request->indikator,
-            "creator" => Auth::user()->id,
+
+
+
+        $submenu->update([
+
+            "menu_id" => $request->menu_id,
+            "nama" => $request->nama,
+            "no_urut" => $request->no_urut,
+            "route" => $request->route,
+
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }
@@ -133,21 +151,15 @@ class TujuanIndikatorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
-{
-    $misi  = Model_Tujuan::find($id);
+    public function destroy($id)
+    {
+        $submenu  = Sub_menu::find($id);
 
-    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
-        $count = $misi->tujuan->count();
-    } else {
-        $count = 0;
+        if ($submenu->sub_menus2->count() > 0) {
+            return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
+        }
+
+        $submenu->delete();
+        return response()->json(["message" => "Berhasil menghapus data!"], 200);
     }
-
-    if ($count > 0) {
-        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
-    }
-
-    $misi->delete();
-    return response()->json(["message" => "Berhasil menghapus data!"], 200);
-}
 }
