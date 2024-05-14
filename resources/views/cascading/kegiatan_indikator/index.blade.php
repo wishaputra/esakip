@@ -58,7 +58,7 @@
                                         <tr>
                                             <td width="15%">#</td>
                                             <td>Kegiatan</td>
-                                            <td>Jumlah Indikator</td>
+                                            <td>Jumlah nilai</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -224,7 +224,10 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.kegiatan_indikator.api') }}",
-            method: 'POST'
+            method: 'POST',
+            data:{
+                "id_kegiatan": {{$id_kegiatan}}
+            }
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

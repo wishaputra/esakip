@@ -226,6 +226,9 @@
         ajax: {
             url: "{{ route('setup.tujuan_indikator.api') }}",
             method: 'POST',
+            data:{
+                "id_tujuan": {{$id_tujuan}}
+            }
             
         },
         columns: [

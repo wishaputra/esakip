@@ -236,7 +236,10 @@
     order: [2, 'asc'],
     ajax: {
         url: "{{ route('setup.sasaran_renstra_nilai.api') }}",
-        method: 'POST'
+        method: 'POST',
+        data:{
+                "id_indikator_sasaran_renstra": {{$id_sasaran_renstra_indikator}}
+            }
     },
     columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

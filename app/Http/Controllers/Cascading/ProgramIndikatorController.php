@@ -17,7 +17,7 @@ class ProgramIndikatorController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $program_indikator   = Model_Program_Indikator::all();
+        $program_indikator   = Model_Program_Indikator::whereid_program($request->id_program)->get();
         return DataTables::of($program_indikator)
             ->addColumn('program_nilai_count', function ($p) {
                 $count = $p->program_nilai->count();
@@ -50,7 +50,7 @@ class ProgramIndikatorController extends Controller
         // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
         
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.program_indikator.index', compact('tahun','program'));
+        return view('cascading.program_indikator.index', compact('tahun','program','id_program'));
     }
 
     /**

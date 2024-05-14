@@ -19,7 +19,7 @@ class SasaranIndikatorController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran_indikator   = Model_Sasaran_Indikator::all();
+        $sasaran_indikator   = Model_Sasaran_Indikator::whereid_sasaran($request->id_sasaran)->get();
         // $menu = Sub_menu::wheremenu_id($request->menu_id)->orderBy('no_urut', 'ASC')->get();
         return DataTables::of($sasaran_indikator)
             ->addColumn('sasaran_nilai_count', function ($p) {

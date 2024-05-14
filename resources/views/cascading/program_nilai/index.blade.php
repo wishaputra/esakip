@@ -236,7 +236,8 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.program_nilai.api') }}",
-            method: 'POST'
+            method: 'POST',
+            
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

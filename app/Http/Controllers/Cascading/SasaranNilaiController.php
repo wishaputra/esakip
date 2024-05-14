@@ -18,7 +18,7 @@ class SasaranNilaiController extends Controller
 {
     public function api(Request $request)
     {
-        $sasaran = Model_Sasaran_Nilai::all();
+        $sasaran = Model_Sasaran_Nilai::whereid_indikator_sasaran($request->id_indikator_sasaran)->get();
         return DataTables::of($sasaran)
             ->addColumn('action', function ($p) {
                 return "
@@ -40,7 +40,7 @@ class SasaranNilaiController extends Controller
         // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
         // $id_sasaran = Model_Sasaran_Indikator::all();
 
-        return view('cascading.sasaran_nilai.index', compact('indikator'));
+        return view('cascading.sasaran_nilai.index', compact('indikator','id_indikator'));
     }
 
     public function create()

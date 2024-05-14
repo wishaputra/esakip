@@ -18,7 +18,7 @@ class TujuanRenstraIndikatorController extends Controller
 {
     public function api(Request $request)
     {
-        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::all();
+        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::whereid_tujuan_renstra($request->id_tujuan_resntra)->get();
         return DataTables::of($tujuan_renstra_indikator)
             ->addColumn('tujuan_renstra_nilai_count', function ($p) {
                 $count = $p->tujuan_renstra_nilai->count();
@@ -45,10 +45,10 @@ class TujuanRenstraIndikatorController extends Controller
         }
 
 
-        $tujuan_renstra   = Model_Tujuan_Renstra::whereid($id_tujuan_renstra)->get();
+        $tujuan_renstra   = Model_Tujuan_Renstra_Indikator::whereIdTujuanRenstra($id_tujuan_renstra)->get();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_renstra_indikator.index', compact('tujuan_renstra'));
+        return view('cascading.tujuan_renstra_indikator.index', compact('tujuan_renstra','id_tujuan_renstra'));
     }
 
     /**

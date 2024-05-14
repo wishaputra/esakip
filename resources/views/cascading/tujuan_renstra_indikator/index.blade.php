@@ -225,7 +225,10 @@
     order: [2, 'asc'],
     ajax: {
         url: "{{ route('setup.tujuan_renstra_indikator.api') }}",
-        method: 'POST'
+        method: 'POST',
+        data:{
+                "id_tujuan_renstra": {{$id_tujuan_renstra}}
+            }
     },
     columns: [
         {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

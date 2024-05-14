@@ -18,7 +18,7 @@ class KegiatanIndikatorController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $kegiatan_indikator   = Model_Kegiatan_Indikator::all();
+        $kegiatan_indikator   = Model_Kegiatan_Indikator::whereid_kegiatan($request->id_kegiatan)->get();
         return DataTables::of($kegiatan_indikator)
             ->addColumn('kegiatan_nilai_count', function ($p) {
                 $count = $p->kegiatan_nilai->count();
@@ -47,7 +47,7 @@ class KegiatanIndikatorController extends Controller
       
         $kegiatan = Model_kegiatan::whereid($id_kegiatan)->get();
         
-        return view('cascading.kegiatan_indikator.index', compact('kegiatan'));
+        return view('cascading.kegiatan_indikator.index', compact('kegiatan','id_kegiatan'));
     }
 
     /**

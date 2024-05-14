@@ -218,7 +218,10 @@
     order: [2, 'asc'],
     ajax: {
         url: "{{ route('setup.sasaran_indikator.api') }}",
-        method: 'POST'
+        method: 'POST',
+        data:{
+                "id_sasaran": {{$id_sasaran}}
+            }
     },
     columns: [
         {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

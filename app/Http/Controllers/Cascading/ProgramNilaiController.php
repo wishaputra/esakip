@@ -18,7 +18,7 @@ class ProgramNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $program_nilai   = Model_Program_Nilai::all();
+        $program_nilai   = Model_Program_Nilai::whereid_indikator_program($request->id_indikator_program)->get();
         return DataTables::of($program_nilai)
             ->addColumn('action', function ($p) {
                 return "
@@ -35,7 +35,7 @@ class ProgramNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
+        // $id_ = $request->id_visi;
         // if (!$id_visi || !Model_Program::whereid($id_visi)->first()) {
         //     return redirect()->route('setup.program_indikator.index');
         // }

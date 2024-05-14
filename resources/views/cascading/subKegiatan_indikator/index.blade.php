@@ -223,7 +223,10 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.sub_kegiatan_indikator.api') }}",
-            method: 'POST'
+            method: 'POST',
+            data:{
+                "id_sub_kegiatan": {{$id_sub_kegiatan}}
+            }
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

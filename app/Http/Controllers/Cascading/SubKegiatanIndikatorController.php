@@ -16,7 +16,7 @@ class SubKegiatanIndikatorController extends Controller
 {
     public function api(Request $request)
 {
-    $sub_kegiatan_indikator = Model_SubKegiatan_Indikator::all();
+    $sub_kegiatan_indikator = Model_SubKegiatan_Indikator::whereid_sub_kegiatan($request->id_sub_kegiatan)->get();
 
     return DataTables::of($sub_kegiatan_indikator)
         ->addColumn('subkegiatan_nilai_count', function ($p) {
@@ -39,7 +39,7 @@ class SubKegiatanIndikatorController extends Controller
     public function index(Request $request)
     {
         $id_sub_kegiatan = $request->id_sub_kegiatan;
-        if (!$id_sub_kegiatan || !Model_subkegiatan::whereid($id_sub_kegiatan)->first()) {
+        if (!$id_sub_kegiatan || !Model_SubKegiatan::whereid($id_sub_kegiatan)->first()) {
             return redirect()->route('setup.subkegiatan.index');
         }
 
@@ -47,7 +47,7 @@ class SubKegiatanIndikatorController extends Controller
         $sub_kegiatan = Model_subkegiatan::whereid($id_sub_kegiatan)->get();
 
         // return view('cascading.subkegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_indikator.index', compact('sub_kegiatan'));
+        return view('cascading.subkegiatan_indikator.index', compact('sub_kegiatan','id_sub_kegiatan'));
     }
 
     /**

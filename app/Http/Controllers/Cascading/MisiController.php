@@ -13,17 +13,16 @@ use Illuminate\Support\Facades\DB;
 class MisiController extends Controller
 {
     public function api(Request $request)
-    {
-        $misi   = Model_Misi::whereid_visi($request->id_visi)->orderBy('id', 'ASC')->get();
-        // $misi   = Model_Misi::find(3)->misi;
-        return DataTables::of($misi)
-            ->addColumn('action', function ($p) {
-                return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
-            })
-            ->toJson();
-    }
+{
+    $misi = Model_Misi::whereid_visi($request->id_visi)->orderBy('id', 'ASC')->get();
+    return DataTables::of($misi)
+        ->addColumn('action', function ($p) {
+            return "
+                <a href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
+                <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
+        })
+        ->toJson();
+}
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +31,7 @@ class MisiController extends Controller
     public function index(Request $request)
 {
     $id_visi = $request->id_visi;
-    if (!$id_visi || !Model_Visi::whereid($id_visi)->first()) {
+    if (!Model_Visi::find($id_visi)) {
         return redirect()->route('setup.visi.index');
     }
 

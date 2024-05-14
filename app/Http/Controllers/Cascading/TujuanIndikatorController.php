@@ -16,7 +16,7 @@ class TujuanIndikatorController extends Controller
 {
     public function api(Request $request)
     {
-        $tujuan_indikator = Model_Tujuan_Indikator::whereid_tujuan($request->id_tujuan)->orderBy('id_tujuan', 'ASC')->get();
+        $tujuan_indikator = Model_Tujuan_Indikator::whereid_tujuan($request->id_tujuan)->get();
         return DataTables::of($tujuan_indikator)
             ->addColumn('tujuan_nilai_count', function ($p) {
                 $count = $p->tujuan_nilai->count();
@@ -44,7 +44,7 @@ class TujuanIndikatorController extends Controller
 
     $tujuan = Model_Tujuan_Indikator::whereIdTujuan($id_tujuan)->get();
 
-    return view('cascading.tujuan_indikator.index', compact('tujuan'));
+    return view('cascading.tujuan_indikator.index', compact('tujuan', 'id_tujuan'));
 }
 
 

@@ -17,7 +17,7 @@ class KegiatanNilaiController extends Controller
 {
     public function api(Request $request)
     {
-        $kegiatan_nilai = Model_Kegiatan_Nilai::all();
+        $kegiatan_nilai = Model_Kegiatan_Nilai::whereid_indikator_kegiatan($request->id_indikator_kegiatan)->get();
     
         return DataTables::of($kegiatan_nilai)
             ->addColumn('action', function ($p) {
@@ -25,7 +25,7 @@ class KegiatanNilaiController extends Controller
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
                     <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['kegiatan_nilai_count', 'action'])
+            ->rawColumns(['action'])
             ->toJson();
     }
     /**
@@ -35,17 +35,17 @@ class KegiatanNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        $id_kegiatan_indikator = $request->id_kegiatan_indikator;
-        if (!$id_kegiatan_indikator || !Model_kegiatan::whereid($id_kegiatan_indikator)->first()) {
+        $id_indikator_kegiatan = $request->id_indikator_kegiatan;
+        if (!$id_indikator_kegiatan || !Model_kegiatan::whereid($id_indikator_kegiatan)->first()) {
             return redirect()->route('setup.kegiatan_indikator.index');
         }
 
       
-        $indikator = Model_Kegiatan_Indikator::whereid($id_kegiatan_indikator)->get();
+        $indikator = Model_Kegiatan_Indikator::whereid($id_indikator_kegiatan)->get();
 
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_nilai.index', compact('indikator'));
+        return view('cascading.kegiatan_nilai.index', compact('indikator','id_kegiatan_indikator'));
     }
 
     /**

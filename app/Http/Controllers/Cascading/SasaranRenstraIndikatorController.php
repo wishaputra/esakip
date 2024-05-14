@@ -19,7 +19,7 @@ class SasaranRenstraIndikatorController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $sasaran_renstra_indikator   = Model_Sasaran_Renstra_Indikator::all();
+        $sasaran_renstra_indikator   = Model_Sasaran_Renstra_Indikator::whereid_sasaran_renstra($request->id_sasaran_renstra)->get();
         return DataTables::of($sasaran_renstra_indikator)
             ->addColumn('sasaran_renstra_nilai_count', function ($p) {
                 $count = $p->sasaran_renstra_nilai->count();
@@ -48,7 +48,7 @@ class SasaranRenstraIndikatorController extends Controller
         
         $sasaran_renstra = Model_Sasaran_Renstra::whereid($id_sasaran_renstra)->get();
 
-        return view('cascading.sasaran_renstra_indikator.index', compact('sasaran_renstra'));
+        return view('cascading.sasaran_renstra_indikator.index', compact('sasaran_renstra','id_sasaran_renstra'));
     }
 
     /**

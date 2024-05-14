@@ -221,7 +221,10 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.misi.api') }}",
-            method: 'POST'
+            method: 'POST',
+            data:{
+                "id_visi": {{$id_visi}}
+            }
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
