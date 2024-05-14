@@ -93,15 +93,15 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <<input type="hidden" name="id" id="id">
-                    <input type="hidden" name="indikator_sub_kegiatan" id="id_indikator_sub_kegiatan">
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="indikator" id="indikator">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
-                    <label for="indikator_sub_kegiatan" class="col-form-label">indikator</label>
-                    @foreach ($indikator_sub_kegiatan->unique('id') as $item)
-                        <textarea name="indikator_sub_kegiatan" id="indikator_sub_kegiatan" class="form-control" readonly>{{ $item->indikator_sub_kegiatan }}</textarea>
-                        <input type="hidden" name="indikator_sub_kegiatan" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                    <label for="id_indikator" class="col-form-label">indikator</label>
+                    @foreach ($indikator->unique('id') as $item)
+                        <textarea name="indikator" id="indikator" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <input type="hidden" name="indikator" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
                         </div>

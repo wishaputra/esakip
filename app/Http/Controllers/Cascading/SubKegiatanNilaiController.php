@@ -42,10 +42,10 @@ class SubKegiatanNilaiController extends Controller
         }
 
       
-        $indikator_sub_kegiatan = Model_SubKegiatan_Indikator::whereid($id_indikator_sub_kegiatan)->get();
+        $indikator = Model_SubKegiatan_Indikator::whereid($id_indikator_sub_kegiatan)->get();
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_nilai.index', compact('indikator_sub_kegiatan', 'id_indikator_sub_kegiatan'));
+        return view('cascading.subkegiatan_nilai.index', compact('indikator', 'id_indikator_sub_kegiatan'));
     }
 
     /**
