@@ -18,7 +18,7 @@ class TujuanRenstraNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $tujuan_renstra_nilai   = Model_Tujuan_Renstra_Nilai::all();
+        $tujuan_renstra_nilai   = Model_Tujuan_Renstra_Nilai::whereid_indikator_tujuan_renstra($request->id_indikator_tujuan_renstra)->get();
         return DataTables::of($tujuan_renstra_nilai)
             ->addColumn('action', function ($p) {
                 return "
@@ -35,16 +35,16 @@ class TujuanRenstraNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        $id_tujuan_renstra_indikator = $request->id_tujuan_renstra_indikator;
-        if (!$id_tujuan_renstra_indikator || !Model_Tujuan_Renstra_Indikator::whereid($id_tujuan_renstra_indikator)->first()) {
+        $id_indikator_tujuan_renstra = $request->id_indikator_tujuan_renstra;
+        if (!$id_indikator_tujuan_renstra || !Model_Tujuan_Renstra_Indikator::whereid($id_indikator_tujuan_renstra)->first()) {
             return redirect()->route('setup.tujuan_renstra_indikator.index');
         }
 
 
-        $indikator   = Model_Tujuan_Renstra_Indikator::whereid($id_tujuan_renstra_indikator)->get();
+        $indikator   = Model_Tujuan_Renstra_Indikator::whereid($id_indikator_tujuan_renstra)->get();
 
         // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_renstra_nilai.index', compact('indikator'));
+        return view('cascading.tujuan_renstra_nilai.index', compact('indikator','id_indikator_tujuan_renstra'));
     }
 
     /**

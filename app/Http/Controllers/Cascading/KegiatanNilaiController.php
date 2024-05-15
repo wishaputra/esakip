@@ -36,7 +36,7 @@ class KegiatanNilaiController extends Controller
     public function index(Request $request)
     {
         $id_indikator_kegiatan = $request->id_indikator_kegiatan;
-        if (!$id_indikator_kegiatan || !Model_kegiatan::whereid($id_indikator_kegiatan)->first()) {
+        if (!$id_indikator_kegiatan || !Model_Kegiatan_Indikator::whereid($id_indikator_kegiatan)->first()) {
             return redirect()->route('setup.kegiatan_indikator.index');
         }
 
@@ -45,7 +45,7 @@ class KegiatanNilaiController extends Controller
 
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_nilai.index', compact('indikator','id_kegiatan_indikator'));
+        return view('cascading.kegiatan_nilai.index', compact('indikator','id_indikator_kegiatan'));
     }
 
     /**

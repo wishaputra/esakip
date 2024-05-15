@@ -25,7 +25,7 @@ class ProgramNilaiController extends Controller
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
                     <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['program_nilai_count', 'action'])
+            ->rawColumns(['action'])
             ->toJson();
     }
     /**
@@ -35,19 +35,18 @@ class ProgramNilaiController extends Controller
      */
     public function index(Request $request)
     {
-        // $id_ = $request->id_visi;
-        // if (!$id_visi || !Model_Program::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.program_indikator.index');
-        // }
+        $id_indikator_program = $request->id_indikator_program;
+        if (!$id_indikator_program || !Model_Program_Indikator::whereid($id_indikator_program)->first()) {
+            return redirect()->route('setup.program_indikator.index');
+        }
 
         // $visi = Model_Program::find($id_visi);
         // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $program = Model_Program::all();
-        $indikator = Model_Program_Indikator::all();
+       
+        $indikator = Model_Program_Indikator::whereid($id_indikator_program)->get();
         
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.program_nilai.index', compact('tahun','program','indikator'));
+        return view('cascading.program_nilai.index', compact('indikator','id_indikator_program'));
     }
 
     /**

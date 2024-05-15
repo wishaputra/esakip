@@ -18,11 +18,13 @@ class TujuanRenstraIndikatorController extends Controller
 {
     public function api(Request $request)
     {
-        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::whereid_tujuan_renstra($request->id_tujuan_resntra)->get();
+        $tujuan_renstra_indikator   = Model_Tujuan_Renstra_Indikator::whereid_tujuan_renstra($request->id_tujuan_renstra)->get();
+
         return DataTables::of($tujuan_renstra_indikator)
             ->addColumn('tujuan_renstra_nilai_count', function ($p) {
                 $count = $p->tujuan_renstra_nilai->count();
-                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?id_tujuan_renstra_indikator=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
+               
+                return "<a  href='".route('setup.tujuan_renstra_nilai.index')."?id_indikator_tujuan_renstra=".$p->id."'  title='Nilai Tujuan Renstra'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
@@ -40,12 +42,13 @@ class TujuanRenstraIndikatorController extends Controller
     public function index(Request $request)
     {
         $id_tujuan_renstra = $request->id_tujuan_renstra;
-        if (!$id_tujuan_renstra || !Model_tujuan_renstra::whereid($id_tujuan_renstra)->first()) {
+        if (!$id_tujuan_renstra || !Model_Tujuan_Renstra::whereid($id_tujuan_renstra)->first()) {
             return redirect()->route('setup.tujuan_renstra.index');
         }
 
-
-        $tujuan_renstra   = Model_Tujuan_Renstra_Indikator::whereIdTujuanRenstra($id_tujuan_renstra)->get();
+        // $visi = Model_Tujuan_Renstra::find($id_visi);
+        // $title = "Tujuan " . $visi->tujuan;
+        $tujuan_renstra   = Model_Tujuan_Renstra::whereid($id_tujuan_renstra)->get();
 
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
         return view('cascading.tujuan_renstra_indikator.index', compact('tujuan_renstra','id_tujuan_renstra'));
@@ -71,7 +74,6 @@ class TujuanRenstraIndikatorController extends Controller
 {
     $request->validate([
        
-        "id_tujuan_renstra" => 'required',
         "indikator" => 'required',
     ]);
 
@@ -103,7 +105,7 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan_Renstra_Indikator::find($id);
+        return Model_Tujuan_Renstra::find($id);
     }
 
     /**
@@ -115,15 +117,17 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan_Renstra_Indikator::find($id);
+        $misi  = Model_Tujuan_Renstra::find($id);
         $rule = [
-            "indikator" => 'required',
+            "tujuan_renstra" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "indikator"    => $request->indikator,
+            "id_sasaran"    => $request->id_sasaran,
+            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
+            "tujuan_renstra"=> $request->tujuan_renstra,
             "creator"       => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -137,7 +141,7 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Tujuan_Renstra_Indikator::find($id);
+    $misi  = Model_Tujuan_Renstra::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

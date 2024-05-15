@@ -101,18 +101,17 @@
                         <div class="col-md-12">
                         <div class="col-md-12">
                         <div class="col-md-12">
-                            <input type="hidden" name="id_tujuan_renstra" id="id_tujuan_renstra">
+                            <input type="hidden" name="id_tujuan_rensta" id="id_tujuan_renstra">
                             <div class="form-group col-md-12">
-                                <label for="tujuan_renstra" class="col-form-label">Tujuan renstra</label>
+                                <label for="tujuan_renstra" class="col-form-label">Tujuan</label>
                                 <div>
                                     @foreach ($tujuan_renstra->unique('id') as $item)
-                                        <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" readonly>{{ $item->tujuan_renstra }}</textarea>
+                                        <textarea name="tujuan_renstra" id="id_tujuan_renstra" class="form-control" readonly>{{ $item->tujuan_renstra }}</textarea>
                                         <input type="hidden" name="id_tujuan_renstra" value="{{ $item->id }}">
                                         @break
                                     @endforeach
                                 </div>
                             </div>
-                    
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="indikator" class="col-form-label">Indikator</label>

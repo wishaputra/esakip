@@ -237,7 +237,9 @@
         ajax: {
             url: "{{ route('setup.program_nilai.api') }}",
             method: 'POST',
-            
+            data:{
+                "id_indikator_program": {{$id_indikator_program}}
+            }
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

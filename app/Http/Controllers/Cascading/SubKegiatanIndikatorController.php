@@ -20,7 +20,7 @@ class SubKegiatanIndikatorController extends Controller
 
     return DataTables::of($sub_kegiatan_indikator)
         ->addColumn('subkegiatan_nilai_count', function ($p) {
-            $count = $p->sub_kegiatan_nilai ? $p->sub_kegiatan_nilai->count() : 0;
+            $count = $p->subkegiatan_nilai->count();
             return "<a  href='".route('setup.sub_kegiatan_nilai.index')."?id_indikator_sub_kegiatan=".$p->id."'  title='Nilai Sub Kegiatan'>".$count."</a>";
         })
         ->addColumn('action', function ($p) {

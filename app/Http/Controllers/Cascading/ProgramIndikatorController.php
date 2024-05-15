@@ -21,7 +21,7 @@ class ProgramIndikatorController extends Controller
         return DataTables::of($program_indikator)
             ->addColumn('program_nilai_count', function ($p) {
                 $count = $p->program_nilai->count();
-                return "<a  href='".route('setup.program_nilai.index')."?program_nilai_id=".$p->id."'  title='Nilai Program'>".$count."</a>";
+                return "<a  href='".route('setup.program_nilai.index')."?id_indikator_program=".$p->id."'  title='Nilai Program'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
