@@ -236,7 +236,10 @@
         order: [2, 'asc'],
         ajax: {
             url: "{{ route('setup.tujuan_nilai.api') }}",
-            method: 'POST'
+            method: 'POST',
+            data:{
+                "id_indikator_tujuan": {{$id_indikator_tujuan}}
+            }
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},

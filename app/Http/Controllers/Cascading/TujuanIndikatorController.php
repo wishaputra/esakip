@@ -20,14 +20,14 @@ class TujuanIndikatorController extends Controller
         return DataTables::of($tujuan_indikator)
             ->addColumn('tujuan_nilai_count', function ($p) {
                 $count = $p->tujuan_nilai->count();
-                return "<a  href='".route('setup.tujuan_nilai.index')."?tujuan_nilai_id=".$p->id."'  title='Nilai Tujuan'>".$count."</a>";
+                return "<a  href='".route('setup.tujuan_nilai.index')."?id_indikator_kegiatan=".$p->id."'  title='Nilai Tujuan'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit Menu'><i class='icon-pencil mr-1'></i></a>
                     <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus Menu'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['tujuan_renstra_indikator_count', 'action'])
+            ->rawColumns(['tujuan_nilai_count', 'action'])
             ->toJson();
     }
     /**
@@ -42,7 +42,7 @@ class TujuanIndikatorController extends Controller
         return redirect()->route('setup.tujuan.index');
     }
 
-    $tujuan = Model_Tujuan_Indikator::whereIdTujuan($id_tujuan)->get();
+    $tujuan = Model_Tujuan::whereid($id_tujuan)->get();
 
     return view('cascading.tujuan_indikator.index', compact('tujuan', 'id_tujuan'));
 }

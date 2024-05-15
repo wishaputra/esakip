@@ -18,30 +18,29 @@ class TujuanNilaiController extends Controller
     public function api(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
-        $tujuan_nilai   = Model_Tujuan_Nilai::all();
+        $tujuan_nilai   = Model_Tujuan_Nilai::whereid_indikator_tujuan($request->id_indikator_tujuan)->get();
         return DataTables::of($tujuan_nilai)
             ->addColumn('action', function ($p) {
                 return "
                     <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
                     <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
             })
-            ->rawColumns(['tujuan_nilai_count', 'action'])
+            ->rawColumns(['action'])
             ->toJson();
     }
 
     public function index(Request $request)
     {
-        // $id_visi = $request->id_visi;
-        // if (!$id_visi || !Model_Tujuan::whereid($id_visi)->first()) {
-        //     return redirect()->route('setup.tujuan_indikator.index');
-        // }
+        $id_indikator_tujuan = $request->id_indikator_tujuan;
+        if (!$id_indikator_tujuan || !Model_Tujuan_Indikator::whereid($id_indikator_tujuan)->first()) {
+            return redirect()->route('setup.tujuan_indikator.index');
+        }
 
-        // $visi = Model_Tujuan::find($id_visi);
-        // $title = "Tujuan " . $visi->tujuan;
-        $tahun  = Model_Visi::all();
-        $misi   = Model_Misi::all();
-        $indikator = Model_Tujuan_Indikator::all();    // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_nilai.index', compact('indikator','misi'));
+
+        $indikator = Model_Tujuan_Nilai::whereid_indikator_tujuan($id_indikator_tujuan)->get(); 
+           // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
+        return view('cascading.tujuan_nilai.index', compact('indikator', 'id_indikator_tujuan'));
+
     }
     public function create()
     {

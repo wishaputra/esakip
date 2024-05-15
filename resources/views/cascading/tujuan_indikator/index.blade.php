@@ -235,8 +235,6 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'indikator', name: 'indikator'},
             {data: 'tujuan_nilai_count', name: 'tujuan_nilai_count'},
-
-
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
     });
