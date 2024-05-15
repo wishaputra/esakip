@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Tujuan Renstra</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Indikator Tujuan Renstra</a>
                     </li>
 
 
