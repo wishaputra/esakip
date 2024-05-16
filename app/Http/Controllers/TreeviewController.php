@@ -10,35 +10,37 @@ use App\Models\Cascading\Model_Sasaran;
 
 class TreeviewController extends Controller
 {
-    public function getTreeviewElementDescription(Request $request, $type)
+    private $modelMapping = [
+        'visi' => Model_Visi::class,
+        'misi' => Model_Misi::class,
+        'tujuan' => Model_Tujuan::class,
+        'sasaran' => Model_Sasaran::class,
+    ];
+
+    public function getTreeviewElementDescription(Request $request, $type, $elementId)
     {
-        $elementId = $request->input('element_id');
+        $model = $this->getModel($type);
+        $element = $model::find($elementId);
 
-        switch ($type) {
-            case 'visi':
-                $element = Model_Visi::find($elementId);
-                break;
-            case 'misi':
-                $element = Model_Misi::find($elementId);
-                break;
-            case 'tujuan':
-                $element = Model_Tujuan::find($elementId);
-                break;
-            case 'sasaran':
-                $element = Model_Sasaran::find($elementId);
-                break;
-            default:
-                return response()->json(['error' => 'Invalid element type']);
+        if (!$element) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
         }
 
-        if ($element) {
-            return response()->json([
-                'title' => $element->title,
-                'description' => $element->description,
-                'content' => $element->content,
-            ]);
-        } else {
-            return response()->json(['error' => 'Element not found']);
-        }
+        return response()->json([
+            'title' => $element->title,
+            'description' => $element->description,
+            'content' => $element->content,
+        ]);
     }
+
+    private function getModel($type)
+    {
+        if (!isset($this->modelMapping[$type])) {
+            throw new \InvalidArgumentException("Invalid element type");
+        }
+
+        return $this->modelMapping[$type];
+    }
+
+    
 }
