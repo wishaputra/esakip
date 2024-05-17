@@ -169,30 +169,33 @@
     });
 
     $('#myUL').on('click', 'span.tujuan', function() {
-        var selectedTujuan = $(this).data('tujuan'); // Get the selected TUJUAN text
-        $("#judul").html("Tujuan");
-        $("#deskripsi").html(selectedTujuan); // Update the deskripsi section with the selected TUJUAN
+    var selectedTujuan = $(this).data('tujuan');
 
-        // Show the table and populate it with data
-        $('#tabel').show();
-        if ($.fn.DataTable.isDataTable('#dataTable')) {
-            $('#dataTable').DataTable().clear().draw();
-        } else {
-            $('#dataTable').DataTable({
-                data: getTujuanData(selectedTujuan), // Get the data for the selected 'tujuan'
-                columns: [
-                    { title: "Indikator" },
-                    { title: "Satuan" },
-                    { title: "Tahun 1" },
-                    { title: "Tahun 2" },
-                    { title: "Tahun 3" },
-                    { title: "Tahun 4" },
-                    { title: "Tahun 5" }
-                ]
+    $("#judul").html("Tujuan");
+    $("#deskripsi").html(selectedTujuan);
+
+    $('#tabel').show();
+
+    $.ajax({
+        url: '/get-tujuan-indikator/' + selectedTujuan,
+        type: 'GET',
+        success: function(data) {
+            console.log(data); // Check if data is received
+            var tableData = data.map(function(item) {
+                return [
+                    item.indikator, // Only populate the 'Indikator' column
+                ];
             });
+            $('#dataTable').DataTable().clear().rows.add(tableData).draw();
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
         }
     });
 });
+
+
+    });
 
 function visi() {
     var selectedOption = $('#periode').find(":selected");

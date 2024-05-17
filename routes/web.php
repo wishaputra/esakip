@@ -59,6 +59,7 @@ use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Sasaran;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
+use App\Models\Cascading\Model_Tujuan_Indikator;
 use App\Models\Frontend;
 use App\Models\Section\Pricing;
 use App\Models\TextContent;
@@ -212,6 +213,12 @@ Route::get('/child-nodes', function () {
     $childNodes = ChildNode::all();
     return response()->json($childNodes);
 });
+
+Route::get('/get-tujuan-indikator/{indikator}', function($indikator) {
+    $tujuanIndikators = Model_Tujuan_Indikator::where('indikator', $indikator)->get();
+    return response()->json($tujuanIndikators);
+});
+
 
 //---------------- CASCADING END ---------------- //
 
