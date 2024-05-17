@@ -93,12 +93,6 @@
             <ul class="nested">
                 <li><span class="caret" id="misi">MISI: </span>
                     <ul class="nested" id="misiList">
-                    <li><span class="caret" id="tujuan" onclick="tujuan()">Tujuan:</span>
-                                <ul class="nested">
-                                    <li>SASARAN RPD: 1</li>
-                                    <li>Sasaran: 2</li>
-                                    <li>Sasaran: 3</li>
-                                    <li>Sasaran: 4</li>
                         <!-- MISI and TUJUAN items will be populated here dynamically -->
                     </ul>
                 </li>
@@ -135,106 +129,130 @@
 <script src="https://cdn.datatables.net/2.0.4/js/dataTables.js"></script>
 <script>
     $(document).ready(function() {
-        // Handler for selecting a period
-        $('#periode').change(function() {
-            var selectedOption = $('#periode').find(":selected");
-            var visiText = selectedOption.data('visi');
-            var misiData = selectedOption.data('misi'); // Get the MISI data from the selected option
-            var periodeText = selectedOption.text();
-            
-            $("#textPeriode").html("Periode " + periodeText);
-            $("#visi").html("VISI: " + visiText);
-            
-            // Update the MISI list
-            var misiList = $("#misiList");
-            misiList.empty(); // Clear existing list items
-            
-            misiData.forEach(function(misiItem) {
-                var misi = misiItem.misi;
-                var tujuan = misiItem.tujuan;
-                var li = $("<li><span class='caret'>MISI: " + misi + "</span><ul class='nested'></ul></li>");
-                var tujuanList = li.find('.nested');
-                tujuan.forEach(function(tujuanItem) {
-                    var tujuanLi = $("<li><span class='tujuan'>TUJUAN: " + tujuanItem + "</span></li>");
-                    tujuanList.append(tujuanLi);
-                });
-                misiList.append(li);
+    // Handler for selecting a period
+    $('#periode').change(function() {
+        var selectedOption = $('#periode').find(":selected");
+        var visiText = selectedOption.data('visi');
+        var misiData = selectedOption.data('misi'); // Get the MISI data from the selected option
+        var periodeText = selectedOption.text();
+
+        $("#textPeriode").html("Periode " + periodeText);
+        $("#visi").html("VISI: " + visiText);
+
+        // Update the MISI list
+        var misiList = $("#misiList");
+        misiList.empty(); // Clear existing list items
+
+        misiData.forEach(function(misiItem) {
+            var misi = misiItem.misi;
+            var tujuan = misiItem.tujuan;
+            var li = $("<li><span class='caret misi'>MISI: " + misi + "</span><ul class='nested'></ul></li>");
+            var tujuanList = li.find('.nested');
+            tujuan.forEach(function(tujuanItem) {
+                var tujuanLi = $("<li><span class='tujuan' data-tujuan='" + tujuanItem + "'>TUJUAN: " + tujuanItem + "</span></li>");
+                tujuanList.append(tujuanLi);
             });
-        });
-
-        // Use event delegation to handle click events for dynamically created 'Misi' and 'Tujuan' nodes
-        $('#myUL').on('click', 'span.caret', function() {
-            $(this).siblings(".nested").toggleClass("active");
-            $(this).toggleClass("caret-down");
-        });
-
-        $('#myUL').on('click', 'span.tujuan', function() {
-            var selectedTujuan = $(this).text().replace('TUJUAN: ', ''); // Get the selected TUJUAN text
-            $("#judul").html("Tujuan");
-            $("#deskripsi").html(selectedTujuan); // Update the deskripsi section with the selected TUJUAN
+            misiList.append(li);
         });
     });
 
-    function visi() {
-        var selectedOption = $('#periode').find(":selected");
-        var visiText = selectedOption.data('visi');
-        
-        $("#judul").html("Visi");
-        $("#deskripsi").html(visiText);
-    }
+    // Use event delegation to handle click events for dynamically created 'Misi' and 'Tujuan' nodes
+    $('#myUL').on('click', 'span.caret', function() {
+        $(this).siblings(".nested").toggleClass("active");
+        $(this).toggleClass("caret-down");
+    });
 
+    $('#myUL').on('click', 'span.misi', function() {
+        var selectedMisi = $(this).text().replace('MISI: ', ''); // Get the selected MISI text
+        $("#judul").html("Misi");
+        $("#deskripsi").html(selectedMisi); // Update the deskripsi section with the selected MISI
+    });
 
-    function misi(){
+    $('#myUL').on('click', 'span.tujuan', function() {
+        var selectedTujuan = $(this).data('tujuan'); // Get the selected TUJUAN text
+        $("#judul").html("Tujuan");
+        $("#deskripsi").html(selectedTujuan); // Update the deskripsi section with the selected TUJUAN
+
+        // Show the table and populate it with data
+        $('#tabel').show();
+        if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().clear().draw();
+        } else {
+            $('#dataTable').DataTable({
+                data: getTujuanData(selectedTujuan), // Get the data for the selected 'tujuan'
+                columns: [
+                    { title: "Indikator" },
+                    { title: "Satuan" },
+                    { title: "Tahun 1" },
+                    { title: "Tahun 2" },
+                    { title: "Tahun 3" },
+                    { title: "Tahun 4" },
+                    { title: "Tahun 5" }
+                ]
+            });
+        }
+    });
+});
+
+function visi() {
+    var selectedOption = $('#periode').find(":selected");
+    var visiText = selectedOption.data('visi');
+
+    $("#judul").html("Visi");
+    $("#deskripsi").html(visiText);
+}
+
+function getTujuanData(tujuan) {
+    // Replace this with the actual data retrieval logic
+    // For now, returning dummy data
+    return [
+        ["Indikator 1", "Satuan 1", "Tahun 1-1", "Tahun 1-2", "Tahun 1-3", "Tahun 1-4", "Tahun 1-5"],
+        ["Indikator 2", "Satuan 2", "Tahun 2-1", "Tahun 2-2", "Tahun 2-3", "Tahun 2-4", "Tahun 2-5"]
+    ];
+}
+
+function misi() {
     var selectedMisi = event.target.textContent.replace('MISI: ', ''); // Get the selected MISI text
-    
+
     $("#judul").html("Misi");
     $("#deskripsi").html(selectedMisi); // Update the deskripsi section with the selected MISI
-    
+
     // Toggle the display of the Tujuan node's children
     var tujuanNode = $("#misiList").find("span:contains('TUJUAN')").parent().find(".nested");
     tujuanNode.toggleClass("active");
     tujuanNode.toggleClass("caret-down");
 }
 
+function sasaran() {
+    var selectedSasaran = event.target.getAttribute('data-sasaran');
 
-    function tujuan(){
-        var selectedTujuan = event.target.getAttribute('data-tujuan');
-        
-        $("#judul").html("Tujuan");
-        $("#deskripsi").html(selectedTujuan);
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
+    $("#judul").html("Sasaran");
+    $("#deskripsi").html(selectedSasaran);
+    $('#tabel').show();
+    $('#dataTable').DataTable();
+}
 
-    function sasaran(){
-        var selectedSasaran = event.target.getAttribute('data-sasaran');
-        
-        $("#judul").html("Sasaran");
-        $("#deskripsi").html(selectedSasaran);
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-    
-    function program(){
-        $("#judul").html("Program");
-        $("#deskripsi").html($("#program").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-    
-    function kegiatan(){
-        $("#judul").html("Kegiatan");
-        $("#deskripsi").html($("#kegiatan").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-    
-    function subkegiatan(){
-        $("#judul").html("Sub Kegiatan");
-        $("#deskripsi").html($("#subkegiatan").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
+function program() {
+    $("#judul").html("Program");
+    $("#deskripsi").html($("#program").text());
+    $('#tabel').show();
+    $('#dataTable').DataTable();
+}
+
+function kegiatan() {
+    $("#judul").html("Kegiatan");
+    $("#deskripsi").html($("#kegiatan").text());
+    $('#tabel').show();
+    $('#dataTable').DataTable();
+}
+
+function subkegiatan() {
+    $("#judul").html("Sub Kegiatan");
+    $("#deskripsi").html($("#subkegiatan").text());
+    $('#tabel').show();
+    $('#dataTable').DataTable();
+}
+
 </script>
 
 @endsection
