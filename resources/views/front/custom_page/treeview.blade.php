@@ -205,14 +205,7 @@ function visi() {
     $("#deskripsi").html(visiText);
 }
 
-function getTujuanData(tujuan) {
-    // Replace this with the actual data retrieval logic
-    // For now, returning dummy data
-    return [
-        ["Indikator 1", "Satuan 1", "Tahun 1-1", "Tahun 1-2", "Tahun 1-3", "Tahun 1-4", "Tahun 1-5"],
-        ["Indikator 2", "Satuan 2", "Tahun 2-1", "Tahun 2-2", "Tahun 2-3", "Tahun 2-4", "Tahun 2-5"]
-    ];
-}
+
 
 function misi() {
     var selectedMisi = event.target.textContent.replace('MISI: ', ''); // Get the selected MISI text
