@@ -3,7 +3,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.4/css/dataTables.dataTables.css" />
-  
     <style>
         ul, #myUL {
             list-style-type: none;
@@ -78,7 +77,7 @@
         <select name="periode" id="periode" class="form-control ml-3">
             <option value="">Pilih</option>
             @foreach ($visi as $item)
-                <option value="{{ $item->id }}" data-visi="{{ $item->visi }}" data-misi="{{ $item->misi->pluck('misi')->join(', ') }}">
+                <option value="{{ $item->id }}" data-visi="{{ $item->visi }}" data-misi="{{ json_encode($item->misi->map(function($misi) { return ['misi' => $misi->misi, 'tujuan' => $misi->tujuan->pluck('tujuan')]; })) }}">
                     {{ $item->tahun_awal }} - {{ $item->tahun_akhir }}
                 </option>
             @endforeach
@@ -92,16 +91,15 @@
     <ul id="myUL">
         <li class="ml-3"><span class="caret" id="visi" onclick="visi()">VISI: </span>
             <ul class="nested">
-                <li><span class="caret" id="misi" onclick="misi()">MISI: </span>
-                <ul class="nested" id="misiList">
-                        <li><span class="caret" id="tujuan" onclick="tujuan()">TUJUAN: </span>
-                            <ul class="nested">
-                                <li>SASARAN: 1</li>
-                                <li>SASARAN: 2</li>
-                                <li>SASARAN: 3</li>
-                                <li>SASARAN: 4</li>
-                            </ul>
-                        </li>
+                <li><span class="caret" id="misi">MISI: </span>
+                    <ul class="nested" id="misiList">
+                    <li><span class="caret" id="tujuan" onclick="tujuan()">Tujuan:</span>
+                                <ul class="nested">
+                                    <li>SASARAN RPD: 1</li>
+                                    <li>Sasaran: 2</li>
+                                    <li>Sasaran: 3</li>
+                                    <li>Sasaran: 4</li>
+                        <!-- MISI and TUJUAN items will be populated here dynamically -->
                     </ul>
                 </li>
             </ul>
@@ -136,48 +134,55 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/2.0.4/js/dataTables.js"></script>
 <script>
-    var toggler = document.getElementsByClassName("caret");
-    var i;
-
-    for (i = 0; i < toggler.length; i++) {
-        toggler[i].addEventListener("click", function() {
-            this.parentElement.querySelector(".nested").classList.toggle("active");
-            this.classList.toggle("caret-down");
+    $(document).ready(function() {
+        // Handler for selecting a period
+        $('#periode').change(function() {
+            var selectedOption = $('#periode').find(":selected");
+            var visiText = selectedOption.data('visi');
+            var misiData = selectedOption.data('misi'); // Get the MISI data from the selected option
+            var periodeText = selectedOption.text();
+            
+            $("#textPeriode").html("Periode " + periodeText);
+            $("#visi").html("VISI: " + visiText);
+            
+            // Update the MISI list
+            var misiList = $("#misiList");
+            misiList.empty(); // Clear existing list items
+            
+            misiData.forEach(function(misiItem) {
+                var misi = misiItem.misi;
+                var tujuan = misiItem.tujuan;
+                var li = $("<li><span class='caret'>MISI: " + misi + "</span><ul class='nested'></ul></li>");
+                var tujuanList = li.find('.nested');
+                tujuan.forEach(function(tujuanItem) {
+                    var tujuanLi = $("<li><span class='tujuan'>TUJUAN: " + tujuanItem + "</span></li>");
+                    tujuanList.append(tujuanLi);
+                });
+                misiList.append(li);
+            });
         });
-    }
 
-    $('#periode').change(function(){
-    var selectedOption = $('#periode').find(":selected");
-    var visiText = selectedOption.data('visi');
-    var misiText = selectedOption.data('misi').split(', '); // Split the MISI data into an array
-    var periodeText = selectedOption.text();
-    
-    $("#textPeriode").html("Periode " + periodeText);
-    $("#visi").html("VISI: " + visiText);
-    
-    // Update the MISI list
-    var misiList = $("#misiList");
-    misiList.empty(); // Clear existing list items
-    
-    misiText.forEach(function(misi) {
-        var li = $("<li><span class='caret' onclick='misi()'>MISI: " + misi + "</span></li>");
-        misiList.append(li);
-    });
-});
+        // Use event delegation to handle click events for dynamically created 'Misi' and 'Tujuan' nodes
+        $('#myUL').on('click', 'span.caret', function() {
+            $(this).siblings(".nested").toggleClass("active");
+            $(this).toggleClass("caret-down");
+        });
 
-    // Use event delegation to handle click events for all 'Misi' nodes
-    $('#misiList').on('click', 'span.caret', function() {
-        $(this).siblings(".nested").toggleClass("active");
-        $(this).toggleClass("caret-down");
+        $('#myUL').on('click', 'span.tujuan', function() {
+            var selectedTujuan = $(this).text().replace('TUJUAN: ', ''); // Get the selected TUJUAN text
+            $("#judul").html("Tujuan");
+            $("#deskripsi").html(selectedTujuan); // Update the deskripsi section with the selected TUJUAN
+        });
     });
 
-    function visi(){
+    function visi() {
         var selectedOption = $('#periode').find(":selected");
         var visiText = selectedOption.data('visi');
         
         $("#judul").html("Visi");
         $("#deskripsi").html(visiText);
     }
+
 
     function misi(){
     var selectedMisi = event.target.textContent.replace('MISI: ', ''); // Get the selected MISI text
@@ -186,10 +191,11 @@
     $("#deskripsi").html(selectedMisi); // Update the deskripsi section with the selected MISI
     
     // Toggle the display of the Tujuan node's children
-    var tujuanNode = $("#misiList").find("span:contains('TUJUAN')");
-    tujuanNode.siblings(".nested").toggleClass("active");
+    var tujuanNode = $("#misiList").find("span:contains('TUJUAN')").parent().find(".nested");
+    tujuanNode.toggleClass("active");
     tujuanNode.toggleClass("caret-down");
 }
+
 
     function tujuan(){
         var selectedTujuan = event.target.getAttribute('data-tujuan');
