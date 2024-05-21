@@ -18,4 +18,9 @@ class Model_Sasaran extends Model
     {
         return $this->hasMany(Model_Sasaran_Indikator::class, 'id_sasaran');
     }
+
+    public function perangkatDaerah()
+    {
+    return $this->hasMany(Model_Perangkat_Daerah::class, 'sasaran_id');
+    }
 }

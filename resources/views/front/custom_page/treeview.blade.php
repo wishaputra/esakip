@@ -77,29 +77,43 @@
         <select name="periode" id="periode" class="form-control ml-3">
             <option value="">Pilih</option>
             @foreach ($visi as $item)
-                <option value="{{ $item->id }}" data-visi="{{ $item->visi }}" data-misi="{{ json_encode($item->misi->map(function($misi) { return ['misi' => $misi->misi, 'tujuan' => $misi->tujuan->pluck('tujuan')]; })) }}">
-                    {{ $item->tahun_awal }} - {{ $item->tahun_akhir }}
-                </option>
+            <option value="{{ $item->id }}" data-visi="{{ $item->visi }}" data-misi="{{ json_encode($item->misi->map(function($misi) { return ['id' => $misi->id, 'misi' => $misi->misi, 'tujuan' => $misi->tujuan->map(function($tujuan) { return ['id' => $tujuan->id, 'tujuan' => $tujuan->tujuan, 'sasaran' => $tujuan->sasaran->map(function($sasaran) { return ['id' => $sasaran->id, 'sasaran' => $sasaran->sasaran, 'tujuanRenstra' => $sasaran->tujuanRenstra ? $sasaran->tujuanRenstra->pluck('tujuan_renstra') : collect()]; })]; })]; })) }}">
+    {{ $item->tahun_awal }} - {{ $item->tahun_akhir }}
+</option>
             @endforeach
         </select>
     </div>
 </form>
 
 <!-- Diagram box -->
-<div id="diagramBox">
-    <h5 class="ml-3 mt-2">Pohon Kinerja</h5><hr>
-    <ul id="myUL">
+    <div id="diagramBox">
+        <h5 class="ml-3 mt-2">Pohon Kinerja</h5><hr>
+        <ul id="myUL">
         <li class="ml-3"><span class="caret" id="visi" onclick="visi()">VISI: </span>
             <ul class="nested">
                 <li><span class="caret" id="misi">MISI: </span>
                     <ul class="nested" id="misiList">
-                        <!-- MISI and TUJUAN items will be populated here dynamically -->
+                        <li><span class="caret" id="tujuan">TUJUAN: </span>
+                            <ul class="nested" id="tujuanList">
+                                <!-- Tujuan items will be populated here dynamically -->
+                                <li><span class="caret" id="sasaran">SASARAN: </span>
+                                    <ul class="nested" id="sasaranList">
+                                        <!-- Sasaran items will be populated here dynamically -->
+                                        <li><span class="caret" id="tujuan_renstra">TUJUAN RENSTRA: </span>
+                                            <ul class="nested" id="tujuanRenstraList">
+                                                <!-- Tujuan Renstra items will be populated here dynamically -->
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
             </ul>
         </li>
     </ul>
-</div>
+</div>    
 
 <!-- Description box -->
 <div id="descriptionBox">
@@ -149,14 +163,24 @@
             var li = $("<li><span class='caret misi'>MISI: " + misi + "</span><ul class='nested'></ul></li>");
             var tujuanList = li.find('.nested');
             tujuan.forEach(function(tujuanItem) {
-                var tujuanLi = $("<li><span class='tujuan' data-tujuan='" + tujuanItem + "'>TUJUAN: " + tujuanItem + "</span></li>");
+                var tujuanLi = $("<li><span class='caret tujuan' data-tujuanid='" + tujuanItem.id + "'>TUJUAN: " + tujuanItem.tujuan + "</span><ul class='nested'></ul></li>");
+                var sasaranList = tujuanLi.find('.nested');
+                tujuanItem.sasaran.forEach(function(sasaranItem) {
+                    var sasaranLi = $("<li><span class='caret sasaran' data-sasaranid='" + sasaranItem.id + "'>SASARAN: " + sasaranItem.sasaran + "</span><ul class='nested'></ul></li>");
+                    var tujuanRenstraList = sasaranLi.find('.nested');
+                    sasaranItem.tujuanRenstra.forEach(function(tujuanRenstraItem) {
+                        var tujuanRenstraLi = $("<li><span class='tujuan_renstra'>TUJUAN RENSTRA: " + tujuanRenstraItem + "</span></li>");
+                        tujuanRenstraList.append(tujuanRenstraLi);
+                    });
+                    sasaranList.append(sasaranLi);
+                });
                 tujuanList.append(tujuanLi);
             });
             misiList.append(li);
         });
     });
 
-    // Use event delegation to handle click events for dynamically created 'Misi' and 'Tujuan' nodes
+    // Use event delegation to handle click events for dynamically created 'Misi', 'Tujuan', 'Sasaran', and 'Tujuan Renstra' nodes
     $('#myUL').on('click', 'span.caret', function() {
         $(this).siblings(".nested").toggleClass("active");
         $(this).toggleClass("caret-down");
@@ -169,33 +193,26 @@
     });
 
     $('#myUL').on('click', 'span.tujuan', function() {
-    var selectedTujuan = $(this).data('tujuan');
+        var selectedTujuan = $(this).text().replace('TUJUAN: ', ''); // Get the selected TUJUAN text
+        $("#judul").html("Tujuan");
+        $("#deskripsi").html(selectedTujuan); // Update the deskripsi section with the selected TUJUAN
+        $('#tabel').show();
+    });
 
-    $("#judul").html("Tujuan");
-    $("#deskripsi").html(selectedTujuan);
+    $('#myUL').on('click', 'span.sasaran', function() {
+        var selectedSasaran = $(this).text().replace('SASARAN: ', ''); // Get the selected SASARAN text
+        $("#judul").html("Sasaran");
+        $("#deskripsi").html(selectedSasaran); // Update the deskripsi section with the selected SASARAN
+        $('#tabel').show();
+    });
 
-    $('#tabel').show();
-
-    $.ajax({
-        url: '/get-tujuan-indikator/' + selectedTujuan,
-        type: 'GET',
-        success: function(data) {
-            console.log(data); // Check if data is received
-            var tableData = data.map(function(item) {
-                return [
-                    item.indikator, // Only populate the 'Indikator' column
-                ];
-            });
-            $('#dataTable').DataTable().clear().rows.add(tableData).draw();
-        },
-        error: function(xhr, status, error) {
-            console.log('Error fetching data:', error);
-        }
+    $('#myUL').on('click', 'span.tujuan_renstra', function() {
+        var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', ''); // Get the selected TUJUAN RENSTRA text
+        $("#judul").html("Tujuan Renstra");
+        $("#deskripsi").html(selectedTujuanRenstra); // Update the deskripsi section with the selected TUJUAN RENSTRA
+        $('#tabel').show();
     });
 });
-
-
-    });
 
 function visi() {
     var selectedOption = $('#periode').find(":selected");
@@ -204,8 +221,6 @@ function visi() {
     $("#judul").html("Visi");
     $("#deskripsi").html(visiText);
 }
-
-
 
 function misi() {
     var selectedMisi = event.target.textContent.replace('MISI: ', ''); // Get the selected MISI text
@@ -228,6 +243,14 @@ function sasaran() {
     $('#dataTable').DataTable();
 }
 
+function tujuanRenstra() {
+    var selectedTujuanRenstra = event.target.textContent.replace('TUJUAN RENSTRA: ', ''); // Get the selected TUJUAN RENSTRA text
+
+    $("#judul").html("Tujuan Renstra");
+    $("#deskripsi").html(selectedTujuanRenstra); // Update the deskripsi section with the selected TUJUAN RENSTRA
+    $('#tabel').show();
+}
+
 function program() {
     $("#judul").html("Program");
     $("#deskripsi").html($("#program").text());
@@ -248,6 +271,7 @@ function subkegiatan() {
     $('#tabel').show();
     $('#dataTable').DataTable();
 }
+
 
 </script>
 
