@@ -13,4 +13,9 @@ class Model_Sasaran_Renstra extends Model
     {
         return $this->hasMany(Model_Sasaran_Renstra_Indikator::class, 'id_sasaran_renstra');
     }
+
+    public function tujuan_renstra()
+    {
+        return $this->belongsTo(Model_Tujuan_Renstra::class, 'id_tujuan_renstra');
+    }
 }
