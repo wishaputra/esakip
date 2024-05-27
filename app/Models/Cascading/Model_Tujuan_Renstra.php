@@ -20,4 +20,5 @@ class Model_Tujuan_Renstra extends Model
         return $this->hasMany(Model_Sasaran_Renstra::class, 'id_tujuan_renstra');
     }
 
+
 }

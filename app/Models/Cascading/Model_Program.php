@@ -13,4 +13,5 @@ class Model_Program extends Model
     {
         return $this->hasMany(Model_Program_Indikator::class, 'id_program');
     }
+
 }
