@@ -14,4 +14,9 @@ class Model_Program extends Model
         return $this->hasMany(Model_Program_Indikator::class, 'id_program');
     }
 
+
+    public function cascading_kegiatan()
+    {
+        return $this->hasMany(Model_Kegiatan::class, 'id_program');
+    }
 }

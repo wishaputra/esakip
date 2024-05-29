@@ -4,6 +4,7 @@ namespace App\Models\Cascading;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Model_Kegiatan extends Model
 {
     protected $table = "cascading_kegiatan";
@@ -13,4 +14,11 @@ class Model_Kegiatan extends Model
     {
         return $this->hasMany(Model_Kegiatan_Indikator::class, 'id_kegiatan');
     }
+
+    
+    public function cascading_sub_kegiatan()
+    {
+        return $this->hasMany(Model_SubKegiatan::class, 'id_kegiatan');
+    }
+    
 }
