@@ -11,7 +11,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CategoryBusinessController;
 use App\Http\Controllers\Section\DownloadController;
-use App\Http\Controllers\Section\TreeviewController;
+use App\Http\Controllers\TreeviewController;
 use App\Http\Controllers\FooterController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\HomeController;
@@ -235,7 +235,8 @@ Route::any('/save-chart', [ChartController::class, 'saveChart']);
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
 
 //treview
-Route::get('/get-indikator', 'IndikatorController@getIndikator');
+Route::get('/getTujuanIndikator/{id}', [TreeViewController::class, 'getTujuanIndikator']);
+Route::get('/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']);
 
 
 

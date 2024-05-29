@@ -183,12 +183,12 @@
     <h5 style="text-align: center" id="textPeriode">Periode</h5>
     <h6 class="ml-3 mt-2" id="judul">Visi</h6>
     <p class="ml-3 mt-2" id="deskripsi">Info detail</p>
-    <div id="tabel" class="table-responsive mx-3" style="display: none">
+    <div id="tabel" class="table-responsive mx-3" style="display: none;">
         <table class="table table-bordered" id="dataTable">
             <thead class="card-header">
                 <tr>
                     <th width="250px">Indikator</th>
-                    <th width="90px">nilai</th>
+                    <th width="90px">Nilai</th>
                     <th width="90px">Tahun 1</th>
                     <th width="90px">Tahun 2</th>
                     <th width="90px">Tahun 3</th>
@@ -196,9 +196,13 @@
                     <th width="90px">Tahun 5</th>
                 </tr>
             </thead>
+            <tbody>
+                <!-- Rows will be populated by JavaScript -->
+            </tbody>
         </table>
     </div>
 </div>
+
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/2.0.4/js/dataTables.js"></script>
@@ -226,10 +230,10 @@ $(document).ready(function() {
             var tujuanList = li.find('.nested');
 
             tujuan.forEach(function(tujuanItem) {
-                var tujuanText = tujuanItem.tujuan;
-                var sasaran = tujuanItem.sasaran;
-                var tujuanLi = $("<li><span class='caret tujuan'>TUJUAN: " + tujuanText + "</span><ul class='nested'></ul></li>");
-                var sasaranList = tujuanLi.find('.nested');
+            var tujuanText = tujuanItem.tujuan;
+            var sasaran = tujuanItem.sasaran;
+            var tujuanLi = $("<li><span class='caret tujuan' data-id='" + tujuanItem.id + "'>TUJUAN: " + tujuanText + "</span><ul class='nested'></ul></li>");
+            var sasaranList = tujuanLi.find('.nested');
 
                 sasaran.forEach(function(sasaranItem) {
                     var sasaranText = sasaranItem.sasaran;
@@ -303,10 +307,65 @@ $(document).ready(function() {
 
     $('#myUL').on('click', 'span.tujuan', function() {
         var selectedTujuan = $(this).text().replace('TUJUAN: ', '');
+        var tujuanId = $(this).data('id');  // Assume you store the ID as a data attribute
         $("#judul").html("Tujuan");
         $("#deskripsi").html(selectedTujuan);
         $('#tabel').show();
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getTujuanIndikator/' + tujuanId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getTujuanNilai/' + tujuanId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty(); // Clear existing rows
+
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_tujuan] = nilai.nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id_tujuan] || ''; // Get the corresponding nilai or default to empty
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + nilai + '</td>' +
+                    '<td></td>' +  // Tahun column (empty for now)
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
+
 
     $('#myUL').on('click', 'span.sasaran', function() {
         var selectedSasaran = $(this).text().replace('SASARAN: ', '');
