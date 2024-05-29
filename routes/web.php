@@ -64,7 +64,7 @@ use App\Models\Section\Pricing;
 use App\Models\TextContent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
-
+use App\Models\Cascading\Model_Tujuan_Indikator;
 
 /*
 |--------------------------------------------------------------------------
@@ -235,6 +235,7 @@ Route::any('/save-chart', [ChartController::class, 'saveChart']);
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
 
 //treview
+Route::get('/get-indikator', 'IndikatorController@getIndikator');
 
 
 

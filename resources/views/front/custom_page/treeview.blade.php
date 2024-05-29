@@ -188,7 +188,7 @@
             <thead class="card-header">
                 <tr>
                     <th width="250px">Indikator</th>
-                    <th width="90px">Satuan</th>
+                    <th width="90px">nilai</th>
                     <th width="90px">Tahun 1</th>
                     <th width="90px">Tahun 2</th>
                     <th width="90px">Tahun 3</th>
@@ -341,7 +341,7 @@ $(document).ready(function() {
         $("#deskripsi").html(selectedKegiatan);
         $('#tabel').show();
     });
-    
+
     $('#myUL').on('click', 'span.sub_kegiatan', function() {
         var selectedSubKegiatan = $(this).text().replace('SUB KEGIATAN: ', '');
         $("#judul").html("Sub Kegiatan");
@@ -369,6 +369,16 @@ $(document).ready(function() {
         var tujuanNode = $("#misiList").find("span:contains('TUJUAN')").parent().find(".nested");
         tujuanNode.toggleClass("active");
         tujuanNode.toggleClass("caret-down");
+    }
+
+
+    function tujuan() {
+        var selectedTujuan = event.target.getAttribute('data-tujuan');
+
+        $("#judul").html("Tujuan");
+        $("#deskripsi").html(selectedTujuan);
+        $('#tabel').show();
+        $('#dataTable').DataTable();
     }
 
     function sasaran() {
