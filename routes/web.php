@@ -245,6 +245,8 @@ Route::get('/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai
 
 
 
+
+
 Route::get('download2', [HomeController::class, 'download2'])->name('main.download');
 Route::get('displaypdf3', [HomeController::class, 'displaypdf3'])->name('main.displaypdf');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'front'])->name('front');

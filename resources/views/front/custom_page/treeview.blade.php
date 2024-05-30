@@ -242,13 +242,13 @@ $(document).ready(function() {
                     tujuanRenstra.forEach(function(tujuanRenstraItem) {
                         var tujuanRenstraText = tujuanRenstraItem.tujuan_renstra;
                         var sasaranRenstra = tujuanRenstraItem.sasaranRenstra;
-                        var tujuanRenstraLi = $("<li><span class='caret tujuanRenstra'>TUJUAN RENSTRA: " + tujuanRenstraText + "</span><ul class='nested'></ul></li>");
+                        var tujuanRenstraLi = $("<li><span class='caret tujuanRenstra' data-id='" + tujuanRenstraItem.id + "'>TUJUAN RENSTRA: " + tujuanRenstraText + "</span><ul class='nested'></ul></li>");
                         var sasaranRenstraList = tujuanRenstraLi.find('.nested');
 
                         sasaranRenstra.forEach(function(sasaranRenstraItem) {
                             var sasaranRenstraText = sasaranRenstraItem.sasaran_renstra;
                             var program = sasaranRenstraItem.program;
-                            var sasaranRenstraLi = $("<li><span class='caret sasaranRenstra'>SASARAN RENSTRA: " + sasaranRenstraText + "</span><ul class='nested'></ul></li>");
+                            var sasaranRenstraLi = $("<li><span class='caret sasaranRenstra' data-id='" + sasaranRenstraItem.id + "'>SASARAN RENSTRA: " + sasaranRenstraText + "</span><ul class='nested'></ul></li>");
                             var programList = sasaranRenstraLi.find('.nested');
 
                         
@@ -434,6 +434,8 @@ $('#myUL').on('click', 'span.sasaran', function() {
         var selectedSasaranRenstra = $(this).text().replace('SASARAN RENSTRA: ', '');
         $("#judul").html("Sasaran Renstra");
         $("#deskripsi").html(selectedSasaranRenstra);
+        $('#tabel').show();
+    
     });
 
     $('#myUL').on('click', 'span.program', function() {
