@@ -238,6 +238,10 @@ Route::get('/load-chart', [ChartController::class, 'loadChart']);
 Route::get('/getTujuanIndikator/{id}', [TreeViewController::class, 'getTujuanIndikator']);
 Route::get('/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']);
 
+Route::get('/getSasaranIndikator/{id}', [TreeViewController::class, 'getSasaranIndikator']);
+Route::get('/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai']);
+
+
 
 
 

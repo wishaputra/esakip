@@ -188,12 +188,10 @@
             <thead class="card-header">
                 <tr>
                     <th width="250px">Indikator</th>
-                    <th width="90px">Nilai</th>
-                    <th width="90px">Tahun 1</th>
-                    <th width="90px">Tahun 2</th>
-                    <th width="90px">Tahun 3</th>
-                    <th width="90px">Tahun 4</th>
-                    <th width="90px">Tahun 5</th>
+                    <th width="90px">Satuan</th>
+                    <th width="90px">Tahun </th>
+                    <th width="90px">Target</th>
+                    <th width="90px">Capaian</th>
                 </tr>
             </thead>
             <tbody>
@@ -306,65 +304,64 @@ $(document).ready(function() {
     });
 
     $('#myUL').on('click', 'span.tujuan', function() {
-        var selectedTujuan = $(this).text().replace('TUJUAN: ', '');
-        var tujuanId = $(this).data('id');  // Assume you store the ID as a data attribute
-        $("#judul").html("Tujuan");
-        $("#deskripsi").html(selectedTujuan);
-        $('#tabel').show();
+    var selectedTujuan = $(this).text().replace('TUJUAN: ', '');
+    var tujuanId = $(this).data('id');  // Assume you store the ID as a data attribute
+    $("#judul").html("Tujuan");
+    $("#deskripsi").html(selectedTujuan);
+    $('#tabel').show();
 
-        var indikatorData = [];
-        var nilaiData = [];
+    var indikatorData = [];
+    var nilaiData = [];
 
-        // Fetch Indikator data
-        $.ajax({
-            url: '/getTujuanIndikator/' + tujuanId,
-            method: 'GET',
-            success: function(response) {
-                indikatorData = response;
-                populateTable(indikatorData, nilaiData);
-            },
-            error: function() {
-                console.log('Error fetching indikator data');
-            }
-        });
-
-        // Fetch Nilai data
-        $.ajax({
-            url: '/getTujuanNilai/' + tujuanId,
-            method: 'GET',
-            success: function(response) {
-                nilaiData = response;
-                populateTable(indikatorData, nilaiData);
-            },
-            error: function() {
-                console.log('Error fetching nilai data');
-            }
-        });
-
-        function populateTable(indikators, nilais) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
-
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_tujuan] = nilai.nilai;
-            });
-
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id_tujuan] || ''; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + nilai + '</td>' +
-                    '<td></td>' +  // Tahun column (empty for now)
-                    '<td></td>' +
-                    '<td></td>' +
-                    '<td></td>' +
-                    '<td></td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+    // Fetch Indikator data
+    $.ajax({
+        url: '/getTujuanIndikator/' + tujuanId,
+        method: 'GET',
+        success: function(response) {
+            indikatorData = response;
+            populateTable(indikatorData, nilaiData);
+        },
+        error: function() {
+            console.log('Error fetching indikator data');
         }
     });
+
+    // Fetch Nilai data
+    $.ajax({
+        url: '/getTujuanNilai/' + tujuanId,
+        method: 'GET',
+        success: function(response) {
+            nilaiData = response;
+            populateTable(indikatorData, nilaiData);
+        },
+        error: function() {
+            console.log('Error fetching nilai data');
+        }
+    });
+
+    function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
+
+        var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
+        nilais.forEach(function(nilai) {
+            nilaiMap[nilai.id_indikator_tujuan] = nilai;
+        });
+
+        indikators.forEach(function(indikator) {
+            var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
+            var row = '<tr>' +
+                '<td>' + indikator.indikator + '</td>' +
+                '<td>' + (nilai.satuan || '') + '</td>' +
+                '<td>' + (nilai.tahun || '') + '</td>' +
+                '<td>' + (nilai.target || '') + '</td>' +
+                '<td>' + (nilai.capaian || '') + '</td>' +
+                '</tr>';
+            tableBody.append(row);
+        });
+    }
+});
+
 
 
     $('#myUL').on('click', 'span.sasaran', function() {
