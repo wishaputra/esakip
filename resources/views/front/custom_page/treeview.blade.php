@@ -236,7 +236,7 @@ $(document).ready(function() {
                 sasaran.forEach(function(sasaranItem) {
                     var sasaranText = sasaranItem.sasaran;
                     var tujuanRenstra = sasaranItem.tujuanRenstra;
-                    var sasaranLi = $("<li><span class='caret sasaran'>SASARAN: " + sasaranText + "</span><ul class='nested'></ul></li>");
+                    var sasaranLi = $("<li><span class='caret sasaran' data-id='" + sasaranItem.id + "'>SASARAN: " + sasaranText + "</span><ul class='nested'></ul></li>");
                     var tujuanRenstraList = sasaranLi.find('.nested');
 
                     tujuanRenstra.forEach(function(tujuanRenstraItem) {
@@ -364,12 +364,64 @@ $(document).ready(function() {
 
 
 
-    $('#myUL').on('click', 'span.sasaran', function() {
-        var selectedSasaran = $(this).text().replace('SASARAN: ', '');
-        $("#judul").html("Sasaran");
-        $("#deskripsi").html(selectedSasaran);
-        $('#tabel').show();
+$('#myUL').on('click', 'span.sasaran', function() {
+    var selectedSasaran = $(this).text().replace('SASARAN: ', '');
+    var sasaranId = $(this).data('id');  // Assume you store the ID as a data attribute
+    $("#judul").html("Sasaran");
+    $("#deskripsi").html(selectedSasaran);
+    $('#tabel').show();
+
+    var indikatorData = [];
+    var nilaiData = [];
+
+    // Fetch Indikator data
+    $.ajax({
+        url: '/getSasaranIndikator/' + sasaranId,
+        method: 'GET',
+        success: function(response) {
+            indikatorData = response;
+            populateTable(indikatorData, nilaiData);
+        },
+        error: function() {
+            console.log('Error fetching indikator data');
+        }
     });
+
+    // Fetch Nilai data
+    $.ajax({
+        url: '/getSasaranNilai/' + sasaranId,
+        method: 'GET',
+        success: function(response) {
+            nilaiData = response;
+            populateTable(indikatorData, nilaiData);
+        },
+        error: function() {
+            console.log('Error fetching nilai data');
+        }
+    });
+
+    function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
+
+        var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
+        nilais.forEach(function(nilai) {
+            nilaiMap[nilai.id_indikator_sasaran] = nilai;
+        });
+
+        indikators.forEach(function(indikator) {
+            var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
+            var row = '<tr>' +
+                '<td>' + indikator.indikator + '</td>' +
+                '<td>' + (nilai.satuan || '') + '</td>' +
+                '<td>' + (nilai.tahun || '') + '</td>' +
+                '<td>' + (nilai.target || '') + '</td>' +
+                '<td>' + (nilai.capaian || '') + '</td>' +
+                '</tr>';
+            tableBody.append(row);
+        });
+    }
+});
 
     $('#myUL').on('click', 'span.tujuanRenstra', function() {
         var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
