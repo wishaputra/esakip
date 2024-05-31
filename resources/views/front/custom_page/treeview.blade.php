@@ -107,7 +107,12 @@
                                                                 return [
                                                                     'id' => $kegiatan->id, 
                                                                     'kegiatan' => $kegiatan->kegiatan, 
-                                                                    'sub_kegiatan' => $kegiatan->cascading_sub_kegiatan ? $kegiatan->cascading_sub_kegiatan->pluck('sub_kegiatan') : collect()
+                                                                    'sub_kegiatan' => $kegiatan->cascading_sub_kegiatan ? $kegiatan->cascading_sub_kegiatan->map(function($sub_kegiatan) {
+                                                                        return [
+                                                                            'id' => $sub_kegiatan->id,
+                                                                            'sub_kegiatan' => $sub_kegiatan->sub_kegiatan
+                                                                        ];
+                                                                    }) : collect()
                                                                 ];
                                                             }) : collect()
                                                         ];
@@ -128,7 +133,6 @@
         </select>
     </div>
 </form>
-
 
 <!-- Diagram box -->
 <div id="diagramBox">
@@ -265,7 +269,7 @@ $(document).ready(function() {
                                     var subKegiatanList = kegiatanLi.find('.nested');
 
                                     sub_kegiatan.forEach(function(subKegiatanItem) {
-                                        var subKegiatanLi = $("<li><span class='caret sub_kegiatan'>SUB KEGIATAN: " + subKegiatanItem + "</span></li>");
+                                        var subKegiatanLi = $("<li><span class='caret sub_kegiatan' data-id='" + subKegiatanItem.id + "'>SUB KEGIATAN: " + subKegiatanItem.sub_kegiatan + "</span></li>");
                                         subKegiatanList.append(subKegiatanLi);
                                     });
 
@@ -274,10 +278,8 @@ $(document).ready(function() {
 
                                 programList.append(programLi);
                             });
-                    
-
-                            sasaranRenstraList.append(sasaranRenstraLi);
-                        });
+                                sasaranRenstraList.append(sasaranRenstraLi);
+                            });
 
                         tujuanRenstraList.append(tujuanRenstraLi);
                     });
@@ -289,6 +291,7 @@ $(document).ready(function() {
             });
 
             misiList.append(li);
+            
         });
     });
 
@@ -299,6 +302,7 @@ $(document).ready(function() {
 
     $('#myUL').on('click', 'span.misi', function() {
         var selectedMisi = $(this).text().replace('MISI: ', '');
+        $('#tabel').hide();
         $("#judul").html("Misi");
         $("#deskripsi").html(selectedMisi);
     });
@@ -663,12 +667,66 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     });
     
 
+    
     $('#myUL').on('click', 'span.sub_kegiatan', function() {
         var selectedSubKegiatan = $(this).text().replace('SUB KEGIATAN: ', '');
+        var subKegiatanId = $(this).data('id');
         $("#judul").html("Sub Kegiatan");
         $("#deskripsi").html(selectedSubKegiatan);
         $('#tabel').show();
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getSubKegiatanIndikator/' + subKegiatanId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getSubKegiatanNilai/' + subKegiatanId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty();
+
+            var nilaiMap = {};
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_indikator_sub_kegiatan] = nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id] || {};
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + (nilai.satuan || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
+
 });
 
 
