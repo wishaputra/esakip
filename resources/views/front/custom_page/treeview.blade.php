@@ -255,13 +255,13 @@ $(document).ready(function() {
                             program.forEach(function(programItem) {
                                 var programText = programItem.program;
                                 var kegiatan = programItem.kegiatan;
-                                var programLi = $("<li><span class='caret program'>PROGRAM: " + programText + "</span><ul class='nested'></ul></li>");
+                                var programLi = $("<li><span class='caret program' data-id='" + programItem.id + "'>PROGRAM: " + programText + "</span><ul class='nested'></ul></li>");
                                 var kegiatanList = programLi.find('.nested');
 
                                 kegiatan.forEach(function(kegiatanItem) {
                                     var kegiatanText = kegiatanItem.kegiatan;
                                     var sub_kegiatan = kegiatanItem.sub_kegiatan;
-                                    var kegiatanLi = $("<li><span class='caret kegiatan'>KEGIATAN: " + kegiatanText + "</span><ul class='nested'></ul></li>");
+                                    var kegiatanLi = $("<li><span class='caret kegiatan' data-id='" + kegiatanItem.id + "'>KEGIATAN: " + kegiatanText + "</span><ul class='nested'></ul></li>");
                                     var subKegiatanList = kegiatanLi.find('.nested');
 
                                     sub_kegiatan.forEach(function(subKegiatanItem) {
@@ -423,34 +423,245 @@ $('#myUL').on('click', 'span.sasaran', function() {
     }
 });
 
-    $('#myUL').on('click', 'span.tujuanRenstra', function() {
+$('#myUL').on('click', 'span.tujuanRenstra', function() {
         var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
+        var tujuanRenstraId = $(this).data('id');  // Assume you store the ID as a data attribute
         $("#judul").html("Tujuan Renstra");
         $("#deskripsi").html(selectedTujuanRenstra);
         $('#tabel').show();
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getTujuanRenstraIndikator/' + tujuanRenstraId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getTujuanRenstraNilai/' + tujuanRenstraId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty(); // Clear existing rows
+
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_indikator_tujuan_renstra] = nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + (nilai.satuan || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
 
+   
     $('#myUL').on('click', 'span.sasaranRenstra', function() {
         var selectedSasaranRenstra = $(this).text().replace('SASARAN RENSTRA: ', '');
+        var sasaranRenstraId = $(this).data('id');  // Assume you store the ID as a data attribute
         $("#judul").html("Sasaran Renstra");
         $("#deskripsi").html(selectedSasaranRenstra);
         $('#tabel').show();
-    
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getSasaranRenstraIndikator/' + sasaranRenstraId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getSasaranRenstraNilai/' + sasaranRenstraId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty(); // Clear existing rows
+
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_indikator_sasaran_renstra] = nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + (nilai.satuan || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
+
 
     $('#myUL').on('click', 'span.program', function() {
         var selectedProgram = $(this).text().replace('PROGRAM: ', '');
+        var programId = $(this).data('id');
         $("#judul").html("Program");
         $("#deskripsi").html(selectedProgram);
         $('#tabel').show();
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getProgramIndikator/' + programId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getProgramNilai/' + programId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty();
+
+            var nilaiMap = {};
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_indikator_program] = nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id] || {};
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + (nilai.satuan || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
 
+    
     $('#myUL').on('click', 'span.kegiatan', function() {
         var selectedKegiatan = $(this).text().replace('KEGIATAN: ', '');
+        var kegiatanId = $(this).data('id');
         $("#judul").html("Kegiatan");
         $("#deskripsi").html(selectedKegiatan);
         $('#tabel').show();
+
+        var indikatorData = [];
+        var nilaiData = [];
+
+        // Fetch Indikator data
+        $.ajax({
+            url: '/getKegiatanIndikator/' + kegiatanId,
+            method: 'GET',
+            success: function(response) {
+                indikatorData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching indikator data');
+            }
+        });
+
+        // Fetch Nilai data
+        $.ajax({
+            url: '/getKegiatanNilai/' + kegiatanId,
+            method: 'GET',
+            success: function(response) {
+                nilaiData = response;
+                populateTable(indikatorData, nilaiData);
+            },
+            error: function() {
+                console.log('Error fetching nilai data');
+            }
+        });
+
+        function populateTable(indikators, nilais) {
+            var tableBody = $('#dataTable tbody');
+            tableBody.empty();
+
+            var nilaiMap = {};
+            nilais.forEach(function(nilai) {
+                nilaiMap[nilai.id_indikator_kegiatan] = nilai;
+            });
+
+            indikators.forEach(function(indikator) {
+                var nilai = nilaiMap[indikator.id] || {};
+                var row = '<tr>' +
+                    '<td>' + indikator.indikator + '</td>' +
+                    '<td>' + (nilai.satuan || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+        }
     });
+    
 
     $('#myUL').on('click', 'span.sub_kegiatan', function() {
         var selectedSubKegiatan = $(this).text().replace('SUB KEGIATAN: ', '');
@@ -461,73 +672,6 @@ $('#myUL').on('click', 'span.sasaran', function() {
 });
 
 
-    function visi() {
-        var selectedOption = $('#periode').find(":selected");
-        var visiText = selectedOption.data('visi');
-
-        $("#judul").html("Visi");
-        $("#deskripsi").html(visiText);
-    }
-
-    function misi() {
-        var selectedMisi = event.target.textContent.replace('MISI: ', ''); // Get the selected MISI text
-
-        $("#judul").html("Misi");
-        $("#deskripsi").html(selectedMisi); // Update the deskripsi section with the selected MISI
-
-        // Toggle the display of the Tujuan node's children
-        var tujuanNode = $("#misiList").find("span:contains('TUJUAN')").parent().find(".nested");
-        tujuanNode.toggleClass("active");
-        tujuanNode.toggleClass("caret-down");
-    }
-
-
-    function tujuan() {
-        var selectedTujuan = event.target.getAttribute('data-tujuan');
-
-        $("#judul").html("Tujuan");
-        $("#deskripsi").html(selectedTujuan);
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-
-    function sasaran() {
-        var selectedSasaran = event.target.getAttribute('data-sasaran');
-
-        $("#judul").html("Sasaran");
-        $("#deskripsi").html(selectedSasaran);
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-
-    function tujuanRenstra() {
-        var selectedTujuanRenstra = event.target.textContent.replace('TUJUAN RENSTRA: ', ''); // Get the selected TUJUAN RENSTRA text
-
-        $("#judul").html("Tujuan Renstra");
-        $("#deskripsi").html(selectedTujuanRenstra); // Update the deskripsi section with the selected TUJUAN RENSTRA
-        $('#tabel').show();
-    }
-
-    function program() {
-        $("#judul").html("Program");
-        $("#deskripsi").html($("#program").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-
-    function kegiatan() {
-        $("#judul").html("Kegiatan");
-        $("#deskripsi").html($("#kegiatan").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
-
-    function subkegiatan() {
-        $("#judul").html("Sub Kegiatan");
-        $("#deskripsi").html($("#subkegiatan").text());
-        $('#tabel').show();
-        $('#dataTable').DataTable();
-    }
 </script>
 
 @endsection
