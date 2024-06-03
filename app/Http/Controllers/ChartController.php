@@ -3,41 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Chart;
+use App\Models\Cascading\Model_Visi;
+use App\Models\Cascading\Model_Misi;
+use App\Models\Cascading\Model_Tujuan;
 
 class ChartController extends Controller
 {
-    public function saveChart(Request $request) {
-        try {
-            $chartData = $request->input('chartData');
-            \Log::info('Chart data received:', ['chartData' => $chartData]); // Log the received data
-    
-            // Save $chartData to the database using the Chart model
-            $chart = new Chart;
-            $chart->data = json_encode($chartData); // Ensure your column can store JSON/string data
-            $saveStatus = $chart->save();
-    
-            if ($saveStatus) {
-                return response()->json(['success' => true, 'message' => 'Chart data saved successfully']);
-            } else {
-                return response()->json(['success' => false, 'message' => 'Failed to save chart data']);
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error saving chart data: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Failed to save chart data', 'error' => $e->getMessage()]);
-        }
-    }
     
 
-    public function loadChart() {
-        $chartData = Chart::latest()->first(); // Assuming you have a model called ChartModel
-        if ($chartData) {
-            // Assuming your JSON is stored in a column named 'data'
-            $decodedData = json_decode($chartData->data, true);
-            return response()->json($decodedData);
-        } else {
-            return response()->json(['error' => 'No chart data found'], 404);
-        }
+    public function loadChart()
+{
+    // Fetch data from the Model_Visi
+    $visiNodes = Model_Visi::all()->map(function($visi) {
+        return [
+            'key' => $visi->id,
+            'visi' => $visi->visi,
+            'tahun_awal' => $visi->tahun_awal,
+            'tahun_akhir' => $visi->tahun_akhir,
+            // Add other necessary fields here
+        ];
+    });
+
+    // Example response structure expected by GoJS
+    $response = [
+        'nodeDataArray' => $visiNodes->toArray(),
+        'linkDataArray' => [] // Assuming you handle links separately
+    ];
+
+    return response()->json($response);
+}
+    
+    public function loadVisi() {
+        $visiData = Model_Visi::all()->toArray();
+        return response()->json($visiData);
+    }
+    
+    public function loadMisi() {
+        $misiData = Model_Misi::all()->toArray();
+        return response()->json($misiData);
+    }
+    
+    public function loadTujuan() {
+        $tujuanData = Model_Tujuan::all()->toArray();
+        return response()->json($tujuanData);
     }
     
     

@@ -1,46 +1,30 @@
 function init() {
-
-  // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
-  // For details, see https://gojs.net/latest/intro/buildingObjects.html
-  const $ = go.GraphObject.make;  // for conciseness in defining templates
-  
-
-  myDiagram =
-  new go.Diagram("myDiagramDiv", {
-    // make sure users can only create trees
+  const $ = go.GraphObject.make;  
+  myDiagram = new go.Diagram("myDiagramDiv", {
     validCycle: go.Diagram.CycleDestinationTree,
-    // users can select only one part at a time
     maxSelectionCount: 1,
-    layout: $(go.TreeLayout,
-            {
-              treeStyle: go.TreeLayout.StyleLastParents,
-              arrangement: go.TreeLayout.ArrangementHorizontal,
-              // properties for most of the tree:
-              angle: 90,
-              layerSpacing: 35,
-              // properties for the "last parents":
-              alternateAngle: 0,
-              alternateLayerSpacing: 35,
-              alternateAlignment: go.TreeLayout.AlignmentStart,
-              alternateNodeIndent: 10,
-              alternateNodeIndentPastParent: 1.0,
-              alternateNodeSpacing: 10,
-              alternateLayerSpacing: 30,
-              alternateLayerSpacingParentOverlap: 1.0,
-              alternatePortSpot: new go.Spot(0.01, 1, 10, 0),
-              alternateChildPortSpot: go.Spot.Left
-            }),
-        // support editing the properties of the selected person in HTML
-        "ChangedSelection": onSelectionChanged,
-        "TextEdited": onTextEdited,
-        // newly drawn links are of type "Support" -- not a regular boss-employee relationship
-        "linkingTool.archetypeLinkData": { category: "Support", text: "100%" },
-        // enable undo & redo
-        "undoManager.isEnabled": true
-        
-      });
+    layout: $(go.TreeLayout, {
+      treeStyle: go.TreeLayout.StyleLastParents,
+      arrangement: go.TreeLayout.ArrangementHorizontal,
+      angle: 90,
+      layerSpacing: 35,
+      alternateAngle: 0,
+      alternateLayerSpacing: 35,
+      alternateAlignment: go.TreeLayout.AlignmentStart,
+      alternateNodeIndent: 10,
+      alternateNodeIndentPastParent: 1.0,
+      alternateNodeSpacing: 10,
+      alternateLayerSpacing: 30,
+      alternateLayerSpacingParentOverlap: 1.0,
+      alternatePortSpot: new go.Spot(0.01, 1, 10, 0),
+      alternateChildPortSpot: go.Spot.Left
+    }),
+    "ChangedSelection": onSelectionChanged,
+    "TextEdited": onTextEdited,
+    "linkingTool.archetypeLinkData": { category: "Support", text: "100%" },
+    "undoManager.isEnabled": true
+  });
 
-  // when the document is modified, add a "*" to the title and enable the "Save" button
   myDiagram.addDiagramListener("Modified", e => {
     var button = document.getElementById("SaveButton");
     if (button) button.disabled = !myDiagram.isModified;
@@ -55,41 +39,19 @@ function init() {
   var graygrad = $(go.Brush, "Linear",
     { 0: "rgb(125, 125, 125)", 0.5: "rgb(86, 86, 86)", 1: "rgb(86, 86, 86)" });
 
-  // when a node is double-clicked, add a child to it
-  function nodeDoubleClick(e, obj) {
-    var clicked = obj.part;
-    if (clicked !== null) {
-      var thisemp = clicked.data;
-      myDiagram.startTransaction("add employee");
-      var nextkey = (myDiagram.model.nodeDataArray.length + 1).toString();
-      var newemp = { key: nextkey, name: "()", title: "" };
-      myDiagram.model.addNodeData(newemp);
-      myDiagram.model.addLinkData({ from: thisemp.key, to: nextkey });
-      myDiagram.commitTransaction("add employee");
-    }
-  }
-
-  // this is used to determine feedback during drags
   function mayWorkFor(node1, node2) {
-    if (!(node1 instanceof go.Node)) return false;  // must be a Node
-    if (node1 === node2) return false;  // cannot work for yourself
-    if (node2.isInTreeOf(node1)) return false;  // cannot work for someone who works for you
+    if (!(node1 instanceof go.Node)) return false;  
+    if (node1 === node2) return false;  
+    if (node2.isInTreeOf(node1)) return false;  
     return true;
   }
 
-  // This function provides a common style for most of the TextBlocks.
-  // Some of these values may be overridden in a particular TextBlock.
   function textStyle() {
     return { font: "9pt sans-serif", stroke: "white" };
   }
 
-  // define the Node template
-  // define the Node template
-// define the Node template
-// Define the Node template
-myDiagram.nodeTemplate =
+  myDiagram.nodeTemplate =
   $(go.Node, "Auto",
-    // Handle dragging a Node onto a Node to (maybe) change the reporting relationship
     {
       mouseDragEnter: (e, node, prev) => {
         var diagram = node.diagram;
@@ -104,29 +66,25 @@ myDiagram.nodeTemplate =
       },
       mouseDrop: (e, node) => {
         var diagram = node.diagram;
-        var selnode = diagram.selection.first();  // assume just one Node in selection
+        var selnode = diagram.selection.first();
         if (mayWorkFor(selnode, node)) {
-          // find any existing link into the selected node
           var link = selnode.findTreeParentLink();
-          if (link !== null) {  // reconnect any existing link
+          if (link !== null) {
             link.fromNode = node;
-          } else {  // else create a new link
+          } else {
             diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
           }
         }
       }
     },
-    // Bind the Part.layerName to control the Node's layer depending on whether it isSelected
     new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
-    // Define the node's outer shape
     $(go.Shape, "RoundedRectangle",
       {
         name: "SHAPE",
         fill: graygrad, stroke: "black",
         portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer",
-        width: 250, height: 90 // Adjust width and height as desired
+        width: 250, height: 90
       }),
-    // Define the panel where the text will appear
     $(go.Panel, "Table",
       {
         maxSize: new go.Size(150, 999),
@@ -134,43 +92,16 @@ myDiagram.nodeTemplate =
         defaultAlignment: go.Spot.Left
       },
       $(go.RowColumnDefinition, { column: 2, width: 4 }),
-      $(go.TextBlock, "Title: ", textStyle(),
-        {
-          row: 0, column: 0,
-          font: "bold 9pt sans-serif",
-          editable: true, isMultiline: false,
-          stroke: "white", minSize: new go.Size(80, 24), // Adjust minimum size as desired
-          name: "title"
-        },
-        new go.Binding("text", "title").makeTwoWay()),
-      $("TreeExpanderButton",
-        {
-          row: 1, columnSpan: 99, alignment: go.Spot.Center,
-          click: function (e, obj) {
-            var node = obj.part;
-            if (node !== null) {
-              var diagram = node.diagram;
-              diagram.startTransaction("toggleExpansion");
-              if (node.isTreeExpanded) {
-                diagram.commandHandler.collapseTree(node);
-              } else {
-                diagram.commandHandler.expandTree(node);
-              }
-              diagram.commitTransaction("toggleExpansion");
-            }
-          }
-        })
-    )  // end Table Panel
-  );  // end Node
+      $(go.TextBlock, "Visi: ", textStyle(),
+        { row: 2, column: 0, font: "bold 9pt sans-serif" },
+        new go.Binding("text", "visi").makeTwoWay())
+      )
+    );
 
-
-
-
-  // define the Link template
   myDiagram.linkTemplate =
     $(go.Link, go.Link.Orthogonal,
       { corner: 5 },
-      $(go.Shape, { strokeWidth: 2 }));  // the link shape
+      $(go.Shape, { strokeWidth: 2 }));
 
   myDiagram.linkTemplateMap.add("Support",
     $(go.Link, go.Link.Bezier,
@@ -187,26 +118,9 @@ myDiagram.nodeTemplate =
           maxSize: new go.Size(80, NaN), editable: true
         })));
 
-  myDiagram.linkTemplateMap.add("Motion",
-    $(go.Link, go.Link.Bezier,
-      { isLayoutPositioned: false, isTreeLink: false, curviness: -50 },
-      { relinkableFrom: true, relinkableTo: true },
-      $(go.Shape,
-        { stroke: "orange", strokeWidth: 2 }),
-      $(go.Shape,
-        { toArrow: "OpenTriangle", stroke: "orange", strokeWidth: 2 }),
-      $(go.TextBlock,
-        new go.Binding("text").makeTwoWay(),
-        {
-          stroke: "orange", background: "rgba(255,255,255,0.75)",
-          maxSize: new go.Size(80, NaN), editable: true
-        })));
-
-  // read in the JSON-format data from the "mySavedModel" element
   loadChart();
 }
 
-// Allow the user to edit text when a single node is selected
 function onSelectionChanged(e) {
   var node = e.diagram.selection.first();
   if (node instanceof go.Node) {
@@ -216,22 +130,6 @@ function onSelectionChanged(e) {
   }
 }
 
-// Update the HTML elements for editing the properties of the currently selected node, if any
-// function updateProperties(data) {
-//   if (data === null) {
-//     document.getElementById("propertiesPanel").style.display = "none";
-//     document.getElementById("name").value = "";
-//     document.getElementById("title").value = "";
-//     document.getElementById("comments").value = "";
-//   } else {
-//     document.getElementById("propertiesPanel").style.display = "block";
-//     document.getElementById("name").value = data.name || "";
-//     document.getElementById("title").value = data.title || "";
-//     document.getElementById("comments").value = data.comments || "";
-//   }
-// }
-
-// This is called when the user has finished inline text-editing
 function onTextEdited(e) {
   var tb = e.subject;
   if (tb === null || !tb.name) return;
@@ -242,44 +140,17 @@ function onTextEdited(e) {
   }
 }
 
-// Update the data fields when the text is changed
 function updateData(text, field) {
   var node = myDiagram.selection.first();
-  // maxSelectionCount = 1, so there can only be one Part in this collection
   var data = node.data;
   if (node instanceof go.Node && data !== null) {
     var model = myDiagram.model;
     model.startTransaction("modified " + field);
-    if (field === "name") {
-      model.setDataProperty(data, "name", text);
-    } else if (field === "title") {
-      model.setDataProperty(data, "title", text);
-    } else if (field === "comments") {
-      model.setDataProperty(data, "comments", text);
-    }
+    model.setDataProperty(data, field, text);
     model.commitTransaction("modified " + field);
   }
 }
 
-// Show the diagram's model in JSON format
-function saveChart() {
-  var chartData = { nodeDataArray: myDiagram.model.nodeDataArray, linkDataArray: myDiagram.model.linkDataArray };
-  var jsonData = JSON.stringify({ chartData: chartData });
-
-  $.ajax({
-      type: "POST", // Ensure you're using POST method
-      url: "/save-chart", // Adjust the URL to match your route
-      data: jsonData,
-      contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      success: function(response) {
-          console.log('Chart data saved successfully:', response);
-      },
-      error: function(xhr, status, error) {
-          console.error('Error saving chart data:', error);
-      }
-  });
-}
 function loadChart() {
   $.ajax({
     url: "/load-chart",
@@ -289,7 +160,6 @@ function loadChart() {
 
       myDiagram.model = new go.GraphLinksModel(response.nodeDataArray, response.linkDataArray);
 
-      // Collapse all nodes after the diagram model is set
       myDiagram.nodes.each(function(node) {
         node.isTreeExpanded = false;
       });
@@ -301,58 +171,55 @@ function loadChart() {
 }
 
 
-function expandFirstNode() {
-  myDiagram.startTransaction();
-  var firstNode = myDiagram.findNodeForKey(myDiagram.model.nodeDataArray[0].key);
-  if (firstNode) {
-    // Toggle the expansion state of the first node
-    myDiagram.commandHandler.expandTree(firstNode);
+function loadNodeData(node) {
+  var nodeType = node.data.name.toLowerCase();
+  var url = '/load-' + nodeType;
 
-    // Traverse the tree and collapse all child nodes
-    collapseChildNodes(firstNode);
-  }
-  myDiagram.commitTransaction();
+  $.ajax({
+    url: url,
+    type: 'GET',
+    success: function(response) {
+      myDiagram.startTransaction("load " + nodeType);
+      response.forEach(function(data) {
+        myDiagram.model.addNodeData(data);
+        myDiagram.model.addLinkData({ from: node.data.key, to: data.key });
+      });
+      myDiagram.commitTransaction("load " + nodeType);
+    },
+    error: function(xhr, status, error) {
+      console.error('Failed to load ' + nodeType + ' data:', error);
+    }
+  });
 }
 
-
-let currentExpandIndex = 0;
-
-function expandFirstNode() {
-  myDiagram.startTransaction();
-  currentExpandIndex = 0;
-  expandNextParent();
-  myDiagram.commitTransaction();
+function save() {
+  saveDiagramProperties();
+  document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+  myDiagram.isModified = false;
 }
 
-function expandNextParent() {
-  if (currentExpandIndex >= myDiagram.model.nodeDataArray.length) {
-    return; // No more nodes to expand
-  }
+function load() {
+  myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+  loadDiagramProperties();
+}
 
-  var nodeData = myDiagram.model.nodeDataArray[currentExpandIndex];
-  var node = myDiagram.findNodeForData(nodeData);
-
-  if (node && !node.data.expanded) {
-    node.data.expanded = true;
-
-    setTimeout(() => {
-      currentExpandIndex++;
-      expandNextParent();
-    }, 500);
+function updateProperties(data) {
+  if (data) {
+    document.getElementById("title").value = data.title || "";
+    // Set other properties as needed
   } else {
-    currentExpandIndex++;
-    expandNextParent();
+    document.getElementById("title").value = "";
+    // Clear other properties
   }
 }
 
-
-function collapseChildNodes(parentNode) {
-  if (parentNode instanceof go.Node) {
-    parentNode.findTreeChildrenNodes().each(function(child) {
-      myDiagram.commandHandler.collapseTree(child);
-    });
-  }
+function saveDiagramProperties() {
+  myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
 }
 
+function loadDiagramProperties(e) {
+  var pos = myDiagram.model.modelData.position;
+  if (pos) myDiagram.position = go.Point.parse(pos);
+}
 
 window.addEventListener('DOMContentLoaded', init);

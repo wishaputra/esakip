@@ -231,8 +231,12 @@ Route::get('/organization-chart', [OrganizationChartController::class, 'index'])
 
 // Route to save chart data
 
-Route::any('/save-chart', [ChartController::class, 'saveChart']);
-Route::get('/load-chart', [ChartController::class, 'loadChart']);
+Route::get('/load-chart', [ChartController::class,'loadChart']);
+Route::get('/load-visi', [ChartController::class,'loadvisi']);
+Route::get('/load-misi', [ChartController::class,'loadmisi']);
+Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
+
+
 
 //treview
 Route::get('/getTujuanIndikator/{id}', [TreeViewController::class, 'getTujuanIndikator']);
