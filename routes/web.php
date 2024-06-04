@@ -231,10 +231,14 @@ Route::get('/organization-chart', [OrganizationChartController::class, 'index'])
 
 // Route to save chart data
 
-Route::get('/load-chart', [ChartController::class,'loadChart']);
+
+Route::get('/struktur', 'ChartController@showOrgChart');
+
+Route::get('/load-chart', [ChartController::class, 'loadChart'])->name('chart.load');
 Route::get('/load-visi', [ChartController::class,'loadvisi']);
 Route::get('/load-misi', [ChartController::class,'loadmisi']);
 Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
+
 
 
 

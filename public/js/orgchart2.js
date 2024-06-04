@@ -19,10 +19,8 @@ function init() {
       alternatePortSpot: new go.Spot(0.01, 1, 10, 0),
       alternateChildPortSpot: go.Spot.Left
     }),
-    "ChangedSelection": onSelectionChanged,
-    "TextEdited": onTextEdited,
     "linkingTool.archetypeLinkData": { category: "Support", text: "100%" },
-    "undoManager.isEnabled": true
+    "undoManager.isEnabled": false
   });
 
   myDiagram.addDiagramListener("Modified", e => {
@@ -92,11 +90,35 @@ function init() {
         defaultAlignment: go.Spot.Left
       },
       $(go.RowColumnDefinition, { column: 2, width: 4 }),
-      $(go.TextBlock, "Visi: ", textStyle(),
-        { row: 2, column: 0, font: "bold 9pt sans-serif" },
-        new go.Binding("text", "visi").makeTwoWay())
-      )
-    );
+      $(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "visi").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "misi").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "tujuan").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "sasaran").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "tujuanRenstra").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "sasaranRenstra").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "program").makeTwoWay()),
+$(go.TextBlock, textStyle(),
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "kegiatan").makeTwoWay()),
+$(go.TextBlock, textStyle(), // Add this part
+  { row: 5, column: 0, font: "bold 9pt sans-serif" },
+  new go.Binding("text", "sub_kegiatan").makeTwoWay())
+)
+);
 
   myDiagram.linkTemplate =
     $(go.Link, go.Link.Orthogonal,
@@ -121,35 +143,6 @@ function init() {
   loadChart();
 }
 
-function onSelectionChanged(e) {
-  var node = e.diagram.selection.first();
-  if (node instanceof go.Node) {
-    updateProperties(node.data);
-  } else {
-    updateProperties(null);
-  }
-}
-
-function onTextEdited(e) {
-  var tb = e.subject;
-  if (tb === null || !tb.name) return;
-  var node = tb.part;
-  if (node instanceof go.Node) {
-    updateData(tb.text, tb.name);
-    updateProperties(node.data);
-  }
-}
-
-function updateData(text, field) {
-  var node = myDiagram.selection.first();
-  var data = node.data;
-  if (node instanceof go.Node && data !== null) {
-    var model = myDiagram.model;
-    model.startTransaction("modified " + field);
-    model.setDataProperty(data, field, text);
-    model.commitTransaction("modified " + field);
-  }
-}
 
 function loadChart() {
   $.ajax({
@@ -158,68 +151,60 @@ function loadChart() {
     success: function(response) {
       console.log('Chart data loaded successfully', response);
 
-      myDiagram.model = new go.GraphLinksModel(response.nodeDataArray, response.linkDataArray);
+      // Process the node data
+      var nodeDataArray = response.nodeDataArray.map(function(nodeData) {
+        // If the key starts with 'visi', add a 'visi' property
+        if (nodeData.key.startsWith('visi')) {
+          nodeData.visi = nodeData.visi;
+        }
+        // If the key starts with 'misi', add a 'misi' property and a 'parent' property
+        else if (nodeData.key.startsWith('misi')) {
+          nodeData.misi = nodeData.misi;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        // If the key starts with 'tujuan', add a 'tujuan' property and a 'parent' property
+        else if (nodeData.key.startsWith('tujuan')) {
+          nodeData.tujuan = nodeData.tujuan;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        // If the key starts with 'sasaran', add a 'sasaran' property and a 'parent' property
+        else if (nodeData.key.startsWith('sasaran')) {
+          nodeData.sasaran = nodeData.sasaran;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        else if (nodeData.key.startsWith('tujuanRenstra')) {
+          nodeData.tujuanRenstra = nodeData.tujuanRenstra;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        else if (nodeData.key.startsWith('sasaranRenstra')) {
+          nodeData.sasaranRenstra = nodeData.sasaranRenstra;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        else if (nodeData.key.startsWith('program')) {
+          nodeData.program = nodeData.program;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        else if (nodeData.key.startsWith('kegiatan')) {
+          nodeData.kegiatan = nodeData.kegiatan;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        else if (nodeData.key.startsWith('sub_kegiatan')) {
+          nodeData.sub_kegiatan = nodeData.sub_kegiatan;
+          nodeData.parent = nodeData.parent; // This should already be correct
+        }
+        return nodeData;
+      });
+
+      myDiagram.model = new go.GraphLinksModel(nodeDataArray, response.linkDataArray);
 
       myDiagram.nodes.each(function(node) {
-        node.isTreeExpanded = false;
+        node.isTreeExpanded = true;
       });
     },
     error: function(xhr, status, error) {
       console.error('Failed to load chart data:', error);
     }
   });
-}
-
-
-function loadNodeData(node) {
-  var nodeType = node.data.name.toLowerCase();
-  var url = '/load-' + nodeType;
-
-  $.ajax({
-    url: url,
-    type: 'GET',
-    success: function(response) {
-      myDiagram.startTransaction("load " + nodeType);
-      response.forEach(function(data) {
-        myDiagram.model.addNodeData(data);
-        myDiagram.model.addLinkData({ from: node.data.key, to: data.key });
-      });
-      myDiagram.commitTransaction("load " + nodeType);
-    },
-    error: function(xhr, status, error) {
-      console.error('Failed to load ' + nodeType + ' data:', error);
-    }
-  });
-}
-
-function save() {
-  saveDiagramProperties();
-  document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-  myDiagram.isModified = false;
-}
-
-function load() {
-  myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
-  loadDiagramProperties();
-}
-
-function updateProperties(data) {
-  if (data) {
-    document.getElementById("title").value = data.title || "";
-    // Set other properties as needed
-  } else {
-    document.getElementById("title").value = "";
-    // Clear other properties
-  }
-}
-
-function saveDiagramProperties() {
-  myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
-}
-
-function loadDiagramProperties(e) {
-  var pos = myDiagram.model.modelData.position;
-  if (pos) myDiagram.position = go.Point.parse(pos);
 }
 
 window.addEventListener('DOMContentLoaded', init);

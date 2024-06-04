@@ -189,6 +189,8 @@ $(go.Node, "Auto",
   load();
 }
 
+
+
 // Allow the user to edit text when a single node is selected
 function onSelectionChanged(e) {
   var node = e.diagram.selection.first();
