@@ -196,6 +196,7 @@
                     <th width="90px">Tahun </th>
                     <th width="90px">Target</th>
                     <th width="90px">Capaian</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -313,6 +314,8 @@ $(document).ready(function() {
     $("#judul").html("Tujuan");
     $("#deskripsi").html(selectedTujuan);
     $('#tabel').show();
+    $('#triwulanHeader').hide();
+    $('#subTableHeader').hide();
 
     var indikatorData = [];
     var nilaiData = [];
@@ -374,6 +377,8 @@ $('#myUL').on('click', 'span.sasaran', function() {
     $("#judul").html("Sasaran");
     $("#deskripsi").html(selectedSasaran);
     $('#tabel').show();
+    $('#triwulanHeader').hide();
+    $('#subTableHeader').hide();
 
     var indikatorData = [];
     var nilaiData = [];
@@ -428,102 +433,144 @@ $('#myUL').on('click', 'span.sasaran', function() {
 });
 
 $('#myUL').on('click', 'span.tujuanRenstra', function() {
-        var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
-        var tujuanRenstraId = $(this).data('id');  // Assume you store the ID as a data attribute
-        $("#judul").html("Tujuan Renstra");
-        $("#deskripsi").html(selectedTujuanRenstra);
-        $('#tabel').show();
+    var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
+    var tujuanRenstraId = $(this).data('id');  // Assume you store the ID as a data attribute
+    $("#judul").html("Tujuan Renstra");
+    $("#deskripsi").html(selectedTujuanRenstra);
+    $('#tabel').show();
+    $('#triwulanHeader').show(); // Show the Triwulan column
 
-        var indikatorData = [];
-        var nilaiData = [];
+    var indikatorData = [];
+    var nilaiData = [];
 
-        // Fetch Indikator data
-        $.ajax({
-            url: '/getTujuanRenstraIndikator/' + tujuanRenstraId,
-            method: 'GET',
-            success: function(response) {
-                indikatorData = response;
-                populateTable(indikatorData, nilaiData);
-            },
-            error: function() {
-                console.log('Error fetching indikator data');
-            }
-        });
-
-        // Fetch Nilai data
-        $.ajax({
-            url: '/getTujuanRenstraNilai/' + tujuanRenstraId,
-            method: 'GET',
-            success: function(response) {
-                nilaiData = response;
-                populateTable(indikatorData, nilaiData);
-            },
-            error: function() {
-                console.log('Error fetching nilai data');
-            }
-        });
-
-        function populateTable(indikators, nilais) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
-
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_indikator_tujuan_renstra] = nilai;
-            });
-
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+    // Fetch Indikator data
+    $.ajax({
+        url: '/getTujuanRenstraIndikator/' + tujuanRenstraId,
+        method: 'GET',
+        success: function(response) {
+            indikatorData = response;
+            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
+        },
+        error: function() {
+            console.log('Error fetching indikator data');
         }
     });
 
+    // Fetch Nilai data
+    $.ajax({
+        url: '/getTujuanRenstraNilai/' + tujuanRenstraId,
+        method: 'GET',
+        success: function(response) {
+            nilaiData = response;
+            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
+        },
+        error: function() {
+            console.log('Error fetching nilai data');
+        }
+    });
+
+    
+    function populateTable(indikators, nilais, isTujuanRenstra) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
+
+        indikators.forEach(function(indikator) {
+            var nilai = nilais.find(function(nilai) {
+                return nilai.id_indikator_tujuan_renstra === indikator.id;
+            }) || {}; // Get the corresponding nilai or default to empty
+            var row = '<tr>' +
+                '<td>' + indikator.indikator + '</td>' +
+                '<td>' + (nilai.satuan || '') + '</td>' +
+                '<td>' + (nilai.tahun || '') + '</td>'; // Keep the triwulan column
+            if (isTujuanRenstra) {
+                row += '<td>' +
+                    '<table>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw3 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                    '</tr>' +
+                    '</table>' +
+                    '</td>';
+            } else {
+                row += '<td>' + (nilai.target || '') + '</td>';
+            }
+            if (isTujuanRenstra) {
+                row += '<td>' +
+                    '<table>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw3 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                    '</tr>' +
+                    '</table>' +
+                    '</td>';
+            } else {
+                row += '<td>' + (nilai.capaian || '') + '</td>';
+            }
+            row += '</tr>';
+            tableBody.append(row);
+        });
+    }
+    
+    
+});
+
    
+    
     $('#myUL').on('click', 'span.sasaranRenstra', function() {
         var selectedSasaranRenstra = $(this).text().replace('SASARAN RENSTRA: ', '');
         var sasaranRenstraId = $(this).data('id');  // Assume you store the ID as a data attribute
         $("#judul").html("Sasaran Renstra");
         $("#deskripsi").html(selectedSasaranRenstra);
         $('#tabel').show();
-
+        $('#triwulanHeader').show(); // Show the Triwulan column
+    
         var indikatorData = [];
         var nilaiData = [];
-
+    
         // Fetch Indikator data
         $.ajax({
             url: '/getSasaranRenstraIndikator/' + sasaranRenstraId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching indikator data');
             }
         });
-
+    
         // Fetch Nilai data
         $.ajax({
             url: '/getSasaranRenstraNilai/' + sasaranRenstraId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching nilai data');
             }
         });
-
-        function populateTable(indikators, nilais) {
+    
+    
+        function populateTable(indikators, nilais, isSasaranRenstra) {
             var tableBody = $('#dataTable tbody');
             tableBody.empty(); // Clear existing rows
 
@@ -537,14 +584,53 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
                 var row = '<tr>' +
                     '<td>' + indikator.indikator + '</td>' +
                     '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '</tr>';
+                    '<td>' + (nilai.tahun || '') + '</td>';
+                if (isSasaranRenstra) {
+                    row += '<td>' +
+                        '<table>' +
+                        '<tr>' +
+                        '<th>TW 1</th>' +
+                        '<th>TW 2</th>' +
+                        '<th>TW 3</th>' +
+                        '<th>TW 4</th>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>' + (nilai.target || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                        '</tr>' +
+                        '</table>' +
+                        '</td>';
+                } else {
+                    row += '<td>' + (nilai.target || '') + '</td>';
+                }
+                if (isSasaranRenstra) {
+                    row += '<td>' +
+                        '<table>' +
+                        '<tr>' +
+                        '<th>TW 1</th>' +
+                        '<th>TW 2</th>' +
+                        '<th>TW 3</th>' +
+                        '<th>TW 4</th>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>' + (nilai.capaian || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                        '</tr>' +
+                        '</table>' +
+                        '</td>';
+                } else {
+                    row += '<td>' + (nilai.capaian || '') + '</td>';
+                }
+                row += '</tr>';
                 tableBody.append(row);
             });
         }
     });
+    
 
 
     $('#myUL').on('click', 'span.program', function() {
@@ -553,57 +639,93 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         $("#judul").html("Program");
         $("#deskripsi").html(selectedProgram);
         $('#tabel').show();
-
+    
         var indikatorData = [];
         var nilaiData = [];
-
+    
         // Fetch Indikator data
         $.ajax({
             url: '/getProgramIndikator/' + programId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching indikator data');
             }
         });
-
+    
         // Fetch Nilai data
         $.ajax({
             url: '/getProgramNilai/' + programId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching nilai data');
             }
         });
-
-        function populateTable(indikators, nilais) {
+    
+        
+        function populateTable(indikators, nilais, isProgram) {
             var tableBody = $('#dataTable tbody');
-            tableBody.empty();
+            tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {};
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
             nilais.forEach(function(nilai) {
                 nilaiMap[nilai.id_indikator_program] = nilai;
             });
 
             indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {};
+                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
                 var row = '<tr>' +
                     '<td>' + indikator.indikator + '</td>' +
                     '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>';
+                if (isProgram) {
+                    row += '<td>' +
+                        '<table>' +
+                        '<tr>' +
+                        '<th>TW 1</th>' +
+                        '<th>TW 2</th>' +
+                        '<th>TW 3</th>' +
+                        '<th>TW 4</th>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>' + (nilai.target || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                        '</tr>' +
+                        '</table>' +
+                        '</td>';
+                } else {
+                    row += '<td>' + (nilai.target || '') + '</td>';
+                }
+                row += '<td>' +
+                    '<table>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '<tr>' +
                     '<td>' + (nilai.capaian || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                    '</tr>' +
+                    '</table>' +
+                    '</td>' +
                     '</tr>';
                 tableBody.append(row);
             });
         }
+        
     });
 
     
@@ -613,57 +735,93 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         $("#judul").html("Kegiatan");
         $("#deskripsi").html(selectedKegiatan);
         $('#tabel').show();
-
+    
         var indikatorData = [];
         var nilaiData = [];
-
+    
         // Fetch Indikator data
         $.ajax({
             url: '/getKegiatanIndikator/' + kegiatanId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching indikator data');
             }
         });
-
+    
         // Fetch Nilai data
         $.ajax({
             url: '/getKegiatanNilai/' + kegiatanId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching nilai data');
             }
         });
-
-        function populateTable(indikators, nilais) {
+    
+        
+        function populateTable(indikators, nilais, isKegiatan) {
             var tableBody = $('#dataTable tbody');
-            tableBody.empty();
+            tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {};
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
             nilais.forEach(function(nilai) {
                 nilaiMap[nilai.id_indikator_kegiatan] = nilai;
             });
 
             indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {};
+                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
                 var row = '<tr>' +
                     '<td>' + indikator.indikator + '</td>' +
                     '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>';
+                if (isKegiatan) {
+                    row += '<td>' +
+                        '<table>' +
+                        '<tr>' +
+                        '<th>TW 1</th>' +
+                        '<th>TW 2</th>' +
+                        '<th>TW 3</th>' +
+                        '<th>TW 4</th>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>' + (nilai.target || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.tw3 || '') + '</td>' +
+                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                        '</tr>' +
+                        '</table>' +
+                        '</td>';
+                } else {
+                    row += '<td>' + (nilai.target || '') + '</td>';
+                }
+                row += '<td>' +
+                    '<table>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '<tr>' +
                     '<td>' + (nilai.capaian || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw3 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                    '</tr>' +
+                    '</table>' +
+                    '</td>' +
                     '</tr>';
                 tableBody.append(row);
             });
         }
+        
     });
     
 
@@ -674,57 +832,92 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         $("#judul").html("Sub Kegiatan");
         $("#deskripsi").html(selectedSubKegiatan);
         $('#tabel').show();
-
+    
         var indikatorData = [];
         var nilaiData = [];
-
+    
         // Fetch Indikator data
         $.ajax({
             url: '/getSubKegiatanIndikator/' + subKegiatanId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching indikator data');
             }
         });
-
+    
         // Fetch Nilai data
         $.ajax({
             url: '/getSubKegiatanNilai/' + subKegiatanId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
-                populateTable(indikatorData, nilaiData);
+                populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
             },
             error: function() {
                 console.log('Error fetching nilai data');
             }
         });
-
-        function populateTable(indikators, nilais) {
+    
+        function populateTable(indikators, nilais, isSubKegiatan) {
             var tableBody = $('#dataTable tbody');
-            tableBody.empty();
+            tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {};
+            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
             nilais.forEach(function(nilai) {
                 nilaiMap[nilai.id_indikator_sub_kegiatan] = nilai;
             });
 
             indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {};
+                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
                 var row = '<tr>' +
                     '<td>' + indikator.indikator + '</td>' +
                     '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '<td>' + (nilai.tahun || '') + '</td>';
+                if (isSubKegiatan) {
+                    row += '<td>' +
+                        '<table>' +
+                        '<tr>' +
+                        '<th>TW 1</th>' +
+                        '<th>TW 2</th>' +
+                        '<th>TW 3</th>' +
+                        '<th>TW 4</th>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>' + (nilai.target || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.tw2 || '') + '</td>' +
+                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                        '</tr>' +
+                        '</table>' +
+                        '</td>';
+                } else {
+                    row += '<td>' + (nilai.target || '') + '</td>';
+                }
+                row += '<td>' +
+                    '<table>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>' + (nilai.capaian|| '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                    '</tr>' +
+                    '</table>' +
+                    '</td>' +
                     '</tr>';
                 tableBody.append(row);
             });
         }
+        
     });
 
 });
