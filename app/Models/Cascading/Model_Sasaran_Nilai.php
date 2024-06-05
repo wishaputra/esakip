@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Model_Sasaran_Nilai extends Model
 {
     protected $table = "cascading_sasaran_nilai";
-    protected $fillable = ['id_indikator_sasaran', 'satuan', 'tahun', 'target', 'capaian', 'creator', 'created_at', 'updated_at'];
+    protected $fillable = ['id_indikator_sasaran', 'satuan', 'tahun', 'triwulan', 'target', 'capaian', 'creator', 'created_at', 'updated_at'];
 
     public function sasaran_indikator()
     {

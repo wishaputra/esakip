@@ -71,6 +71,7 @@ class KegiatanNilaiController extends Controller
             "id_indikator_kegiatan" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -79,6 +80,7 @@ class KegiatanNilaiController extends Controller
             "id_indikator_kegiatan" => $request->id_indikator_kegiatan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->target,
             "creator" => Auth::user()->id,
@@ -121,6 +123,7 @@ class KegiatanNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -131,6 +134,7 @@ class KegiatanNilaiController extends Controller
             "id_indikator_kegiatan" => $request->id_indikator_kegiatan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,

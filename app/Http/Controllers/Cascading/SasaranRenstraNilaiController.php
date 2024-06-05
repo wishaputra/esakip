@@ -69,6 +69,7 @@ class SasaranRenstraNilaiController extends Controller
             "id_indikator_sasaran_renstra" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -76,7 +77,7 @@ class SasaranRenstraNilaiController extends Controller
         Model_Sasaran_Renstra_Nilai::create([
             "id_indikator_sasaran_renstra" => $request->id_indikator_sasaran_renstra,
             "satuan" => $request->satuan,
-            "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
@@ -120,6 +121,7 @@ class SasaranRenstraNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -129,6 +131,7 @@ class SasaranRenstraNilaiController extends Controller
         $misi->update([
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,

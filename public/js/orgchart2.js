@@ -3,6 +3,7 @@ function init() {
   myDiagram = new go.Diagram("myDiagramDiv", {
     validCycle: go.Diagram.CycleDestinationTree,
     maxSelectionCount: 1,
+    allowDelete: false, // Add this line
     layout: $(go.TreeLayout, {
       treeStyle: go.TreeLayout.StyleLastParents,
       arrangement: go.TreeLayout.ArrangementHorizontal,
@@ -44,11 +45,11 @@ function init() {
     return true;
   }
 
-  function textStyle() {
-    return { font: "9pt sans-serif", stroke: "white" };
-  }
+    function textStyle() {
+      return { font: "9pt sans-serif", stroke: "white" };
+    }
 
-  myDiagram.nodeTemplate =
+    myDiagram.nodeTemplate =
   $(go.Node, "Auto",
     {
       mouseDragEnter: (e, node, prev) => {
@@ -67,7 +68,7 @@ function init() {
         var selnode = diagram.selection.first();
         if (mayWorkFor(selnode, node)) {
           var link = selnode.findTreeParentLink();
-          if (link !== null) {
+          if (link!== null) {
             link.fromNode = node;
           } else {
             diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
@@ -75,7 +76,7 @@ function init() {
         }
       }
     },
-    new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
+    new go.Binding("layerName", "isSelected", sel => sel? "Foreground" : "").ofObject(),
     $(go.Shape, "RoundedRectangle",
       {
         name: "SHAPE",
@@ -91,39 +92,54 @@ function init() {
       },
       $(go.RowColumnDefinition, { column: 2, width: 4 }),
       $(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "visi").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "misi").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "tujuan").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "sasaran").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "tujuanRenstra").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "sasaranRenstra").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "program").makeTwoWay()),
-$(go.TextBlock, textStyle(),
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "kegiatan").makeTwoWay()),
-$(go.TextBlock, textStyle(), // Add this part
-  { row: 5, column: 0, font: "bold 9pt sans-serif" },
-  new go.Binding("text", "sub_kegiatan").makeTwoWay())
-)
-);
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "visi").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "misi").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "tujuan").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "sasaran").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "tujuanRenstra").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "sasaranRenstra").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "program").makeTwoWay()),
+  $(go.TextBlock, textStyle(),
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "kegiatan").makeTwoWay()),
+  $(go.TextBlock, textStyle(), // Add this part
+    { row: 5, column: 0, font: "bold 9pt sans-serif" },
+    new go.Binding("text", "sub_kegiatan").makeTwoWay())),
 
-  myDiagram.linkTemplate =
-    $(go.Link, go.Link.Orthogonal,
-      { corner: 5 },
-      $(go.Shape, { strokeWidth: 2 }));
+    $("TreeExpanderButton",
+        {
+          alignment: go.Spot.BottomRight,
+          alignmentFocus: go.Spot.Center,
+          width: 15,
+          height: 15,
+          click: (e, button) => {
+            var node = button.part;
+            if (node.isTreeExpanded) {
+              node.collapseTree();
+            } else {
+              node.expandTree();
+            }
+          }
+        })
+    );
+
+    myDiagram.linkTemplate =
+      $(go.Link, go.Link.Orthogonal,
+        { corner: 5 },
+        $(go.Shape, { strokeWidth: 2 }));
 
   myDiagram.linkTemplateMap.add("Support",
     $(go.Link, go.Link.Bezier,
@@ -197,8 +213,11 @@ function loadChart() {
 
       myDiagram.model = new go.GraphLinksModel(nodeDataArray, response.linkDataArray);
 
+      // Collapse all nodes except the root "visi" node
       myDiagram.nodes.each(function(node) {
-        node.isTreeExpanded = true;
+        if (node.data.key !== "visi") {
+          node.isTreeExpanded = false;
+        }
       });
     },
     error: function(xhr, status, error) {

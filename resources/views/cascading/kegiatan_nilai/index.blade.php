@@ -59,6 +59,7 @@
                                             <td width="15%">#</td>
                                             <td>Satuan</td>
                                             <td>Tahun</td>
+                                            <td>Triwulan</td>
                                             <td>Target</td>
                                             <td>capaian</td>
                                             <td width="10%">Aksi</td>
@@ -117,6 +118,20 @@
                                 <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="triwulan" class="col-form-label">Triwulan</label>
+                                <select name="triwulan" id="triwulan" class="form-control">
+                                    <option value="">Pilih</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="target" class="col-form-label">target</label>
@@ -166,6 +181,7 @@
             $('#id').val(data.id);
             $('#satuan').val(data.satuan);
             $('#tahun').val(data.tahun).focus();
+            $('#triwulan').val(data.tahun).focus();
             $('#target').val(data.target).focus();
             $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
@@ -232,6 +248,7 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'satuan', name: 'satuan'},
             {data: 'tahun', name: 'tahun'},
+            {data: 'triwulan', name: 'triwulan'},
             {data: 'target', name: 'target'},
             {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            

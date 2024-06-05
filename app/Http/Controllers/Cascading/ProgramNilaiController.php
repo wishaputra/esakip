@@ -71,6 +71,7 @@ class ProgramNilaiController extends Controller
             "id_indikator_program" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -79,6 +80,7 @@ class ProgramNilaiController extends Controller
             "id_indikator_program" => $request->id_indikator_program,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->tahun,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
@@ -121,6 +123,7 @@ class ProgramNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -131,6 +134,7 @@ class ProgramNilaiController extends Controller
             "id_program_indikator" => $request->id_program_indikator,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,

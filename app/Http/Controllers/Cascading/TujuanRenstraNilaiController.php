@@ -69,6 +69,7 @@ class TujuanRenstraNilaiController extends Controller
             "id_indikator_tujuan_renstra" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -77,6 +78,7 @@ class TujuanRenstraNilaiController extends Controller
             "id_indikator_tujuan_renstra" => $request->id_indikator_tujuan_renstra,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
@@ -120,6 +122,7 @@ class TujuanRenstraNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
+            "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -129,6 +132,7 @@ class TujuanRenstraNilaiController extends Controller
         $tujuan_renstra_nilai->update([
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
+            "triwulan" => $request->triwulan,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
