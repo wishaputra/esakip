@@ -15,167 +15,158 @@ use App\Models\Cascading\Model_SubKegiatan;
 
 class ChartController extends Controller
 {
-
-
+    public function getPeriods()
+    {
+        $periods = Model_Visi::select('tahun_awal', 'tahun_akhir')
+                    ->distinct()
+                    ->orderBy('tahun_awal')
+                    ->get();
     
-    public function loadChart()
-{
-    
-    // Fetch data from the Model_Visi
-    $visiNodes = Model_Visi::all()->map(function($visi) {
-        return [
-            'key' => 'visi' . $visi->id, // Prefix the id with 'visi' to make it unique
-            'visi' => $visi->visi,
-            'tahun_awal' => $visi->tahun_awal,
-            'tahun_akhir' => $visi->tahun_akhir,
-            // Add other necessary fields here
+        return response()->json($periods);
+    }
+
+    public function loadChart(Request $request)
+    {
+
+        {
+            $tahun_awal = $request->get('tahun_awal');
+            $tahun_akhir = $request->get('tahun_akhir');
+        
+            $visi = Model_Visi::where('tahun_awal', $tahun_awal)
+                              ->where('tahun_akhir', $tahun_akhir)
+                              ->get();
+
+        }
+
+
+
+        $periode = $request->input('periode');
+        if ($periode) {
+            list($tahun_awal, $tahun_akhir) = explode('-', $periode);
+        } else {
+            $tahun_awal = null;
+            $tahun_akhir = null;
+        }
+
+        $visiQuery = Model_Visi::query();
+        if ($tahun_awal && $tahun_akhir) {
+            $visiQuery->where('tahun_awal', $tahun_awal)
+                      ->where('tahun_akhir', $tahun_akhir);
+        }
+        $visiNodes = $visiQuery->with('misi')->get()->map(function($visi) {
+            return [
+                'key' => 'visi' . $visi->id,
+                'visi' => $visi->visi,
+                'tahun_awal' => $visi->tahun_awal,
+                'tahun_akhir' => $visi->tahun_akhir,
+            ];
+        });
+
+        $misiNodes = Model_Misi::whereIn('id_visi', $visiNodes->pluck('key')->map(function($key) {
+            return substr($key, 4);
+        }))->get()->map(function($misi) {
+            return [
+                'key' => 'misi' . $misi->id,
+                'misi' => $misi->misi,
+                'parent' => 'visi' . $misi->id_visi,
+            ];
+        });
+
+        $tujuanNodes = Model_Tujuan::whereIn('id_misi', $misiNodes->pluck('key')->map(function($key) {
+            return substr($key, 4);
+        }))->get()->map(function($tujuan) {
+            return [
+                'key' => 'tujuan' . $tujuan->id,
+                'tujuan' => $tujuan->tujuan,
+                'parent' => 'misi' . $tujuan->id_misi,
+            ];
+        });
+
+        $sasaranNodes = Model_Sasaran::whereIn('id_tujuan', $tujuanNodes->pluck('key')->map(function($key) {
+            return substr($key, 7);
+        }))->get()->map(function($sasaran) {
+            return [
+                'key' => 'sasaran' . $sasaran->id,
+                'sasaran' => $sasaran->sasaran,
+                'parent' => 'tujuan' . $sasaran->id_tujuan,
+            ];
+        });
+
+        $tujuanRenstraNodes = Model_Tujuan_Renstra::whereIn('id_sasaran', $sasaranNodes->pluck('key')->map(function($key) {
+            return substr($key, 7);
+        }))->get()->map(function($tujuanRenstra) {
+            return [
+                'key' => 'tujuanRenstra' . $tujuanRenstra->id,
+                'tujuanRenstra' => $tujuanRenstra->tujuan_renstra,
+                'parent' => 'sasaran' . $tujuanRenstra->id_sasaran,
+            ];
+        });
+
+        $sasaranRenstraNodes = Model_Sasaran_Renstra::whereIn('id_tujuan_renstra', $tujuanRenstraNodes->pluck('key')->map(function($key) {
+            return substr($key, 13);
+        }))->get()->map(function($sasaranRenstra) {
+            return [
+                'key' => 'sasaranRenstra' . $sasaranRenstra->id,
+                'sasaranRenstra' => $sasaranRenstra->sasaran_renstra,
+                'parent' => 'tujuanRenstra' . $sasaranRenstra->id_tujuan_renstra,
+            ];
+        });
+
+        $programNodes = Model_Program::whereIn('id_sasaran_renstra', $sasaranRenstraNodes->pluck('key')->map(function($key) {
+            return substr($key, 14);
+        }))->get()->map(function($program) {
+            return [
+                'key' => 'program' . $program->id,
+                'program' => $program->program,
+                'parent' => 'sasaranRenstra' . $program->id_sasaran_renstra,
+            ];
+        });
+
+        $kegiatanNodes = Model_Kegiatan::whereIn('id_program', $programNodes->pluck('key')->map(function($key) {
+            return substr($key, 7);
+        }))->get()->map(function($kegiatan) {
+            return [
+                'key' => 'kegiatan' . $kegiatan->id,
+                'kegiatan' => $kegiatan->kegiatan,
+                'parent' => 'program' . $kegiatan->id_program,
+            ];
+        });
+
+        $subkegiatanNodes = Model_SubKegiatan::whereIn('id_kegiatan', $kegiatanNodes->pluck('key')->map(function($key) {
+            return substr($key, 10);
+        }))->get()->map(function($sub_kegiatan) {
+            return [
+                'key' => 'subkegiatan' . $sub_kegiatan->id,
+                'sub_kegiatan' => $sub_kegiatan->sub_kegiatan,
+                'parent' => 'kegiatan' . $sub_kegiatan->id_kegiatan,
+            ];
+        });
+
+        $nodes = $visiNodes->concat($misiNodes)->concat($tujuanNodes)->concat($sasaranNodes)->concat($tujuanRenstraNodes)->concat($sasaranRenstraNodes)->concat($programNodes)->concat($kegiatanNodes)->concat($subkegiatanNodes);
+
+        $links = $misiNodes->map(function($misi) {
+            return ['from' => $misi['parent'], 'to' => $misi['key']];
+        })->concat($tujuanNodes->map(function($tujuan) {
+            return ['from' => $tujuan['parent'], 'to' => $tujuan['key']];
+        }))->concat($sasaranNodes->map(function($sasaran) {
+            return ['from' => $sasaran['parent'], 'to' => $sasaran['key']];
+        }))->concat($tujuanRenstraNodes->map(function($tujuanRenstra) {
+            return ['from' => $tujuanRenstra['parent'], 'to' => $tujuanRenstra['key']];
+        }))->concat($sasaranRenstraNodes->map(function($sasaranRenstra) {
+            return ['from' => $sasaranRenstra['parent'], 'to' => $sasaranRenstra['key']];
+        }))->concat($programNodes->map(function($program) {
+            return ['from' => $program['parent'], 'to' => $program['key']];
+        }))->concat($kegiatanNodes->map(function($kegiatan) {
+            return ['from' => $kegiatan['parent'], 'to' => $kegiatan['key']];
+        }))->concat($subkegiatanNodes->map(function($sub_kegiatan) {
+            return ['from' => $sub_kegiatan['parent'], 'to' => $sub_kegiatan['key']];
+        }));
+
+        $response = [
+            'nodeDataArray' => $nodes->toArray(),
+            'linkDataArray' => $links->toArray(),
         ];
-    });
 
-    // Fetch data from the Model_Misi
-    $misiNodes = Model_Misi::all()->map(function($misi) {
-        return [
-            'key' => 'misi' . $misi->id, // Prefix the id with 'misi' to make it unique
-            'misi' => $misi->misi,
-            'parent' => 'visi' . $misi->id_visi, // Assign the 'parent' property to link with the visi node
-            // Add other necessary fields here
-        ];
-    });
-
-    // Fetch data from the Model_Tujuan
-    $tujuanNodes = Model_Tujuan::all()->map(function($tujuan) {
-        return [
-            'key' => 'tujuan' . $tujuan->id, // Prefix the id with 'tujuan' to make it unique
-            'tujuan' => $tujuan->tujuan,
-            'parent' => 'misi' . $tujuan->id_misi, // Assign the 'parent' property to link with the misi node
-            // Add other necessary fields here
-        ];
-    });
-
-    $sasaranNodes = Model_Sasaran::all()->map(function($sasaran) {
-        return [
-            'key' => 'sasaran' . $sasaran->id, // Prefix the id with 'sasaran' to make it unique
-            'sasaran' => $sasaran->sasaran,
-            'parent' => 'tujuan' . $sasaran->id_tujuan, // Assign the 'parent' property to link with the tujuan node
-            // Add other necessary fields here
-        ];
-    });
-
-    $tujuanRenstraNodes = Model_Tujuan_Renstra::all()->map(function($tujuanRenstra) {
-        return [
-            'key' => 'tujuanRenstra' . $tujuanRenstra->id, // Prefix the id with 'tujuanRenstra' to make it unique
-            'tujuanRenstra' => $tujuanRenstra->tujuan_renstra,
-            'parent' => 'sasaran' . $tujuanRenstra->id_sasaran, // Assign the 'parent' property to link with the sasaran node
-            // Add other necessary fields here
-        ];
-    });
-
-    $sasaranRenstraNodes = Model_Sasaran_Renstra::all()->map(function($sasaranRenstra) {
-        return [
-            'key' => 'sasaranRenstra' . $sasaranRenstra->id, // Prefix id with 'sasaranRenstra' to make it unique
-            'sasaranRenstra' => $sasaranRenstra->sasaran_renstra,
-            'parent' => 'tujuanRenstra' . $sasaranRenstra->id_tujuan_renstra, // Assign the 'parent' property to link with the tujuanRenstra node
-            // Add other necessary fields here
-        ];
-    });
-
-    $programNodes = Model_Program::all()->map(function($program) {
-        return [
-            'key' => 'program' . $program->id, // Prefix id with 'program' to make it unique
-            'program' => $program->program,
-            'parent' => 'sasaranRenstra' . $program->id_sasaran_renstra, // Assign the 'parent' property to link with the sasaranRenstra node
-            // Add other necessary fields here
-        ];
-    });
-    
-    $kegiatanNodes = Model_Kegiatan::all()->map(function($kegiatan) {
-        return [
-            'key' => 'kegiatan' . $kegiatan->id, // Prefix id with 'kegiatan' to make it unique
-            'kegiatan' => $kegiatan->kegiatan,
-            'parent' => 'program' . $kegiatan->id_program, // Assign the 'parent' property to link with the program node
-            // Add other necessary fields here
-        ];
-    });
-
-    $subkegiatanNodes = Model_SubKegiatan::all()->map(function($sub_kegiatan) {
-        return [
-            'key' => 'subkegiatan' . $sub_kegiatan->id, // Prefix id with 'subkegiatan' to make it unique
-            'sub_kegiatan' => $sub_kegiatan->sub_kegiatan,
-            'parent' => 'kegiatan' . $sub_kegiatan->id_kegiatan, // Assign the 'parent' property to link with the kegiatan node
-            // Add other necessary fields here
-        ];
-    });
-
-    // Create links from each visi node to its misi nodes
-    $visiToMisiLinks = $misiNodes->map(function($misi) {
-        return [
-            'from' => $misi['parent'],
-            'to' => $misi['key'],
-        ];
-    });
-
-    // Create links from each misi node to its tujuan nodes
-    $misiToTujuanLinks = $tujuanNodes->map(function($tujuan) {
-        return [
-            'from' => $tujuan['parent'],
-            'to' => $tujuan['key'],
-        ];
-    });
-
-    $tujuanToSasaranLinks = $sasaranNodes->map(function($sasaran) {
-        return [
-            'from' => $sasaran['parent'],
-            'to' => $sasaran['key'],
-        ];
-    });
-
-    $sasaranToTujuanRenstraLinks = $tujuanRenstraNodes->map(function($tujuanRenstra) {
-        return [
-            'from' => $tujuanRenstra['parent'],
-            'to' => $tujuanRenstra['key'],
-        ];
-    });
-
-    $tujuanRenstraToSasaranRenstraLinks = $sasaranRenstraNodes->map(function($sasaranRenstra) {
-        return [
-            'from' => $sasaranRenstra['parent'],
-            'to' => $sasaranRenstra['key'],
-        ];
-    });
-
-    $sasaranRenstraToProgramLinks = $programNodes->map(function($program) {
-        return [
-            'from' => $program['parent'],
-            'to' => $program['key'],
-        ];
-    });
-
-    $programToKegiatanLinks = $kegiatanNodes->map(function($kegiatan) {
-        return [
-            'from' => $kegiatan['parent'],
-            'to' => $kegiatan['key'],
-        ];
-    });
-
-    $kegiatanToSubKegiatanLinks = $subkegiatanNodes->map(function($sub_kegiatan) {
-        return [
-            'from' => $sub_kegiatan['parent'],
-            'to' => $sub_kegiatan['key'],
-        ];
-    });
-
-    // Merge the visi nodes, misi nodes, and tujuan nodes into one array
-    $nodes = $visiNodes->concat($misiNodes)->concat($tujuanNodes)->concat($sasaranNodes)->concat($tujuanRenstraNodes)->concat($sasaranRenstraNodes)->concat($programNodes)->concat($kegiatanNodes)->concat($subkegiatanNodes);
-
-    // Merge all links into one array
-    $links = $visiToMisiLinks->concat($misiToTujuanLinks)->concat($tujuanToSasaranLinks)->concat($sasaranToTujuanRenstraLinks)->concat($tujuanRenstraToSasaranRenstraLinks)->concat($sasaranRenstraToProgramLinks)->concat($programToKegiatanLinks)->concat($kegiatanToSubKegiatanLinks);   
-
-    // Example response structure expected by GoJS
-    $response = [
-        'nodeDataArray' => $nodes->toArray(),
-        'linkDataArray' => $links->toArray(),
-    ];
-
-    return response()->json($response);
-}
+        return response()->json($response);
+    }
 }

@@ -1,13 +1,13 @@
 <ul class="sidebar-menu">
-
-    <li class="header"><strong>MAIN NAVIGATIONN</strong></li>
+    <li class="header"><strong>MAIN NAVIGATION</strong></li>
     <li>
         <a href="{{ route('admin') }}">
             <i class="icon icon-sailing-boat-water purple-text s-18"></i> <span>Dashboard</span>
         </a>
     </li>
 
-    @role('admin')
+    
+    @if (Auth::user()->role == 1)
     <li>
         <a href="{{ route('posts.index') }}">
             <i class="icon s-18 icon-web pink-text "></i> <span>Page</span>
@@ -101,45 +101,45 @@
                 </li>
 
                 <li class="treeview">
-            <a href="#">
-                <i class="icon icon-minus s-14 text-blue"></i> <span>Cascading</span>
-                <i class="icon icon-angle-left pull-right"></i>
-            </a>
-            <ul class="treeview-menu">
-                <!-- Sub-menu items -->
+                    <a href="#">
+                        <i class="icon icon-minus s-14 text-blue"></i> <span>Cascading</span>
+                        <i class="icon icon-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <!-- Sub-menu items -->
+                        <li>
+                        <a href="{{ route('setup.visi.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Visi & Misi</span>
+                        </a>
+                        <a href="{{ route('setup.tujuan.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan</span>
+                        </a>
+                        <a href="{{ route('setup.sasaran.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran</span>
+                        </a>
+                        <a href="{{ route('setup.perangkat_daerah.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Perangkat Daerah</span>
+                        </a>
+                        <a href="{{ route('setup.tujuan_renstra.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
+                        </a>
+                        <a href="{{ route('setup.sasaran_renstra.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
+                        </a>
+                        <a href="{{ route('setup.program.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
+                        </a>
+                        <a href="{{ route('setup.kegiatan.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
+                        </a>
+                        <a href="{{ route('setup.sub_kegiatan.index') }}">
+                            <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
+                        </a>
+                    </ul>
                 <li>
-                <a href="{{ route('setup.visi.index') }}">
-                     <i class="icon icon-circle-o s-14 text-blue"></i> <span>Visi & Misi</span>
+                <a href="{{ route('setup.front.index') }}">
+                    <i class="icon icon-layers s-16 indigo-text"></i> <span>Front End</span>
                 </a>
-                <a href="{{ route('setup.tujuan.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan</span>
-                </a>
-                <a href="{{ route('setup.sasaran.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran</span>
-                </a>
-                <a href="{{ route('setup.perangkat_daerah.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Perangkat Daerah</span>
-                </a>
-                <a href="{{ route('setup.tujuan_renstra.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
-                </a>
-                <a href="{{ route('setup.sasaran_renstra.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
-                </a>
-                <a href="{{ route('setup.program.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
-                </a>
-                <a href="{{ route('setup.kegiatan.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
-                </a>
-                <a href="{{ route('setup.sub_kegiatan.index') }}">
-                    <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
-                </a>
-            </ul>
-        <li>
-            <a href="{{ route('setup.front.index') }}">
-                <i class="icon icon-layers s-16 indigo-text"></i> <span>Front End</span>
-            </a>
 
         </li>
         <li class="treeview">
@@ -191,18 +191,56 @@
             <a href="{{ route('setup.footer.index') }}">
                 <i class="icon  s-16 icon-chevron-circle-down red-text"></i> <span>Footer</span>
             </a>
-
         </li>
         <li>
             <a href="{{ route('setup.logo.index') }}">
                 <i class="icon  s-16 icon-image red-text"></i> <span>Logo</span>
             </a>
-
+        </li>
+        <li>
+            <a href="{{ route('setup.user.index') }}">
+                <i class="icon  s-16 icon-user blue-text"></i> <span>Manajemen User</span>
+            </a>
         </li>
     </ul>
 </li>
 @endrole
 
 
+@if (Auth::user()->role == 2)
+<li class="treeview {{ request()->segment(2) == 'setup' ? 'active':'' }} ">
+    <a href="#" target="">
+        <i class="icon icon-gears text-blue s-18"></i> <span>Setup Aplikasi</span>
+        <i class="icon icon-angle-left s-18 pull-right"></i> </a>
 
+    <ul class="treeview-menu ">
+            <li class="treeview">
+                <a href="#">
+                    <i class="icon icon-minus s-14 text-blue"></i> <span>Cascading</span>
+                    <i class="icon icon-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <!-- Sub-menu items -->
+                    <li>
+                    <a href="{{ route('setup.tujuan_renstra.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
+                    </a>
+                    <a href="{{ route('setup.sasaran_renstra.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
+                    </a>
+                    <a href="{{ route('setup.program.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
+                    </a>
+                    <a href="{{ route('setup.kegiatan.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
+                    </a>
+                    <a href="{{ route('setup.sub_kegiatan.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
+                    </a>
+                </ul>
+            <li>
+        </li>
+    </ul>
+</li>
 </ul>
+@endif

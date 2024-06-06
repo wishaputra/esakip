@@ -167,8 +167,8 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.tujuan_renstra_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#id_tujuan_renstra').val(data.id_sasaran);
-            $('#tujuan_renstra_indikator').val(data.tujuan_renstra).focus();
+            $('#id_tujuan_renstra').val(data.id_tujuan_renstra);
+            $('#indikator').val(data.indikator).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

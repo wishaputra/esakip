@@ -101,7 +101,7 @@ class TujuanIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan::find($id);
+        return Model_Tujuan_Indikator::find($id);
     }
 
     /**
@@ -135,7 +135,7 @@ class TujuanIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Tujuan::find($id);
+    $misi  = Model_Tujuan_indikator::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

@@ -92,7 +92,6 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="id_sub_kegiatan" id="id_sub_kegiatan">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
@@ -165,10 +164,8 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.sub_kegiatan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_kegiatan').val(data.id_kegiatan);
-            $('#kode_sub_kegiatan').val(data.kode_sub_kegiatan).focus();
-            $('#sub_kegiatan').val(data.sub_kegiatan).focus();
+            $('#id_sub_kegiatan').val(data.id_sub_kegiatan);
+            $('#indikator').val(data.indikator);
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

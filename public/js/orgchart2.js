@@ -1,3 +1,38 @@
+
+function populatePeriods() {
+            $.ajax({
+                url: "/get-periods",
+                type: 'GET',
+                success: function(response) {
+                    let periodeSelect = document.getElementById('periode');
+                    response.forEach(function(period) {
+                        let option = document.createElement('option');
+                        option.value = period.tahun_awal + "-" + period.tahun_akhir;
+                        option.text = period.tahun_awal + " - " + period.tahun_akhir;
+                        periodeSelect.appendChild(option);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to load periods:', error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            populatePeriods();
+
+            $('#periode').change(function() {
+                let periode = $(this).val();
+                if (periode) {
+                    loadChart(periode);
+                } else {
+                    // Clear the chart if no period is selected
+                    myDiagram.model = new go.GraphLinksModel([], []);
+                }
+            });
+        });
+
+
 function init() {
   const $ = go.GraphObject.make;  
   myDiagram = new go.Diagram("myDiagramDiv", {
@@ -160,10 +195,11 @@ function init() {
 }
 
 
-function loadChart() {
+function loadChart(tahun_awal, tahun_akhir) {
   $.ajax({
-    url: "/load-chart",
-    type: 'GET',
+      url: "/load-chart",
+      type: 'GET',
+      data: { tahun_awal: tahun_awal, tahun_akhir: tahun_akhir },
     success: function(response) {
       console.log('Chart data loaded successfully', response);
 
@@ -225,5 +261,21 @@ function loadChart() {
     }
   });
 }
+
+$('#periode').change(function() {
+  let periode = $(this).val();
+  if (periode) {
+      let [tahun_awal, tahun_akhir] = periode.split("-");
+      loadChart(tahun_awal, tahun_akhir);
+  } else {
+      // Clear the chart if no period is selected
+      myDiagram.model = new go.GraphLinksModel([], []);
+  }
+});
+
+// ..
+
+window.addEventListener('DOMContentLoaded', init);
+
 
 window.addEventListener('DOMContentLoaded', init);

@@ -92,7 +92,7 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="id_sasaran" value="{{$id_sasaran}}">
+                    <input type="hidden" name="sasaran" value="{{$id_sasaran}}">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12"> 
@@ -162,7 +162,8 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.sasaran_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#sasaran').val(data.sasaran).focus();
+            $('#id_sasaran').val(data.id_sasaran);
+            $('#indikator').val(data.indikator).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

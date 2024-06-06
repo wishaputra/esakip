@@ -15,15 +15,14 @@
         </div>
     </header>
     
-<form action="" class="form-inline mt-4 justify-content-center">
-    <div class="form-group mb-3">
-        <h5 class="ml-3">Pilih Periode Tahun</h5>
-        <select name="periode" id="periode" class="form-control ml-3">
-            <option value="">Pilih</option>
-            <!-- Options will be populated by JavaScript -->
-        </select>
-    </div>
-</form>
+    <form action="" class="form-inline mt-4 justify-content-center">
+        <div class="form-group mb-3">
+            <h5 class="ml-3">Pilih Periode Tahun</h5>
+            <select name="periode" id="periode" class="form-control ml-3">
+                <option value="">Pilih</option>
+            </select>
+        </div>
+    </form>
 
     <div class="ex-basic-1">
         <div class="container">

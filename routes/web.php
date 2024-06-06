@@ -17,6 +17,7 @@ use App\Http\Controllers\FrontController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\Cascading\VisiController;
 use App\Http\Controllers\Cascading\MisiController;
@@ -231,9 +232,9 @@ Route::get('/organization-chart', [OrganizationChartController::class, 'index'])
 
 // Route to save chart data
 
-
+Route::get('/chart/load', [ChartController::class, 'loadChart'])->name('chart.load');
+Route::get('/get-periods', [ChartController::class, 'getPeriods']);
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
-Route::post('/load-children', [ChartController::class, 'loadChildren']);
 Route::get('/load-visi', [ChartController::class,'loadvisi']);
 Route::get('/load-misi', [ChartController::class,'loadmisi']);
 Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
@@ -454,6 +455,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::resource('front', FrontController::class);
 
         Route::resource('logo', LogoController::class);
+
+        Route::post('user/api', [UserController::class, 'api'])->name('user.api');
+        Route::resource('user', UserController::class);
     });
 });
 

@@ -168,8 +168,8 @@
         $.get("{{ route('setup.tujuan_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             // $('#tahun').val(data.tahun_awal);
-            $('#id_indikator').val(data.id_indikator);
-            $('#nilai').val(data.nilai).focus();
+            $('#id_tujuan').val(data.id_tujuan);
+            $('#indikator').val(data.indikator).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

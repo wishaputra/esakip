@@ -91,7 +91,7 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id_program" id="id_program">
+                    <input type="hidden" name="id_program" id="id">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">
@@ -158,7 +158,7 @@
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.program_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#program').val(data.program).focus();
+            $('#indikator').val(data.indikator).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

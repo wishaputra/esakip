@@ -92,7 +92,6 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
@@ -218,7 +217,7 @@ $('#tahun').on('change', function() {
         $('input[name=_method]').val('PATCH');
         $.get("{{ route('setup.sasaran.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
+            $('#tahun').val(data.id_visi);
             $('#id_tujuan').val(data.id_tujuan);
             $('#sasaran').val(data.sasaran).focus();
             $('#form-modal').modal('show');

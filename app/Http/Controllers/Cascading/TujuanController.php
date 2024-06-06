@@ -110,8 +110,7 @@ class TujuanController extends Controller
      */
     public function edit($id)
     {
-        $query  = Model_Tujuan::with('misi')->get();
-        return $query;
+        return Model_Tujuan::find($id);
     }
 
     /**
@@ -132,9 +131,10 @@ class TujuanController extends Controller
         $request->validate($rule);
 
         $misi->update([
-            "id_misi"   => $request->id_misi,
-            "tujuan"    => $request->tujuan,
-            "creator"   => Auth::user()->id,
+            "id_visi" => $request->tahun,
+            "id_misi" => $request->id_misi,
+            "tujuan" => $request->tujuan,
+            "creator" => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
     }

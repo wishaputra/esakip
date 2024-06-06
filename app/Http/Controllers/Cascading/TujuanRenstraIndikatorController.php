@@ -105,7 +105,7 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Tujuan_Renstra::find($id);
+        return Model_Tujuan_Renstra_Indikator::find($id);
     }
 
     /**
@@ -117,17 +117,16 @@ class TujuanRenstraIndikatorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $misi  = Model_Tujuan_Renstra::find($id);
+        $misi  = Model_Tujuan_Renstra_Indikator::find($id);
         $rule = [
-            "tujuan_renstra" => 'required',
+            "indikator" => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
-            "id_sasaran"    => $request->id_sasaran,
-            "id_perangkat_daerah"        => $request->id_perangkat_daerah,
-            "tujuan_renstra"=> $request->tujuan_renstra,
+            "id_tujuan_renstra"        => $request->id_tujuan_renstra,
+            "indikator"=> $request->indikator,
             "creator"       => Auth::user()->id,
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);

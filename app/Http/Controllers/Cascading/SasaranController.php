@@ -127,12 +127,15 @@ class SasaranController extends Controller
     {
         $misi  = Model_Sasaran::find($id);
         $rule = [
-            "sasaran" => 'required',
+            "id_tujuan"   => 'required',
+            "sasaran"    => 'required',
         ];
 
         $request->validate($rule);
 
         $misi->update([
+            "id_visi" => $request->tahun,
+            "id_tujuan" => $request->id_tujuan,
             "sasaran" => $request->sasaran,
             "creator" => Auth::user()->id,
         ]);

@@ -91,7 +91,7 @@
                 <form class="needs-validation" id="form" method="POST" autocomplete="off" novalidate>
                     {{ method_field('POST') }}
                     @csrf
-                    <input type="hidden" name="id_sasaran_renstra" id="id_sasaran_renstra">
+                    <input type="hidden" name="id_sasaran_renstra" id="id">
                     <div class="form-row">
                     <div class="col-md-12">
                     <div class="form-group col-md-12">

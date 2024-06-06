@@ -82,7 +82,6 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
@@ -97,7 +96,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_misi" class="col-form-label">Misi</label>
+                                <label for="misi" class="col-form-label">Misi</label>
                                 <select name="id_misi" id="id_misi" class="form-control">
                                     <option value="">Pilih</option>
                                 </select>
