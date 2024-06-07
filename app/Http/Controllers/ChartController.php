@@ -17,12 +17,9 @@ class ChartController extends Controller
 {
     public function getPeriods()
     {
-        $periods = Model_Visi::select('tahun_awal', 'tahun_akhir')
-                    ->distinct()
-                    ->orderBy('tahun_awal')
-                    ->get();
-    
-        return response()->json($periods);
+        $visi = Model_Visi::distinct()->orderBy('tahun_awal')->get(['tahun_awal', 'tahun_akhir']);
+    $title = "Cascading Struktur"; // Assuming you have a title variable
+    return view('front.custom_page.struktur', compact('visi', 'title'));
     }
 
     public function loadChart(Request $request)

@@ -152,13 +152,13 @@
                     <a href="{{ route('setup.section.slider.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Slider</span></a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="{{ route('organization-chart.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Struktur</span></a>
                 </li>  
 
                 <li>
                     <a href="{{ route('tree-view') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Tree</span></a>
-                </li>  
+                </li>   -->
                 
                 <li>
                     <a href="{{ route('setup.section.intro.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Intro</span></a>

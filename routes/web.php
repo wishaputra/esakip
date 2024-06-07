@@ -241,7 +241,8 @@ Route::get('/load-chart', [ChartController::class, 'loadChart']);
 Route::get('/load-visi', [ChartController::class,'loadvisi']);
 Route::get('/load-misi', [ChartController::class,'loadmisi']);
 Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
-
+Route::get('/struktur', [ChartController::class, 'getperiods']);
+Route::post('/api/load-chart', [ChartController::class, 'loadChart']);
 
 
 
@@ -282,7 +283,6 @@ Route::get('/page/team', [HomeController::class, 'team'])->name('main.team');
 
 Route::get('/download', [HomeController::class, 'download'])->name('main.download');
 Route::get('/treeview', [HomeController::class, 'treeview'])->name('main.treeview');
-Route::get('/struktur', [HomeController::class, 'chart'])->name('main.chart');
 Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 Route::get('/blog/s/{slug}', [HomeController::class, 'blog'])->name('main.page.blog');

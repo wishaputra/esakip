@@ -239,18 +239,21 @@ function populatePeriods() {
       type: 'GET',
       success: function(response) {
           let periodeSelect = document.getElementById('periode');
+          // Clear existing options
+          periodeSelect.innerHTML = '<option value="">Pilih</option>';
           response.forEach(function(period) {
               let option = document.createElement('option');
               option.value = period.tahun_awal + "-" + period.tahun_akhir;
               option.text = period.tahun_awal + " - " + period.tahun_akhir;
               periodeSelect.appendChild(option);
-          }); 
+          });
       },
       error: function(xhr, status, error) {
           console.error('Failed to load periods:', error);
       }
   });
 }
+
 
 
 $(document).ready(function() {
