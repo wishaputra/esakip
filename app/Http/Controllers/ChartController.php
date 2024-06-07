@@ -26,44 +26,31 @@ class ChartController extends Controller
     }
 
     public function loadChart(Request $request)
-    {
+{
+    $periode = $request->input('periode');
+    if ($periode) {
+        list($tahun_awal, $tahun_akhir) = explode('-', $periode);
+    } else {
+        $tahun_awal = null;
+        $tahun_akhir = null;
+    }
 
-        {
-            $tahun_awal = $request->get('tahun_awal');
-            $tahun_akhir = $request->get('tahun_akhir');
-        
-            $visi = Model_Visi::where('tahun_awal', $tahun_awal)
-                              ->where('tahun_akhir', $tahun_akhir)
-                              ->get();
-
-        }
-
-
-
-        $periode = $request->input('periode');
-        if ($periode) {
-            list($tahun_awal, $tahun_akhir) = explode('-', $periode);
-        } else {
-            $tahun_awal = null;
-            $tahun_akhir = null;
-        }
-
-        $visiQuery = Model_Visi::query();
-        if ($tahun_awal && $tahun_akhir) {
-            $visiQuery->where('tahun_awal', $tahun_awal)
-                      ->where('tahun_akhir', $tahun_akhir);
-        }
-        $visiNodes = $visiQuery->with('misi')->get()->map(function($visi) {
-            return [
-                'key' => 'visi' . $visi->id,
-                'visi' => $visi->visi,
-                'tahun_awal' => $visi->tahun_awal,
-                'tahun_akhir' => $visi->tahun_akhir,
-            ];
-        });
+    $visiQuery = Model_Visi::query();
+    if ($tahun_awal && $tahun_akhir) {
+        $visiQuery->where('tahun_awal', $tahun_awal)
+                  ->where('tahun_akhir', $tahun_akhir);
+    }
+    $visiNodes = $visiQuery->with('misi')->get()->map(function($visi) {
+        return [
+            'key' => 'visi' . $visi->id,
+            'visi' => $visi->visi,
+            'tahun_awal' => $visi->tahun_awal,
+            'tahun_akhir' => $visi->tahun_akhir,
+        ];
+    });
 
         $misiNodes = Model_Misi::whereIn('id_visi', $visiNodes->pluck('key')->map(function($key) {
-            return substr($key, 4);
+            return substr($key, 4);  // This line remains the same
         }))->get()->map(function($misi) {
             return [
                 'key' => 'misi' . $misi->id,

@@ -232,12 +232,16 @@ Route::get('/organization-chart', [OrganizationChartController::class, 'index'])
 
 // Route to save chart data
 
-Route::get('/chart/load', [ChartController::class, 'loadChart'])->name('chart.load');
-Route::get('/get-periods', [ChartController::class, 'getPeriods']);
+Route::get('/load-chart/{tahun_awal}/{tahun_akhir}', [ChartController::class, 'loadChart'])->name('loadChart');
+
+Route::get('/get-periods', function() {
+    return App\Models\Cascading\Model_Visi::select('tahun_awal', 'tahun_akhir')->distinct()->get();
+});
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
 Route::get('/load-visi', [ChartController::class,'loadvisi']);
 Route::get('/load-misi', [ChartController::class,'loadmisi']);
 Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
+
 
 
 
