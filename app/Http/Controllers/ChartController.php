@@ -67,7 +67,7 @@ class ChartController extends Controller
         });
 
         $sasaranNodes = Model_Sasaran::whereIn('id_tujuan', $tujuanNodes->pluck('key')->map(function($key) {
-            return substr($key, 7);
+            return intval(substr($key, 6)); // Adjust the substring position to match 'sasaran' + id
         }))->get()->map(function($sasaran) {
             return [
                 'key' => 'sasaran' . $sasaran->id,
@@ -77,12 +77,13 @@ class ChartController extends Controller
         });
 
         $tujuanRenstraNodes = Model_Tujuan_Renstra::whereIn('id_sasaran', $sasaranNodes->pluck('key')->map(function($key) {
-            return substr($key, 7);
+            return intval(substr($key, 7)); // Adjust the substring position to match 'tujuanRenstra' + id
         }))->get()->map(function($tujuanRenstra) {
             return [
                 'key' => 'tujuanRenstra' . $tujuanRenstra->id,
                 'tujuanRenstra' => $tujuanRenstra->tujuan_renstra,
                 'parent' => 'sasaran' . $tujuanRenstra->id_sasaran,
+                // Add other necessary fields here
             ];
         });
 
@@ -117,12 +118,13 @@ class ChartController extends Controller
         });
 
         $subkegiatanNodes = Model_SubKegiatan::whereIn('id_kegiatan', $kegiatanNodes->pluck('key')->map(function($key) {
-            return substr($key, 10);
+            return intval(substr($key, 8)); // Adjust the substring position to match 'subkegiatan' + id
         }))->get()->map(function($sub_kegiatan) {
             return [
                 'key' => 'subkegiatan' . $sub_kegiatan->id,
                 'sub_kegiatan' => $sub_kegiatan->sub_kegiatan,
                 'parent' => 'kegiatan' . $sub_kegiatan->id_kegiatan,
+                // Add other necessary fields here
             ];
         });
 
