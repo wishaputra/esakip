@@ -7,7 +7,7 @@
     </li>
 
     
-    @if (Auth::user()->role == 1)
+    @if (Auth::user()->role == 'Super Admin')
     <li>
         <a href="{{ route('posts.index') }}">
             <i class="icon s-18 icon-web pink-text "></i> <span>Page</span>
@@ -207,7 +207,7 @@
 @endrole
 
 
-@if (Auth::user()->role == 2)
+@if (Auth::user()->role == 'Admin Perangkat Daerah')
 <li class="treeview {{ request()->segment(2) == 'setup' ? 'active':'' }} ">
     <a href="#" target="">
         <i class="icon icon-gears text-blue s-18"></i> <span>Setup Aplikasi</span>

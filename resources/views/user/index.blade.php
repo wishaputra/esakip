@@ -143,17 +143,15 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Role</label>
-                                <select name="role" id="role" class="form-control">
-                                    <option value="">Pilih</option>
-                                    <option value="1">Super Admin</option>
-                                    <option value="2">Admin Perangkat Daerah</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-            </div>
+    <div class="form-group col-md-12">
+        <label for="" class="col-form-label">Role</label>
+        <select name="role" id="role" class="form-control">
+            <option value="">Pilih</option>
+            <option value="Super Admin">Super Admin</option>
+            <option value="Admin Perangkat Daerah">Admin Perangkat Daerah</option>
+        </select>
+    </div>
+</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 <button type="submit" id="action" class="btn btn-primary tButton">Simpan</button>
