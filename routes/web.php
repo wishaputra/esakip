@@ -230,7 +230,7 @@ Route::get('/org-chart', function () {
 // Route to render the organization chart view
 Route::get('/organization-chart', [OrganizationChartController::class, 'index'])->name('organization-chart.index');
 
-// Route to save chart data
+// Route to save struktur
 
 Route::get('/load-chart/{tahun_awal}/{tahun_akhir}', [ChartController::class, 'loadChart'])->name('loadChart');
 

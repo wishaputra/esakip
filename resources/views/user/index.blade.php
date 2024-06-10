@@ -243,38 +243,38 @@
     });
 
     var table = $('#user-table').dataTable({
-        processing: true,
-        serverSide: true,
-        order: [2, 'asc'],
-        ajax: {
-            url: "{{ route('setup.user.api') }}",
-            method: 'POST'
-        },
-        columns: [
-            {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'name', name: 'name'},
-            {data: 'username', name: 'username'},
-            {data: 'email', name: 'email'},
-            {data: 'telp', name: 'telp'},
-            {data: 'id_opd', name: 'id_opd'},
-            {data: 'role', name: 'role'},       
-            {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
-        ]
-    });
+    processing: true,
+    serverSide: true,
+    order: [2, 'asc'],
+    ajax: {
+        url: "{{ route('setup.user.api') }}",
+        method: 'POST'
+    },
+    columns: [
+        {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
+        {data: 'name', name: 'name'},
+        {data: 'username', name: 'username'},
+        {data: 'email', name: 'email'},
+        {data: 'telp', name: 'telp'},
+        {data: 'perangkat_daerah', name: 'perangkat_daerah'},  // Updated column name
+        {data: 'role', name: 'role'},       
+        {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+    ]
+});
 
-    table.on('draw.dt', function(){
-        var PageInfo = $('#user-table').DataTable().page.info();
-        table.api().column(0, {page: 'current'}).nodes().each(function (cell, i){
-            cell.innerHTML = i + 1 + PageInfo.start;
-        });
-        $("a.group").fancybox({
-		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic',
-		'speedIn'		:	600, 
-		'speedOut'		:	200, 
-		'overlayShow'	:	false
-	});
+table.on('draw.dt', function(){
+    var PageInfo = $('#user-table').DataTable().page.info();
+    table.api().column(0, {page: 'current'}).nodes().each(function (cell, i){
+        cell.innerHTML = i + 1 + PageInfo.start;
     });
+    $("a.group").fancybox({
+        'transitionIn' : 'elastic',
+        'transitionOut': 'elastic',
+        'speedIn'      : 600, 
+        'speedOut'     : 200, 
+        'overlayShow'  : false
+    });
+});
 
         function remove(id){
         $.confirm({

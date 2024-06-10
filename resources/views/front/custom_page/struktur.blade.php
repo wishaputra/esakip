@@ -26,18 +26,18 @@
   </header>
 
   <form action="" class="form-inline mt-4 justify-content-center">
-      <div class="form-group mb-3">
-          <h5 class="ml-3">Pilih Periode Tahun</h5>
-          <select name="periode" id="periode" class="form-control ml-3">
-              <option value="">Pilih</option>
-              @foreach ($visi as $item)
-                  <option value="{{ $item->tahun_awal }}-{{ $item->tahun_akhir }}">
-                      {{ $item->tahun_awal }} - {{ $item->tahun_akhir }}
-                  </option>
-              @endforeach
-          </select>
-      </div>
-  </form>
+    <div class="form-group mb-3">
+        <h5 class="ml-3">Pilih Periode Tahun</h5>
+        <select name="periode" id="periode" class="form-control ml-3">
+            <option value="">Pilih</option>
+            @foreach ($visi as $item)
+                <option value="{{ $item->tahun_awal }}-{{ $item->tahun_akhir }}">
+                    {{ $item->tahun_awal }} - {{ $item->tahun_akhir }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</form>
 
   <div class="ex-basic-1">
       <div class="container">
@@ -53,10 +53,62 @@
       </div>
   </div>
 
-  <div id="myDiagramDiv" style="background-color: white; border: 1px solid black; height: 550px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"></div>
+  <div id="myDiagramDiv" style="width: 100%; height: 600px; border: 1px solid black;"></div>
 
   <script>
-      
+$(document).ready(function() {
+    $('#periode').change(function() {
+        var periode = $(this).val();
+        $.ajax({
+            url: '/load-chart',
+            type: 'GET',
+            data:{
+                "id_visi": {{$id_visi}}
+            },
+            success: function(response) {
+                if (response.nodeDataArray.length > 0) {
+                    myDiagram.model = go.Model.fromJson(response);
+                } else {
+                    // Handle empty response
+                    alert('No data available for the selected period.');
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle AJAX error
+                console.error(xhr.responseText);
+                alert('An error occurred while fetching the data.');
+            }
+        });
+    });
+
+    // Initialize GoJS diagram
+    var $ = go.GraphObject.make;
+    var myDiagram =
+        $(go.Diagram, "myDiagramDiv",
+            {
+                "undoManager.isEnabled": true
+            });
+
+    myDiagram.nodeTemplate =
+        $(go.Node, "Auto",
+            $(go.Shape, "Rectangle", { fill: "lightyellow" }),
+            $(go.TextBlock, { margin: 5 },
+                new go.Binding("text", "key"))
+        );
+
+    // Setup initial diagram
+    myDiagram.model = new go.GraphLinksModel(
+        [
+            { key: "Initial Node" }
+        ],
+        [
+            { from: "Initial Node", to: "Another Node" }
+        ]
+    );
+});
+
+
+
 function init() {
   const $ = go.GraphObject.make;
   myDiagram = new go.Diagram("myDiagramDiv", {
@@ -220,10 +272,10 @@ loadChart(); // Load the initial chart data
 }
 
 function loadChart(tahun_awal, tahun_akhir) {
-    if (!tahun_awal ||!tahun_akhir) {
+    if (!tahun_awal || !tahun_akhir) {
         return;
     }
-
+    myDiagram.clear(); // Clear the chart data
     $.ajax({
         url: "/load-chart",
         type: 'GET',
@@ -288,6 +340,8 @@ function loadChart(tahun_awal, tahun_akhir) {
         }
     });
 }
+
+
 
 $('#periode').change(function() {
     let periode = $(this).val();

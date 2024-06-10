@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Cascading\Model_Perangkat_Daerah;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,4 +68,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(Peserta::class);
     }
+
+    public function perangkatDaerah()
+    {
+        return $this->belongsTo(Model_Perangkat_Daerah::class, 'id_opd');
+    }
+
+
+
 }
