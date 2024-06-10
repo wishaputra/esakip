@@ -56,59 +56,7 @@
   <div id="myDiagramDiv" style="width: 100%; height: 600px; border: 1px solid black;"></div>
 
   <script>
-$(document).ready(function() {
-    $('#periode').change(function() {
-        var periode = $(this).val();
-        $.ajax({
-            url: '/load-chart',
-            type: 'GET',
-            data:{
-                "id_visi": {{$id_visi}}
-            },
-            success: function(response) {
-                if (response.nodeDataArray.length > 0) {
-                    myDiagram.model = go.Model.fromJson(response);
-                } else {
-                    // Handle empty response
-                    alert('No data available for the selected period.');
-                }
-            },
-            error: function(xhr, status, error) {
-                // Handle AJAX error
-                console.error(xhr.responseText);
-                alert('An error occurred while fetching the data.');
-            }
-        });
-    });
-
-    // Initialize GoJS diagram
-    var $ = go.GraphObject.make;
-    var myDiagram =
-        $(go.Diagram, "myDiagramDiv",
-            {
-                "undoManager.isEnabled": true
-            });
-
-    myDiagram.nodeTemplate =
-        $(go.Node, "Auto",
-            $(go.Shape, "Rectangle", { fill: "lightyellow" }),
-            $(go.TextBlock, { margin: 5 },
-                new go.Binding("text", "key"))
-        );
-
-    // Setup initial diagram
-    myDiagram.model = new go.GraphLinksModel(
-        [
-            { key: "Initial Node" }
-        ],
-        [
-            { from: "Initial Node", to: "Another Node" }
-        ]
-    );
-});
-
-
-
+      
 function init() {
   const $ = go.GraphObject.make;
   myDiagram = new go.Diagram("myDiagramDiv", {
@@ -135,16 +83,7 @@ function init() {
       "undoManager.isEnabled": false
   });
 
-  myDiagram.addDiagramListener("Modified", e => {
-      var button = document.getElementById("SaveButton");
-      if (button) button.disabled = !myDiagram.isModified;
-      var idx = document.title.indexOf("*");
-      if (myDiagram.isModified) {
-          if (idx < 0) document.title += "*";
-      } else {
-          if (idx >= 0) document.title = document.title.slice(0, idx);
-      }
-  });
+  
 
   var graygrad = $(go.Brush, "Linear",
       { 0: "rgb(125, 125, 125)", 0.5: "rgb(86, 86, 86)", 1: "rgb(86, 86, 86)" });
@@ -255,7 +194,7 @@ $(go.Shape, { strokeWidth: 2 }));
 myDiagram.linkTemplateMap.add("Support",
 $(go.Link, go.Link.Bezier,
 { isLayoutPositioned: false, isTreeLink: false, curviness: -50 },
-{ relinkableFrom: true, relinkableTo: true },
+{ relinkableFrom: false, relinkableTo: false },
 $(go.Shape,
 { stroke: "green", strokeWidth: 2 }),
 $(go.Shape,
@@ -272,6 +211,7 @@ loadChart(); // Load the initial chart data
 }
 
 function loadChart(tahun_awal, tahun_akhir) {
+    console.log('Loading chart for tahun_awal:', tahun_awal, 'tahun_akhir:', tahun_akhir);
     if (!tahun_awal || !tahun_akhir) {
         return;
     }
@@ -341,6 +281,25 @@ function loadChart(tahun_awal, tahun_akhir) {
     });
 }
 
+function getPeriods() {
+    $.ajax({
+        url: "/get-periods",
+        type: 'GET',
+        success: function(response) {
+            $('#periode').empty(); // Clear existing options
+            $('#periode').append($('<option>').text('Pilih').attr('value', ''));
+            response.forEach(function(period) {
+                $('#periode').append($('<option>').text(period.tahun_awal + ' - ' + period.tahun_akhir).attr('value', period.tahun_awal + '-' + period.tahun_akhir));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to load periods:', error);
+        }
+    });
+}
+
+// Call getPeriods to load the periods initially
+getPeriods();
 
 
 $('#periode').change(function() {
