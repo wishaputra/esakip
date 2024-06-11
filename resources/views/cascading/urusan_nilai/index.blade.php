@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Tujuan Renstra</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Nilai Urusan</a>
                     </li>
 
 
@@ -56,10 +56,14 @@
                                 <table class="table" id="menu-table">
                                     <thead>
                                         <tr>
-                                            <td width="15%">#</td>
-                                            <td>Tujuan Renstra</td>
-                                            <td>Jumlah Indikator</td>
+                                        <td width="15%">#</td>
+                                            <td>satuan</td>
+                                            <td>tahun</td>
+                                            <td>triwulan</td>
+                                            <td>target</td>
+                                            <td>capaian</td>
                                             <td width="10%">Aksi</td>
+                                        </tr>>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,48 +96,52 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
+                    <div class="col-md-12">
+                    <div class="form-group col-md-12">
+                    <label for="indikator" class="col-form-label">Indikator</label>
+                    @foreach ($indikator->unique('id') as $item)
+                        <textarea name="indikator_urusan" id="indikator_urusan" class="form-control" readonly>{{ $item->indikator }}</textarea>
+                        <input type="hidden" name="id_indikator_urusan" value="{{ $item->id }}"> <!-- Add this line to include the id_urusan field -->
+                        @break
+                    @endforeach
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="tahun" class="col-form-label">Periode Tahun</label>
-                                <select name="tahun" id="tahun" class="form-control">
+                                <label for="satuan" class="col-form-label">satuan</label>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="tahun" class="col-form-label">tahun</label>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="triwulan" class="col-form-label">Triwulan</label>
+                                <select name="triwulan" id="triwulan" class="form-control">
                                     <option value="">Pilih</option>
-                                    @foreach ($tahun as $item)
-                                        <option value="{{ $item->id }}">{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</option>
-                                    @endforeach
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_urusan" class="col-form-label">Sasaran</label>
-                                <select name="id_urusan" id="id_urusan" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($urusan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->urusan }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="target" class="col-form-label">target</label>
+                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_perangkat_daerah" class="col-form-label">Perangkat Daerah</label>
-                                <select name="id_perangkat_daerah" id="id_perangkat_daerah" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($opd as $item)
-                                        <option value="{{ $item->id }}">{{ $item->perangkat_daerah }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="capaian" class="col-form-label">capaian</label>
+                                <textarea name="capaian" id="capaian" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="tujuan_renstra" class="col-form-label">Tujuan Renstra</label>
-                                <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" rows="3"></textarea>
-                            </div>
-                        </div>
-
                         <!-- <div class="col-md-4">
                             <div class="form-group col-md-12">
                                 <label for="" class="col-form-label">Nama</label>
@@ -163,35 +171,6 @@
 @push('script')
 
 <script>
-
-$(document).ready(function() {
-    $('#tahun').on('change', function() {
-        var tahunId = $(this).val();
-        if (tahunId) {
-            $.ajax({
-                url: '{{ route("getSasaranByTahun", ":id") }}'.replace(':id', tahunId),
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data); // Log data to console for debugging
-                    $('#id_urusan').empty();
-                    $('#id_urusan').append('<option value="">Pilih</option>');
-                    $.each(data, function(key, value) {
-                        console.log(key, value); // Log key and value for each item
-                        $('#id_urusan').append('<option value="' + key + '">' + value + '</option>');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText); // Log error message to console
-                }
-            });
-        } else {
-            $('#id_urusan').empty();
-            $('#id_urusan').append('<option value="">Pilih</option>');
-        }
-    });
-});
-
     function add(){
         $('#alert').html('');
         save_method = "add";
@@ -200,7 +179,7 @@ $(document).ready(function() {
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
-    }
+}
     
     function edit(id){
         save_method = 'edit';
@@ -209,12 +188,13 @@ $(document).ready(function() {
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan_renstra.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.urusan_nilai.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_urusan').val(data.id_urusan);
-            $('#id_perangkat_daerah').val(data.id_perangkat_daerah);
-            $('#tujuan_renstra').val(data.tujuan_renstra).focus();
+            $('#satuan').val(data.satuan);
+            $('#tahun').val(data.tahun).focus();
+            $('#triwulan').val(data.triwulan);
+            $('#target').val(data.target).focus();
+            $('#capaian').val(data.capaian).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -230,7 +210,7 @@ $(document).ready(function() {
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan_renstra.store') }}" : "{{ route('setup.tujuan_renstra.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.urusan_nilai.store') }}" : "{{ route('setup.urusan_nilai.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -265,22 +245,27 @@ $(document).ready(function() {
     });
 
     var table = $('#menu-table').dataTable({
-        processing: true,
-        serverSide: true,
-        order: [2, 'asc'],
-        ajax: {
-            url: "{{ route('setup.tujuan_renstra.api') }}",
-            method: 'POST'
-        },
-        columns: [
+    processing: true,
+    serverSide: true,
+    order: [2, 'asc'],
+    ajax: {
+        url: "{{ route('setup.urusan_nilai.api') }}",
+        method: 'POST',
+        data:{
+                "id_indikator_urusan": {{$id_indikator}}
+            }
+    },
+    columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'tujuan_renstra', name: 'tujuan_renstra'},
-            {data: 'tujuan_renstra_indikator_count', name: 'tujuan_renstra_indikator_count'},
-            // {data: 'route', name: 'route'},
+            {data: 'satuan', name: 'satuan'},
+            {data: 'tahun', name: 'tahun'},
+            {data: 'triwulan', name: 'triwulan'},
+            {data: 'target', name: 'target'},
+            {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
-    });
+});
 
     table.on('draw.dt', function(){
         var PageInfo = $('#menu-table').DataTable().page.info();
@@ -311,7 +296,7 @@ $(document).ready(function() {
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan_renstra.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.urusan_nilai.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

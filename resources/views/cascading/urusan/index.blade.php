@@ -31,7 +31,7 @@
                     </li>
                     <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Tujuan Renstra</a>
+                            <i class="icon icon-plus-circle"></i>Tambah Urusan</a>
                     </li>
 
 
@@ -57,8 +57,8 @@
                                     <thead>
                                         <tr>
                                             <td width="15%">#</td>
-                                            <td>Tujuan Renstra</td>
-                                            <td>Jumlah Indikator</td>
+                                            <td>Urusan</td>
+                                            <td>Jumlah Indikator Urusan</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -92,7 +92,6 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
@@ -107,30 +106,19 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_urusan" class="col-form-label">Sasaran</label>
-                                <select name="id_urusan" id="id_urusan" class="form-control">
+                                <label for="id_sasaran" class="col-form-label">Sasaran</label>
+                                <select name="id_sasaran" id="id_sasaran" class="form-control">
                                     <option value="">Pilih</option>
-                                    @foreach ($urusan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->urusan }}</option>
+                                    @foreach ($sasaran as $item)
+                                        <option value="{{ $item->id }}">{{ $item->sasaran }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_perangkat_daerah" class="col-form-label">Perangkat Daerah</label>
-                                <select name="id_perangkat_daerah" id="id_perangkat_daerah" class="form-control">
-                                    <option value="">Pilih</option>
-                                    @foreach ($opd as $item)
-                                        <option value="{{ $item->id }}">{{ $item->perangkat_daerah }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="tujuan_renstra" class="col-form-label">Tujuan Renstra</label>
-                                <textarea name="tujuan_renstra" id="tujuan_renstra" class="form-control" rows="3"></textarea>
+                                <label for="urusan" class="col-form-label">Urusan</label>
+                                <textarea name="urusan" id="urusan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
@@ -165,32 +153,50 @@
 <script>
 
 $(document).ready(function() {
-    $('#tahun').on('change', function() {
-        var tahunId = $(this).val();
-        if (tahunId) {
+    $('#id_visi').on('change', function() {
+        var visiId = $(this).val();
+        if (visiId) {
             $.ajax({
-                url: '{{ route("getSasaranByTahun", ":id") }}'.replace(':id', tahunId),
+                url: '{{ route("getSasaranByTahun", ":id") }}'.replace(':id', visiId),
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data); // Log data to console for debugging
-                    $('#id_urusan').empty();
-                    $('#id_urusan').append('<option value="">Pilih</option>');
+                    $('#id_sasaran').empty();
+                    $('#id_sasaran').append('<option value="">Pilih</option>');
                     $.each(data, function(key, value) {
-                        console.log(key, value); // Log key and value for each item
-                        $('#id_urusan').append('<option value="' + key + '">' + value + '</option>');
+                        $('#id_sasaran').append('<option value="' + key + '">' + value + '</option>');
                     });
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText); // Log error message to console
                 }
             });
         } else {
-            $('#id_urusan').empty();
-            $('#id_urusan').append('<option value="">Pilih</option>');
+            $('#id_sasaran').empty();
+            $('#id_sasaran').append('<option value="">Pilih</option>');
         }
     });
 });
+
+
+$('#tahun').on('change', function() {
+    var tahunId = $(this).val();
+    if (tahunId) {
+        $.ajax({
+            url: '{{ route("getSasaranByTahun", ["id" => ":id"]) }}'.replace(':id', tahunId),
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#id_sasaran').empty();
+                $('#id_sasaran').append('<option value="">Pilih</option>');
+                $.each(data, function(key, value) {
+                    $('#id_sasaran').append('<option value="' + key + '">' + value + '</option>');
+                });
+            }
+        });
+    } else {
+        $('#id_sasaran').empty();
+        $('#id_sasaran').append('<option value="">Pilih</option>');
+    }
+});
+
 
     function add(){
         $('#alert').html('');
@@ -199,7 +205,7 @@ $(document).ready(function() {
         $('.modal-title').html('Tambah Data')
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
-        $('#nama').focus();
+        $('#urusan').focus();
     }
     
     function edit(id){
@@ -209,18 +215,18 @@ $(document).ready(function() {
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.tujuan_renstra.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.urusan.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_urusan').val(data.id_urusan);
-            $('#id_perangkat_daerah').val(data.id_perangkat_daerah);
-            $('#tujuan_renstra').val(data.tujuan_renstra).focus();
+            $('#tahun').val(data.id_visi);
+            $('#id_sasaran').val(data.id_sasaran);
+            $('#urusan').val(data.urusan).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
         });
     }
 
+    
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -230,7 +236,7 @@ $(document).ready(function() {
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.tujuan_renstra.store') }}" : "{{ route('setup.tujuan_renstra.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.urusan.store') }}" : "{{ route('setup.urusan.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -269,13 +275,13 @@ $(document).ready(function() {
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.tujuan_renstra.api') }}",
+            url: "{{ route('setup.urusan.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'tujuan_renstra', name: 'tujuan_renstra'},
-            {data: 'tujuan_renstra_indikator_count', name: 'tujuan_renstra_indikator_count'},
+            {data: 'urusan', name: 'urusan'},
+            {data: 'urusan_indikator_count', name: 'urusan_indikator_count'},
             // {data: 'route', name: 'route'},
             // {data: 'submenu_count', name: 'submenu_count'},            
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
@@ -311,7 +317,7 @@ $(document).ready(function() {
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.tujuan_renstra.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.urusan.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

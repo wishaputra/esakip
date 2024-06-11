@@ -41,6 +41,25 @@ class TreeViewController extends Controller
         return response()->json($nilai);
     }
 
+
+    public function getUrusanIndikator($id)
+    {
+        $indikator = DB::table('cascading_urusan_indikator')->where('id_urusan', $id)->get();
+        return response()->json($indikator);
+    }
+
+
+    public function getUrusanNilai($id)
+    {
+        $nilai = DB::table('cascading_urusan_nilai')
+                    ->join('cascading_urusan_indikator', 'cascading_urusan_nilai.id_indikator_urusan', '=', 'cascading_urusan_indikator.id')
+                    ->where('cascading_urusan_indikator.id_urusan', $id)
+                    ->select('cascading_urusan_nilai.*')
+                    ->get();
+        return response()->json($nilai);
+    }
+
+
     public function getTujuanRenstraIndikator($id)
     {
         $indikator = DB::table('cascading_tujuan_renstra_indikator')->where('id_tujuan_renstra', $id)->get();

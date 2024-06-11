@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Model_Tujuan_Renstra extends Model
 {
     protected $table = "cascading_tujuan_renstra";
-    protected $fillable = ['id_sasaran', 'id_visi' , 'id_perangkat_daerah', 'tujuan_renstra', 'creator', 'created_at', 'updated_at'];
+    protected $fillable = ['id_urusan', 'id_visi' , 'id_perangkat_daerah', 'tujuan_renstra', 'creator', 'created_at', 'updated_at'];
 
     public function tujuan_renstra_indikator()
     {
@@ -18,6 +18,11 @@ class Model_Tujuan_Renstra extends Model
     public function cascading_sasaran_renstra()
     {
         return $this->hasMany(Model_Sasaran_Renstra::class, 'id_tujuan_renstra');
+    }
+
+    public function urusan()
+    {
+        return $this->belongsTo(Model_Urusan::class, 'id_urusan');
     }
 
 

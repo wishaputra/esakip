@@ -27,6 +27,9 @@ use App\Http\Controllers\Cascading\TujuanNilaiController;
 use App\Http\Controllers\Cascading\SasaranController;
 use App\Http\Controllers\Cascading\SasaranIndikatorController;
 use App\Http\Controllers\Cascading\SasaranNilaiController;
+use App\Http\Controllers\Cascading\UrusanController;
+use App\Http\Controllers\Cascading\UrusanIndikatorController;
+use App\Http\Controllers\Cascading\UrusanNilaiController;
 use App\Http\Controllers\Cascading\PerangkatDaerahController;
 use App\Http\Controllers\Cascading\TujuanRenstraController;
 use App\Http\Controllers\Cascading\TujuanRenstraIndikatorController;
@@ -58,6 +61,7 @@ use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\TextContentController;
 use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Sasaran;
+use App\Models\Cascading\Model_Urusan;
 use App\Models\TreeNode;
 use App\Models\ChildNode;
 use App\Models\Frontend;
@@ -89,6 +93,7 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 
 Route::get('/getMisiByTahun/{id}', [TujuanController::class, 'getMisiByTahun'])->name('getMisiByTahun');
 Route::get('/get-tujuan-by-tahun/{id}', [SasaranController::class, 'getTujuanByTahun'])->name('getTujuanByTahun');
+Route::get('/get-sasaran-urusan-by-tahun/{id}', [UrusanController::class,'getSasaranUrusanByTahun'])->name('getSasaranUrusanByTahun');
 Route::get('/get-sasaran-by-tahun/{id}', [TujuanRenstraController::class,'getSasaranByTahun'])->name('getSasaranByTahun');
 Route::get('/getTujuanRenstraByTahun/{id}', [SasaranRenstraController::class,'getTujuanRenstraByTahun'])->name('getTujuanRenstraByTahun');
 Route::get('/get-sasaran-renstra-by-tahun/{id}', [ProgramController::class,'getSasaranRenstraByTahun'])->name('getSasaranRenstraByTahun');
@@ -129,6 +134,18 @@ Route::get('/sasaran_indikator', function () {
 Route::get('/sasaran_nilai', function () {
     return view('cascading.sasaran_nilai.index');
 })->name('sasaran_nilai');
+
+Route::get('/urusan', function () {
+    return view('cascading.urusan.index');
+})->name('urusan');
+
+Route::get('/urusan_indikator', function () {
+    return view('cascading.urusan_indikator.index');
+})->name('urusan_indikator');
+
+Route::get('/urusan_nilai', function () {
+    return view('cascading.urusan_nilai.index');
+})->name('urusan_nilai');
 
 Route::get('/perangkat_daerah', function () {
     return view('cascading.perangkat_daerah.index');
@@ -230,7 +247,7 @@ Route::get('/org-chart', function () {
 // Route to render the organization chart view
 Route::get('/organization-chart', [OrganizationChartController::class, 'index'])->name('organization-chart.index');
 
-// Route to save struktur
+// Route to save chart data
 
 Route::get('/load-chart/{tahun_awal}/{tahun_akhir}', [ChartController::class, 'loadChart'])->name('loadChart');
 
@@ -238,6 +255,9 @@ Route::get('/get-periods', function() {
     return App\Models\Cascading\Model_Visi::select('tahun_awal', 'tahun_akhir')->distinct()->get();
 });
 Route::get('/load-chart', [ChartController::class, 'loadChart']);
+Route::get('/load-visi', [ChartController::class,'loadvisi']);
+Route::get('/load-misi', [ChartController::class,'loadmisi']);
+Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
 Route::get('/struktur', [ChartController::class, 'getperiods']);
 Route::post('/api/load-chart', [ChartController::class, 'loadChart']);
 
@@ -250,6 +270,13 @@ Route::get('/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']
 
 Route::get('/getSasaranIndikator/{id}', [TreeViewController::class, 'getSasaranIndikator']);
 Route::get('/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai']);
+
+Route::get('/getUrusanIndikator/{id}', [TreeViewController::class, 'geturusanIndikator']);
+Route::get('/getUrusanNilai/{id}', [TreeViewController::class, 'geturusanNilai']);
+
+
+Route::get('/getUrusanIndikator/{id}', [TreeViewController::class, 'getUrusanIndikator']);
+Route::get('/getUrusanNilai/{id}', [TreeViewController::class, 'getUrusanNilai']);
 
 route::get('/getTujuanRenstraIndikator/{id}', [TreeViewController::class, 'getTujuanRenstraIndikator']);
 route::get('/getTujuanRenstraNilai/{id}', [TreeViewController::class, 'getTujuanRenstraNilai']);
@@ -344,6 +371,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::resource('sasaran_indikator', SasaranIndikatorController::class);
             Route::post('sasaran_nilai/api', [SasaranNilaiController::class, 'api'])->name('sasaran_nilai.api');
             Route::resource('sasaran_nilai', SasaranNilaiController::class);
+
+            Route::post('urusan/api', [UrusanController::class, 'api'])->name('urusan.api');
+            Route::resource('urusan', UrusanController::class);
+            Route::post('urusan_indikator/api', [UrusanIndikatorController::class, 'api'])->name('urusan_indikator.api');
+            Route::resource('urusan_indikator', UrusanIndikatorController::class);
+            Route::post('urusan_nilai/api', [UrusanNilaiController::class, 'api'])->name('urusan_nilai.api');
+            Route::resource('urusan_nilai', UrusanNilaiController::class);
 
             Route::post('perangkat_daerah/api', [PerangkatDaerahController::class, 'api'])->name('perangkat_daerah.api');
             Route::resource('perangkat_daerah', PerangkatDaerahController::class);
