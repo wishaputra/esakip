@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cascading\Model_Urusan;
 use Illuminate\Http\Request;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -76,13 +77,24 @@ class ChartController extends Controller
             ];
         });
 
-        $tujuanRenstraNodes = Model_Tujuan_Renstra::whereIn('id_sasaran', $sasaranNodes->pluck('key')->map(function($key) {
-            return intval(substr($key, 7)); // Adjust the substring position to match 'tujuanRenstra' + id
+        $urusanNodes = Model_Urusan::whereIn('id_sasaran', $sasaranNodes->pluck('key')->map(function($key) {
+            return intval(substr($key, 7)); // Adjust the substring position to match 'urusan' + id
+        }))->get()->map(function($urusan) {
+            return [
+                'key' => 'urusan' . $urusan->id,
+                'urusan' => $urusan->urusan,
+                'parent' => 'sasaran' . $urusan->id_sasaran,
+                // Add other necessary fields here
+            ];
+        });
+        
+        $tujuanRenstraNodes = Model_Tujuan_Renstra::whereIn('id_urusan', $urusanNodes->pluck('key')->map(function($key) {
+            return intval(substr($key, 6)); // Adjust the substring position to match 'tujuanRenstra' + id
         }))->get()->map(function($tujuanRenstra) {
             return [
                 'key' => 'tujuanRenstra' . $tujuanRenstra->id,
                 'tujuanRenstra' => $tujuanRenstra->tujuan_renstra,
-                'parent' => 'sasaran' . $tujuanRenstra->id_sasaran,
+                'parent' => 'urusan' . $tujuanRenstra->id_urusan,
                 // Add other necessary fields here
             ];
         });
@@ -128,25 +140,27 @@ class ChartController extends Controller
             ];
         });
 
-        $nodes = $visiNodes->concat($misiNodes)->concat($tujuanNodes)->concat($sasaranNodes)->concat($tujuanRenstraNodes)->concat($sasaranRenstraNodes)->concat($programNodes)->concat($kegiatanNodes)->concat($subkegiatanNodes);
+        $nodes = $visiNodes->concat($misiNodes)->concat($tujuanNodes)->concat($sasaranNodes)->concat($urusanNodes)->concat($tujuanRenstraNodes)->concat($sasaranRenstraNodes)->concat($programNodes)->concat($kegiatanNodes)->concat($subkegiatanNodes);
 
-        $links = $misiNodes->map(function($misi) {
-            return ['from' => $misi['parent'], 'to' => $misi['key']];
-        })->concat($tujuanNodes->map(function($tujuan) {
-            return ['from' => $tujuan['parent'], 'to' => $tujuan['key']];
-        }))->concat($sasaranNodes->map(function($sasaran) {
-            return ['from' => $sasaran['parent'], 'to' => $sasaran['key']];
-        }))->concat($tujuanRenstraNodes->map(function($tujuanRenstra) {
-            return ['from' => $tujuanRenstra['parent'], 'to' => $tujuanRenstra['key']];
-        }))->concat($sasaranRenstraNodes->map(function($sasaranRenstra) {
-            return ['from' => $sasaranRenstra['parent'], 'to' => $sasaranRenstra['key']];
-        }))->concat($programNodes->map(function($program) {
-            return ['from' => $program['parent'], 'to' => $program['key']];
-        }))->concat($kegiatanNodes->map(function($kegiatan) {
-            return ['from' => $kegiatan['parent'], 'to' => $kegiatan['key']];
-        }))->concat($subkegiatanNodes->map(function($sub_kegiatan) {
-            return ['from' => $sub_kegiatan['parent'], 'to' => $sub_kegiatan['key']];
-        }));
+$links = $misiNodes->map(function($misi) {
+    return ['from' => $misi['parent'], 'to' => $misi['key']];
+})->concat($tujuanNodes->map(function($tujuan) {
+    return ['from' => $tujuan['parent'], 'to' => $tujuan['key']];
+}))->concat($sasaranNodes->map(function($sasaran) {
+    return ['from' => $sasaran['parent'], 'to' => $sasaran['key']];
+}))->concat($urusanNodes->map(function($urusan) {
+    return ['from' => $urusan['parent'], 'to' => $urusan['key']];
+}))->concat($tujuanRenstraNodes->map(function($tujuanRenstra) {
+    return ['from' => $tujuanRenstra['parent'], 'to' => $tujuanRenstra['key']];
+}))->concat($sasaranRenstraNodes->map(function($sasaranRenstra) {
+    return ['from' => $sasaranRenstra['parent'], 'to' => $sasaranRenstra['key']];
+}))->concat($programNodes->map(function($program) {
+    return ['from' => $program['parent'], 'to' => $program['key']];
+}))->concat($kegiatanNodes->map(function($kegiatan) {
+    return ['from' => $kegiatan['parent'], 'to' => $kegiatan['key']];
+}))->concat($subkegiatanNodes->map(function($sub_kegiatan) {
+    return ['from' => $sub_kegiatan['parent'], 'to' => $sub_kegiatan['key']];
+}));
 
         $response = [
             'nodeDataArray' => $nodes->toArray(),

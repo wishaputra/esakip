@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="id_urusan" class="col-form-label">Sasaran</label>
+                                <label for="id_urusan" class="col-form-label">Urusan</label>
                                 <select name="id_urusan" id="id_urusan" class="form-control">
                                     <option value="">Pilih</option>
                                     @foreach ($urusan as $item)

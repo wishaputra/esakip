@@ -96,32 +96,33 @@
         }
 
         myDiagram.nodeTemplate =
-            $(go.Node, "Auto",
-                {
-                    mouseDragEnter: (e, node, prev) => {
-                        var diagram = node.diagram;
-                        var selnode = diagram.selection.first();
-                        if (!mayWorkFor(selnode, node)) return;
-                        var shape = node.findObject("SHAPE");
-                        if (shape) shape.fill = "darkred";
-                    },
-                    mouseDragLeave: (e, node, next) => {
-                        var shape = node.findObject("SHAPE");
-                        if (shape) shape.fill = graygrad;
-                    },
-                    mouseDrop: (e, node) => {
-                        var diagram = node.diagram;
-                        var selnode = diagram.selection.first();
-                        if (mayWorkFor(selnode, node)) {
-                            var link = selnode.findTreeParentLink();
-                            if (link !== null) {
-                                link.fromNode = node;
-                            } else {
-                                diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
-                            }
-                        }
+    $(go.Node, "Auto",
+        {
+            isTreeExpanded: false, // Add this line
+            mouseDragEnter: (e, node, prev) => {
+                var diagram = node.diagram;
+                var selnode = diagram.selection.first();
+                if (!mayWorkFor(selnode, node)) return;
+                var shape = node.findObject("SHAPE");
+                if (shape) shape.fill = "darkred";
+            },
+            mouseDragLeave: (e, node, next) => {
+                var shape = node.findObject("SHAPE");
+                if (shape) shape.fill = graygrad;
+            },
+            mouseDrop: (e, node) => {
+                var diagram = node.diagram;
+                var selnode = diagram.selection.first();
+                if (mayWorkFor(selnode, node)) {
+                    var link = selnode.findTreeParentLink();
+                    if (link !== null) {
+                        link.fromNode = node;
+                    } else {
+                        diagram.toolManager.linkingTool.insertLink(node, node.port, selnode, selnode.port);
                     }
-                },
+                }
+            }
+        },
                 new go.Binding("layerName", "isSelected", sel => sel ? "Foreground" : "").ofObject(),
                 $(go.Shape, "RoundedRectangle",
                     {
@@ -149,6 +150,9 @@
                     $(go.TextBlock, textStyle(),
                         { row: 5, column: 0, font: "bold 9pt sans-serif" },
                         new go.Binding("text", "sasaran").makeTwoWay()),
+                    $(go.TextBlock, textStyle(),
+                        { row: 5, column: 0, font: "bold 9pt sans-serif" },
+                        new go.Binding("text", "urusan").makeTwoWay()),
                     $(go.TextBlock, textStyle(),
                         { row: 5, column: 0, font: "bold 9pt sans-serif" },
                         new go.Binding("text", "tujuanRenstra").makeTwoWay()),
