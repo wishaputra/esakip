@@ -464,28 +464,25 @@ $('#myUL').on('click', 'span.sasaran', function() {
     }
 });
 
-$(document).ready(function() {
-    var selectedTriwulan = null;
-    var selectedUrusanId = null;
+$('#myUL').on('click', 'span.urusan', function() {
+    var selectedUrusan = $(this).text().replace('URUSAN: ', '');
+    var urusanId = $(this).data('id');  // Assume you store the ID as a data attribute
+    $("#judul").html("Urusan");
+    $("#deskripsi").html(selectedUrusan);
+    $('#tabel').show();
+    $('#triwulanHeader').show();
+    $('#subTableHeader').show();
 
-    // Capture triwulan change event
-    $('#triwulan').change(function() {
-        selectedTriwulan = $(this).val();
-        if (selectedUrusanId) {
-            fetchAndPopulateData(selectedUrusanId);
-        }
-    });
-
-    function fetchAndPopulateData(urusanId) {
     var indikatorData = [];
     var nilaiData = [];
 
     // Fetch Indikator data
-    var indikatorRequest = $.ajax({
+    $.ajax({
         url: '/getUrusanIndikator/' + urusanId,
         method: 'GET',
         success: function(response) {
             indikatorData = response;
+            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument for Urusan
         },
         error: function() {
             console.log('Error fetching indikator data');
@@ -493,37 +490,30 @@ $(document).ready(function() {
     });
 
     // Fetch Nilai data
-    var nilaiRequest = $.ajax({
+    $.ajax({
         url: '/getUrusanNilai/' + urusanId,
         method: 'GET',
         success: function(response) {
             nilaiData = response;
+            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument for Urusan
         },
         error: function() {
             console.log('Error fetching nilai data');
         }
     });
 
-    // Wait for both AJAX requests to complete
-    $.when(indikatorRequest, nilaiRequest).done(function() {
-        populateTable(indikatorData, nilaiData, true);
-    });
-}
-
     function populateTable(indikators, nilais, isUrusan) {
         var tableBody = $('#dataTable tbody');
-        tableBody.empty();
+        tableBody.empty(); // Clear existing rows
 
         indikators.forEach(function(indikator) {
-            var nilai = nilais.filter(function(nilai) {
+            var nilai = nilais.find(function(nilai) {
                 return nilai.id_indikator_urusan === indikator.id;
-            });
-
+            }) || {}; // Get the corresponding nilai or default to empty
             var row = '<tr>' +
                 '<td>' + indikator.indikator + '</td>' +
-                '<td>' + (nilai.length > 0 ? nilai[0].satuan : '') + '</td>' +
-                '<td>' + (nilai.length > 0 ? nilai[0].tahun : '') + '</td>'; 
-
+                '<td>' + (nilai.satuan || '') + '</td>' +
+                '<td>' + (nilai.tahun || '') + '</td>'; // Keep the triwulan column
             if (isUrusan) {
                 row += '<td>' +
                     '<table>' +
@@ -533,20 +523,17 @@ $(document).ready(function() {
                     '<th>TW 3</th>' +
                     '<th>TW 4</th>' +
                     '</tr>' +
-                    '<tr>';
-
-                for (var i = 1; i <= 4; i++) {
-                    var targetValue = nilai.find(n => n.triwulan == i) ? nilai.find(n => n.triwulan == i).target : '';
-                    row += '<td>' + (selectedTriwulan == i ? targetValue : '') + '</td>';
-                }
-
-                row += '</tr>' +
+                    '<tr>' +
+                    '<td>' + (nilai.target || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw3 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
+                    '</tr>' +
                     '</table>' +
                     '</td>';
             } else {
-                row += '<td>' + (nilai.length > 0 ? nilai[0].target : '') + '</td>';
+                row += '<td>' + (nilai.target || '') + '</td>';
             }
-
             if (isUrusan) {
                 row += '<td>' +
                     '<table>' +
@@ -556,39 +543,22 @@ $(document).ready(function() {
                     '<th>TW 3</th>' +
                     '<th>TW 4</th>' +
                     '</tr>' +
-                    '<tr>';
-
-                for (var i = 1; i <= 4; i++) {
-                    var capaianValue = nilai.find(n => n.triwulan == i) ? nilai.find(n => n.triwulan == i).capaian : '';
-                    row += '<td>' + (selectedTriwulan == i ? capaianValue : '') + '</td>';
-                }
-
-                row += '</tr>' +
+                    '<tr>' +
+                    '<td>' + (nilai.capaian || '') + '</td>' +
+                    '<td>' + (nilai.tw2 || '') + '</td>' +
+                    '<td>' + (nilai.tw3 || '') + '</td>' +
+                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
+                    '</tr>' +
                     '</table>' +
                     '</td>';
             } else {
-                row += '<td>' + (nilai.length > 0 ? nilai[0].capaian : '') + '</td>';
+                row += '<td>' + (nilai.capaian || '') + '</td>';
             }
-
             row += '</tr>';
             tableBody.append(row);
         });
     }
-
-    // Event listener for urusan node click
-    $('#myUL').on('click', 'span.urusan', function() {
-        var selectedUrusan = $(this).text().replace('URUSAN: ', '');
-        selectedUrusanId = $(this).data('id'); // Assume you store the ID as a data attribute
-        $("#judul").html("Urusan");
-        $("#deskripsi").html(selectedUrusan);
-        $('#tabel').show();
-        $('#triwulanHeader').show();
-        $('#subTableHeader').show();
-
-        fetchAndPopulateData(selectedUrusanId);
-    });
 });
-
 
 
 $('#myUL').on('click', 'span.tujuanRenstra', function() {
