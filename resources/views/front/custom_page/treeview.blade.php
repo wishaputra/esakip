@@ -503,61 +503,78 @@ $('#myUL').on('click', 'span.urusan', function() {
     });
 
     function populateTable(indikators, nilais, isUrusan) {
-        var tableBody = $('#dataTable tbody');
-        tableBody.empty(); // Clear existing rows
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-        indikators.forEach(function(indikator) {
-            var nilai = nilais.find(function(nilai) {
-                return nilai.id_indikator_urusan === indikator.id;
-            }) || {}; // Get the corresponding nilai or default to empty
-            var row = '<tr>' +
-                '<td>' + indikator.indikator + '</td>' +
-                '<td>' + (nilai.satuan || '') + '</td>' +
-                '<td>' + (nilai.tahun || '') + '</td>'; // Keep the triwulan column
-            if (isUrusan) {
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw3 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>';
-            } else {
-                row += '<td>' + (nilai.target || '') + '</td>';
-            }
-            if (isUrusan) {
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw3 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>';
-            } else {
-                row += '<td>' + (nilai.capaian || '') + '</td>';
-            }
-            row += '</tr>';
-            tableBody.append(row);
-        });
-    }
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_urusan === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
+
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
+        }
+
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
+    });
+}
 });
 
 
@@ -600,64 +617,79 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
 
     
     
-    function populateTable(indikators, nilais, isTujuanRenstra) {
-        var tableBody = $('#dataTable tbody');
-        tableBody.empty(); // Clear existing rows
+    function populateTable(indikators, nilais, isUrusan) {
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-        indikators.forEach(function(indikator) {
-            var nilai = nilais.find(function(nilai) {
-                return nilai.id_indikator_tujuan_renstra === indikator.id;
-            }) || {}; // Get the corresponding nilai or default to empty
-            var row = '<tr>' +
-                '<td>' + indikator.indikator + '</td>' +
-                '<td>' + (nilai.satuan || '') + '</td>' +
-                '<td>' + (nilai.tahun || '') + '</td>'; // Keep the triwulan column
-            if (isTujuanRenstra) {
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.target || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw3 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>';
-            } else {
-                row += '<td>' + (nilai.target || '') + '</td>';
-            }
-            if (isTujuanRenstra) {
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw3 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>';
-            } else {
-                row += '<td>' + (nilai.capaian || '') + '</td>';
-            }
-            row += '</tr>';
-            tableBody.append(row);
-        });
-    }
-    
-    
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_tujuan_renstra === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
+
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
+        }
+
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
+    });
+}
 });
 
    
@@ -700,67 +732,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
     
-        function populateTable(indikators, nilais, isSasaranRenstra) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais, isUrusan) {
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_indikator_sasaran_renstra] = nilai;
-            });
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_sasaran_renstra === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
 
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>';
-                if (isSasaranRenstra) {
-                    row += '<td>' +
-                        '<table>' +
-                        '<tr>' +
-                        '<th>TW 1</th>' +
-                        '<th>TW 2</th>' +
-                        '<th>TW 3</th>' +
-                        '<th>TW 4</th>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>' + (nilai.target || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                        '</tr>' +
-                        '</table>' +
-                        '</td>';
-                } else {
-                    row += '<td>' + (nilai.target || '') + '</td>';
-                }
-                if (isSasaranRenstra) {
-                    row += '<td>' +
-                        '<table>' +
-                        '<tr>' +
-                        '<th>TW 1</th>' +
-                        '<th>TW 2</th>' +
-                        '<th>TW 3</th>' +
-                        '<th>TW 4</th>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>' + (nilai.capaian || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                        '</tr>' +
-                        '</table>' +
-                        '</td>';
-                } else {
-                    row += '<td>' + (nilai.capaian || '') + '</td>';
-                }
-                row += '</tr>';
-                tableBody.append(row);
-            });
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
         }
+
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
     });
-    
+}
+});
 
 
     $('#myUL').on('click', 'span.program', function() {
@@ -800,63 +845,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, isProgram) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais, isUrusan) {
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_indikator_program] = nilai;
-            });
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_program === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
 
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>';
-                if (isProgram) {
-                    row += '<td>' +
-                        '<table>' +
-                        '<tr>' +
-                        '<th>TW 1</th>' +
-                        '<th>TW 2</th>' +
-                        '<th>TW 3</th>' +
-                        '<th>TW 4</th>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>' + (nilai.target || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                        '</tr>' +
-                        '</table>' +
-                        '</td>';
-                } else {
-                    row += '<td>' + (nilai.target || '') + '</td>';
-                }
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
         }
-        
+
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
     });
+}
+});
 
     
     $('#myUL').on('click', 'span.kegiatan', function() {
@@ -896,63 +958,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, isKegiatan) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais, isUrusan) {
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_indikator_kegiatan] = nilai;
-            });
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_kegiatan === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
 
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>';
-                if (isKegiatan) {
-                    row += '<td>' +
-                        '<table>' +
-                        '<tr>' +
-                        '<th>TW 1</th>' +
-                        '<th>TW 2</th>' +
-                        '<th>TW 3</th>' +
-                        '<th>TW 4</th>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>' + (nilai.target || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.tw3 || '') + '</td>' +
-                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                        '</tr>' +
-                        '</table>' +
-                        '</td>';
-                } else {
-                    row += '<td>' + (nilai.target || '') + '</td>';
-                }
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.capaian || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw3 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
         }
-        
+
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
     });
+}
+});
     
 
     
@@ -992,64 +1071,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             }
         });
     
-        function populateTable(indikators, nilais, isSubKegiatan) {
-            var tableBody = $('#dataTable tbody');
-            tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais, isUrusan) {
+    var tableBody = $('#dataTable tbody');
+    tableBody.empty(); // Clear existing rows
 
-            var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
-            nilais.forEach(function(nilai) {
-                nilaiMap[nilai.id_indikator_sub_kegiatan] = nilai;
-            });
+    indikators.forEach(function(indikator) {
+        var nilai = nilais.find(function(nilai) {
+            return nilai.id_indikator_sub_kegiatan === indikator.id;
+        }) || {}; // Get the corresponding nilai or default to empty
 
-            indikators.forEach(function(indikator) {
-                var nilai = nilaiMap[indikator.id] || {}; // Get the corresponding nilai or default to empty
-                var row = '<tr>' +
-                    '<td>' + indikator.indikator + '</td>' +
-                    '<td>' + (nilai.satuan || '') + '</td>' +
-                    '<td>' + (nilai.tahun || '') + '</td>';
-                if (isSubKegiatan) {
-                    row += '<td>' +
-                        '<table>' +
-                        '<tr>' +
-                        '<th>TW 1</th>' +
-                        '<th>TW 2</th>' +
-                        '<th>TW 3</th>' +
-                        '<th>TW 4</th>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>' + (nilai.target || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.tw2 || '') + '</td>' +
-                        '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with target data
-                        '</tr>' +
-                        '</table>' +
-                        '</td>';
-                } else {
-                    row += '<td>' + (nilai.target || '') + '</td>';
-                }
-                row += '<td>' +
-                    '<table>' +
-                    '<tr>' +
-                    '<th>TW 1</th>' +
-                    '<th>TW 2</th>' +
-                    '<th>TW 3</th>' +
-                    '<th>TW 4</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<td>' + (nilai.capaian|| '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.tw2 || '') + '</td>' +
-                    '<td>' + (nilai.triwulan || '') + '</td>' + // TW 4 is filled with capaian data
-                    '</tr>' +
-                    '</table>' +
-                    '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+        var triwulanValue = nilai.triwulan; // Get the triwulan value
+        var targetValue = nilai.target;
+        var capaianValue = nilai.capaian;
+
+        var targetColumn = '';
+        var capaianColumn = '';
+
+        switch (triwulanValue) {
+            case 1:
+                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
+                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
+                break;
+            case 2:
+                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
+                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
+                break;
+            case 3:
+                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
+                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
+                break;
+            case 4:
+                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
+                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
+                break;
+            default:
+                targetColumn = '<td></td><td></td><td></td><td></td>';
+                capaianColumn = '<td></td><td></td><td></td><td></td>';
         }
-        
-    });
 
+        var row = '<tr>' +
+            '<td>' + indikator.indikator + '</td>' +
+            '<td>' + (nilai.satuan || '') + '</td>' +
+            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            targetColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '<td>' +
+            '<table>' +
+            '<tr>' +
+            '<th>TW 1</th>' +
+            '<th>TW 2</th>' +
+            '<th>TW 3</th>' +
+            '<th>TW 4</th>' +
+            '</tr>' +
+            '<tr>' +
+            capaianColumn +
+            '</tr>' +
+            '</table>' +
+            '</td>' +
+            '</tr>';
+
+        tableBody.append(row);
+    });
+}
+});
 
 
 </script>
