@@ -28,6 +28,9 @@ use App\Http\Controllers\Cascading\SasaranController;
 use App\Http\Controllers\Cascading\SasaranIndikatorController;
 use App\Http\Controllers\Cascading\SasaranNilaiController;
 use App\Http\Controllers\Cascading\UrusanController;
+use App\Http\Controllers\Cascading\UrusanOpdController;
+use App\Http\Controllers\Cascading\UrusanOpdIndikatorController;
+use App\Http\Controllers\Cascading\UrusanOpdNilaiController;
 use App\Http\Controllers\Cascading\UrusanIndikatorController;
 use App\Http\Controllers\Cascading\UrusanNilaiController;
 use App\Http\Controllers\Cascading\PerangkatDaerahController;
@@ -138,6 +141,19 @@ Route::get('/sasaran_nilai', function () {
 Route::get('/urusan', function () {
     return view('cascading.urusan.index');
 })->name('urusan');
+
+Route::get('/urusan_opd', function () {
+    return view('cascading.urusan_opd.index');
+})->name('urusan_opd');
+
+
+Route::get('/urusan_opd_indikator', function () {
+    return view('cascading.urusan_opd_indikator.index');
+})->name('urusan_opd_indikator');
+
+Route::get('/urusan_opd_nilai', function () {
+    return view('cascading.urusan_opd_nilai.index');
+})->name('urusan_opd_nilai');
 
 Route::get('/urusan_indikator', function () {
     return view('cascading.urusan_indikator.index');
@@ -271,10 +287,6 @@ Route::get('/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']
 Route::get('/getSasaranIndikator/{id}', [TreeViewController::class, 'getSasaranIndikator']);
 Route::get('/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai']);
 
-Route::get('/getUrusanIndikator/{id}', [TreeViewController::class, 'geturusanIndikator']);
-Route::get('/getUrusanNilai/{id}', [TreeViewController::class, 'geturusanNilai']);
-
-
 Route::get('/getUrusanIndikator/{id}', [TreeViewController::class, 'getUrusanIndikator']);
 Route::get('/getUrusanNilai/{id}', [TreeViewController::class, 'getUrusanNilai']);
 
@@ -374,6 +386,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('urusan/api', [UrusanController::class, 'api'])->name('urusan.api');
             Route::resource('urusan', UrusanController::class);
+            Route::post('urusan_opd/api', [UrusanOpdController::class, 'api_opd'])->name('urusan_opd.api');
+            Route::resource('urusan_opd', UrusanOpdController::class);
+            Route::post('urusan_opd_indikator/api', [UrusanOpdIndikatorController::class, 'api_opd_indikator'])->name('urusan_opd_indikator.api');
+            Route::resource('urusan_opd_indikator', UrusanOpdIndikatorController::class);
+            Route::post('urusan_opd_nilai/api', [UrusanOpdNilaiController::class, 'api_opd_nilai'])->name('urusan_opd_nilai.api');
+            Route::resource('urusan_opd_nilai', UrusanOpdNilaiController::class);
             Route::post('urusan_indikator/api', [UrusanIndikatorController::class, 'api'])->name('urusan_indikator.api');
             Route::resource('urusan_indikator', UrusanIndikatorController::class);
             Route::post('urusan_nilai/api', [UrusanNilaiController::class, 'api'])->name('urusan_nilai.api');

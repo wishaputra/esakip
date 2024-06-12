@@ -227,10 +227,10 @@
                     <li>
                     {{-- <a href="{{ route('setup.tujuan_renstra.index') }}">
                         <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
-                    </a>
-                    <a href="{{ route('setup.sasaran_renstra.index') }}">
-                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
                     </a> --}}
+                    <a href="{{ route('setup.urusan_opd.index') }}">
+                        <i class="icon icon-circle-o s-14 text-blue"></i> <span>Urusan</span>
+                    </a>
                     <a href="{{ route('setup.program.index') }}">
                         <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
                     </a>
