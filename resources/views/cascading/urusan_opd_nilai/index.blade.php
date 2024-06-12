@@ -62,6 +62,7 @@
                                             <td>triwulan</td>
                                             <td>target</td>
                                             <td>capaian</td>
+                                            <td width="10%">Aksi</td>
                                             
                                         </tr>>
                                         </tr>
@@ -109,19 +110,19 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="satuan" class="col-form-label">satuan</label>
-                                <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
+                                <textarea name="satuan" id="satuan" class="form-control" rows="3" readonly></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="tahun" class="col-form-label">tahun</label>
-                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                                <textarea name="tahun" id="tahun" class="form-control" rows="3" readonly></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="triwulan" class="col-form-label">Triwulan</label>
-                                <select name="triwulan" id="triwulan" class="form-control">
+                                <select name="triwulan" id="triwulan" class="form-control" readonly>
                                     <option value="">Pilih</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -133,7 +134,7 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="target" class="col-form-label">target</label>
-                                <textarea name="target" id="target" class="form-control" rows="3"></textarea>
+                                <textarea name="target" id="target" class="form-control" rows="3" readonly></textarea>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -262,6 +263,8 @@
             {data: 'triwulan', name: 'triwulan'},
             {data: 'target', name: 'target'},
             {data: 'capaian', name: 'capaian'},
+            {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+            
             // {data: 'submenu_count', name: 'submenu_count'},            
            
         ]

@@ -23,7 +23,7 @@ class UrusanOpdNilaiController extends Controller
             ->addColumn('action', function ($p) {
                 return "
                     <a href='#' onclick='edit(". $p->id. ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(". $p->id. ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
+                    <a href='#' class='text-secondary' title='Hapus'><i class='icon-remove'></i></a>";
             })
             ->toJson();
     }
