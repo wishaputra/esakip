@@ -224,7 +224,7 @@
 </div>
 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://cdn.datatables.net/2.0.4/js/dataTables.js"></script>
 <script>
 $(document).ready(function() {
@@ -354,7 +354,7 @@ $('#myUL').on('click', 'span.caret', function() {
 
     // Fetch Indikator data
     $.ajax({
-        url: '/getTujuanIndikator/' + tujuanId,
+        url: '/public/getTujuanIndikator/' + tujuanId,
         method: 'GET',
         success: function(response) {
             indikatorData = response;
@@ -367,7 +367,7 @@ $('#myUL').on('click', 'span.caret', function() {
 
     // Fetch Nilai data
     $.ajax({
-        url: '/getTujuanNilai/' + tujuanId,
+        url: '/public/getTujuanNilai/' + tujuanId,
         method: 'GET',
         success: function(response) {
             nilaiData = response;
@@ -417,7 +417,7 @@ $('#myUL').on('click', 'span.sasaran', function() {
 
     // Fetch Indikator data
     $.ajax({
-        url: '/getSasaranIndikator/' + sasaranId,
+        url: '/public/getSasaranIndikator/' + sasaranId,
         method: 'GET',
         success: function(response) {
             indikatorData = response;
@@ -430,7 +430,7 @@ $('#myUL').on('click', 'span.sasaran', function() {
 
     // Fetch Nilai data
     $.ajax({
-        url: '/getSasaranNilai/' + sasaranId,
+        url: '/public/getSasaranNilai/' + sasaranId,
         method: 'GET',
         success: function(response) {
             nilaiData = response;
@@ -478,7 +478,7 @@ $('#myUL').on('click', 'span.urusan', function() {
 
     // Fetch Indikator data
     $.ajax({
-        url: '/getUrusanIndikator/' + urusanId,
+        url: '/public/getUrusanIndikator/' + urusanId,
         method: 'GET',
         success: function(response) {
             indikatorData = response;
@@ -491,7 +491,7 @@ $('#myUL').on('click', 'span.urusan', function() {
 
     // Fetch Nilai data
     $.ajax({
-        url: '/getUrusanNilai/' + urusanId,
+        url: '/public/getUrusanNilai/' + urusanId,
         method: 'GET',
         success: function(response) {
             nilaiData = response;
@@ -578,7 +578,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
 
     // Fetch Indikator data
     $.ajax({
-        url: '/getTujuanRenstraIndikator/' + tujuanRenstraId,
+        url: '/public/getTujuanRenstraIndikator/' + tujuanRenstraId,
         method: 'GET',
         success: function(response) {
             indikatorData = response;
@@ -591,7 +591,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
 
     // Fetch Nilai data
     $.ajax({
-        url: '/getTujuanRenstraNilai/' + tujuanRenstraId,
+        url: '/public/getTujuanRenstraNilai/' + tujuanRenstraId,
         method: 'GET',
         success: function(response) {
             nilaiData = response;
@@ -682,7 +682,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Indikator data
         $.ajax({
-            url: '/getSasaranRenstraIndikator/' + sasaranRenstraId,
+            url: '/public/getSasaranRenstraIndikator/' + sasaranRenstraId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
@@ -695,7 +695,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Nilai data
         $.ajax({
-            url: '/getSasaranRenstraNilai/' + sasaranRenstraId,
+            url: '/public/getSasaranRenstraNilai/' + sasaranRenstraId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
@@ -783,7 +783,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Indikator data
         $.ajax({
-            url: '/getProgramIndikator/' + programId,
+            url: '/public/getProgramIndikator/' + programId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
@@ -796,7 +796,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Nilai data
         $.ajax({
-            url: '/getProgramNilai/' + programId,
+            url: '/public/getProgramNilai/' + programId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
@@ -884,7 +884,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Indikator data
         $.ajax({
-            url: '/getKegiatanIndikator/' + kegiatanId,
+            url: '/public/getKegiatanIndikator/' + kegiatanId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
@@ -897,7 +897,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Nilai data
         $.ajax({
-            url: '/getKegiatanNilai/' + kegiatanId,
+            url: '/public/getKegiatanNilai/' + kegiatanId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;
@@ -986,7 +986,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Indikator data
         $.ajax({
-            url: '/getSubKegiatanIndikator/' + subKegiatanId,
+            url: '/public/getSubKegiatanIndikator/' + subKegiatanId,
             method: 'GET',
             success: function(response) {
                 indikatorData = response;
@@ -999,7 +999,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
     
         // Fetch Nilai data
         $.ajax({
-            url: '/getSubKegiatanNilai/' + subKegiatanId,
+            url: '/public/getSubKegiatanNilai/' + subKegiatanId,
             method: 'GET',
             success: function(response) {
                 nilaiData = response;

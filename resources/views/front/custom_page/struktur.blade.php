@@ -215,7 +215,7 @@
         }
 
         $.ajax({
-            url: "/load-chart",
+            url: "/public/load-chart",
             type: 'GET',
             data: { periode: selectedPeriod },
             success: function (data) {
