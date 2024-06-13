@@ -507,43 +507,31 @@ $('#myUL').on('click', 'span.urusan', function() {
     tableBody.empty(); // Clear existing rows
 
     indikators.forEach(function(indikator) {
-        var nilai = nilais.find(function(nilai) {
+        var relatedNilais = nilais.filter(function(nilai) {
             return nilai.id_indikator_urusan === indikator.id;
-        }) || {}; // Get the corresponding nilai or default to empty
+        });
 
-        var triwulanValue = nilai.triwulan; // Get the triwulan value
-        var targetValue = nilai.target;
-        var capaianValue = nilai.capaian;
+        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
+        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
 
-        var targetColumn = '';
-        var capaianColumn = '';
+        relatedNilais.forEach(function(nilai) {
+            var triwulanIndex = nilai.triwulan - 1;
+            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
+            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
+        });
 
-        switch (triwulanValue) {
-            case 1:
-                targetColumn = '<td>' + targetValue + '</td><td></td><td></td><td></td>';
-                capaianColumn = '<td>' + capaianValue + '</td><td></td><td></td><td></td>';
-                break;
-            case 2:
-                targetColumn = '<td></td><td>' + targetValue + '</td><td></td><td></td>';
-                capaianColumn = '<td></td><td>' + capaianValue + '</td><td></td><td></td>';
-                break;
-            case 3:
-                targetColumn = '<td></td><td></td><td>' + targetValue + '</td><td></td>';
-                capaianColumn = '<td></td><td></td><td>' + capaianValue + '</td><td></td>';
-                break;
-            case 4:
-                targetColumn = '<td></td><td></td><td></td><td>' + targetValue + '</td>';
-                capaianColumn = '<td></td><td></td><td></td><td>' + capaianValue + '</td>';
-                break;
-            default:
-                targetColumn = '<td></td><td></td><td></td><td></td>';
-                capaianColumn = '<td></td><td></td><td></td><td></td>';
-        }
+        var targetColumns = targetValues.map(function(value) {
+            return '<td>' + (value !== null ? value : '') + '</td>';
+        }).join('');
+
+        var capaianColumns = capaianValues.map(function(value) {
+            return '<td>' + (value !== null ? value : '') + '</td>';
+        }).join('');
 
         var row = '<tr>' +
             '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (nilai.satuan || '') + '</td>' +
-            '<td>' + (nilai.tahun || '') + '</td>' +
+            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
+            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
             '<td>' +
             '<table>' +
             '<tr>' +
@@ -553,7 +541,7 @@ $('#myUL').on('click', 'span.urusan', function() {
             '<th>TW 4</th>' +
             '</tr>' +
             '<tr>' +
-            targetColumn +
+            targetColumns +
             '</tr>' +
             '</table>' +
             '</td>' +
@@ -566,7 +554,7 @@ $('#myUL').on('click', 'span.urusan', function() {
             '<th>TW 4</th>' +
             '</tr>' +
             '<tr>' +
-            capaianColumn +
+            capaianColumns +
             '</tr>' +
             '</table>' +
             '</td>' +
@@ -576,7 +564,6 @@ $('#myUL').on('click', 'span.urusan', function() {
     });
 }
 });
-
 
 $('#myUL').on('click', 'span.tujuanRenstra', function() {
     var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
