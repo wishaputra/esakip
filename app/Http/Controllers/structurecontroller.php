@@ -14,7 +14,7 @@ use App\Models\Cascading\Model_Program;
 use App\Models\Cascading\Model_Kegiatan;
 use App\Models\Cascading\Model_SubKegiatan;
 
-class ChartController extends Controller
+class structurecontroller extends Controller
 {
     public function getPeriods()
     {

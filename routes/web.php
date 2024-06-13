@@ -71,7 +71,7 @@ use App\Models\Frontend;
 use App\Models\Section\Pricing;
 use App\Models\TextContent;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ChartController;
+use App\Http\Controllers\structurecontroller;
 use App\Models\Cascading\Model_Tujuan_Indikator;
 
 /*
@@ -270,12 +270,12 @@ Route::get('/load-chart/{tahun_awal}/{tahun_akhir}', [ChartController::class, 'l
 Route::get('/get-periods', function() {
     return App\Models\Cascading\Model_Visi::select('tahun_awal', 'tahun_akhir')->distinct()->get();
 });
-Route::get('/load-chart', [ChartController::class, 'loadChart']);
-Route::get('/load-visi', [ChartController::class,'loadvisi']);
-Route::get('/load-misi', [ChartController::class,'loadmisi']);
-Route::get('/load-tujuan', [ChartController::class,'loadtujuan']);
-Route::get('/struktur', [ChartController::class, 'getperiods']);
-Route::post('/api/load-chart', [ChartController::class, 'loadChart']);
+Route::get('/load-chart', [structurecontroller::class, 'loadChart']);
+Route::get('/load-visi', [structurecontroller::class,'loadvisi']);
+Route::get('/load-misi', [structurecontroller::class,'loadmisi']);
+Route::get('/load-tujuan', [structurecontroller::class,'loadtujuan']);
+Route::get('/struktur', [structurecontroller::class, 'getperiods']);
+Route::post('/api/load-chart', [structurecontroller::class, 'loadChart']);
 
 
 
