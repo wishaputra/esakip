@@ -617,7 +617,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
 
     
     
-    function populateTable(indikators, nilais, isUrusan) {
+    function populateTable(indikators, nilais, selectedTriwulan) {
     var tableBody = $('#dataTable tbody');
     tableBody.empty(); // Clear existing rows
 
@@ -626,56 +626,68 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             return nilai.id_indikator_tujuan_renstra === indikator.id;
         });
 
-        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
-        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
+        // Group nilais by year
+        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+            if (!acc[nilai.tahun]) {
+                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
+            }
+            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+            return acc;
+        }, {});
 
-        relatedNilais.forEach(function(nilai) {
-            var triwulanIndex = nilai.triwulan - 1;
-            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
-            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
-        });
+        var isFirstRow = true;
 
-        var targetColumns = targetValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+        for (var tahun in groupedNilais) {
+            var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var capaianColumns = capaianValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var row = '<tr>' +
-            '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            targetColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            capaianColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '</tr>';
+            var row = '<tr>';
+            if (isFirstRow) {
+                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                isFirstRow = false;
+            }
+            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                '<td>' + tahun + '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + targetColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + capaianColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '</tr>';
 
-        tableBody.append(row);
+            tableBody.append(row);
+        }
     });
 }
 });
@@ -720,7 +732,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
     
-        function populateTable(indikators, nilais, isUrusan) {
+        function populateTable(indikators, nilais, selectedTriwulan) {
     var tableBody = $('#dataTable tbody');
     tableBody.empty(); // Clear existing rows
 
@@ -729,56 +741,68 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             return nilai.id_indikator_sasaran_renstra === indikator.id;
         });
 
-        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
-        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
+        // Group nilais by year
+        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+            if (!acc[nilai.tahun]) {
+                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
+            }
+            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+            return acc;
+        }, {});
 
-        relatedNilais.forEach(function(nilai) {
-            var triwulanIndex = nilai.triwulan - 1;
-            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
-            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
-        });
+        var isFirstRow = true;
 
-        var targetColumns = targetValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+        for (var tahun in groupedNilais) {
+            var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var capaianColumns = capaianValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var row = '<tr>' +
-            '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            targetColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            capaianColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '</tr>';
+            var row = '<tr>';
+            if (isFirstRow) {
+                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                isFirstRow = false;
+            }
+            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                '<td>' + tahun + '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + targetColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + capaianColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '</tr>';
 
-        tableBody.append(row);
+            tableBody.append(row);
+        }
     });
 }
 });
@@ -821,7 +845,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, isUrusan) {
+        function populateTable(indikators, nilais, selectedTriwulan) {
     var tableBody = $('#dataTable tbody');
     tableBody.empty(); // Clear existing rows
 
@@ -830,56 +854,68 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             return nilai.id_indikator_program === indikator.id;
         });
 
-        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
-        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
+        // Group nilais by year
+        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+            if (!acc[nilai.tahun]) {
+                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
+            }
+            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+            return acc;
+        }, {});
 
-        relatedNilais.forEach(function(nilai) {
-            var triwulanIndex = nilai.triwulan - 1;
-            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
-            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
-        });
+        var isFirstRow = true;
 
-        var targetColumns = targetValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+        for (var tahun in groupedNilais) {
+            var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var capaianColumns = capaianValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var row = '<tr>' +
-            '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            targetColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            capaianColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '</tr>';
+            var row = '<tr>';
+            if (isFirstRow) {
+                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                isFirstRow = false;
+            }
+            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                '<td>' + tahun + '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + targetColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + capaianColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '</tr>';
 
-        tableBody.append(row);
+            tableBody.append(row);
+        }
     });
 }
 });
@@ -922,7 +958,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, isUrusan) {
+        function populateTable(indikators, nilais, selectedTriwulan) {
     var tableBody = $('#dataTable tbody');
     tableBody.empty(); // Clear existing rows
 
@@ -931,56 +967,68 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             return nilai.id_indikator_kegiatan === indikator.id;
         });
 
-        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
-        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
+        // Group nilais by year
+        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+            if (!acc[nilai.tahun]) {
+                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
+            }
+            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+            return acc;
+        }, {});
 
-        relatedNilais.forEach(function(nilai) {
-            var triwulanIndex = nilai.triwulan - 1;
-            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
-            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
-        });
+        var isFirstRow = true;
 
-        var targetColumns = targetValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+        for (var tahun in groupedNilais) {
+            var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var capaianColumns = capaianValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var row = '<tr>' +
-            '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            targetColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            capaianColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '</tr>';
+            var row = '<tr>';
+            if (isFirstRow) {
+                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                isFirstRow = false;
+            }
+            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                '<td>' + tahun + '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + targetColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + capaianColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '</tr>';
 
-        tableBody.append(row);
+            tableBody.append(row);
+        }
     });
 }
 });
@@ -1023,7 +1071,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             }
         });
     
-        function populateTable(indikators, nilais, isUrusan) {
+        function populateTable(indikators, nilais, selectedTriwulan) {
     var tableBody = $('#dataTable tbody');
     tableBody.empty(); // Clear existing rows
 
@@ -1032,56 +1080,68 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             return nilai.id_indikator_sub_kegiatan === indikator.id;
         });
 
-        var targetValues = [null, null, null, null]; // Initialize target values for each triwulan
-        var capaianValues = [null, null, null, null]; // Initialize capaian values for each triwulan
+        // Group nilais by year
+        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+            if (!acc[nilai.tahun]) {
+                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
+            }
+            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+            return acc;
+        }, {});
 
-        relatedNilais.forEach(function(nilai) {
-            var triwulanIndex = nilai.triwulan - 1;
-            targetValues[triwulanIndex] = nilai.target; // Set target value for specific triwulan
-            capaianValues[triwulanIndex] = nilai.capaian; // Set capaian value for specific triwulan
-        });
+        var isFirstRow = true;
 
-        var targetColumns = targetValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+        for (var tahun in groupedNilais) {
+            var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var capaianColumns = capaianValues.map(function(value) {
-            return '<td>' + (value !== null ? value : '') + '</td>';
-        }).join('');
+            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                return '<td>' + (value || '') + '</td>';
+            }).join('');
 
-        var row = '<tr>' +
-            '<td>' + indikator.indikator + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].satuan : '') + '</td>' +
-            '<td>' + (relatedNilais.length > 0 ? relatedNilais[0].tahun : '') + '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            targetColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '<td>' +
-            '<table>' +
-            '<tr>' +
-            '<th>TW 1</th>' +
-            '<th>TW 2</th>' +
-            '<th>TW 3</th>' +
-            '<th>TW 4</th>' +
-            '</tr>' +
-            '<tr>' +
-            capaianColumns +
-            '</tr>' +
-            '</table>' +
-            '</td>' +
-            '</tr>';
+            var row = '<tr>';
+            if (isFirstRow) {
+                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                isFirstRow = false;
+            }
+            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                '<td>' + tahun + '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + targetColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '<td>' +
+                '<table class="table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>TW 1</th>' +
+                '<th>TW 2</th>' +
+                '<th>TW 3</th>' +
+                '<th>TW 4</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' + capaianColumns + '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</td>' +
+                '</tr>';
 
-        tableBody.append(row);
+            tableBody.append(row);
+        }
     });
 }
 });
