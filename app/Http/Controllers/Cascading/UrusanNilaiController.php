@@ -37,10 +37,9 @@ class UrusanNilaiController extends Controller
 
 
         $indikator = Model_Urusan_Indikator::whereid($id_indikator)->get();
-        // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
-        // $id_sasaran = Model_Sasaran_Indikator::all();
+        $tahun  = Model_Visi::all();
 
-        return view('cascading.urusan_nilai.index', compact('indikator','id_indikator'));
+        return view('cascading.urusan_nilai.index', compact('indikator','id_indikator','tahun'));
     }
 
     public function create()

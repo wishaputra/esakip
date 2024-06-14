@@ -42,10 +42,11 @@ class KegiatanNilaiController extends Controller
 
       
         $indikator = Model_Kegiatan_Indikator::whereid($id_indikator_kegiatan)->get();
+        $tahun  = Model_Visi::all();
 
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.kegiatan_nilai.index', compact('indikator','id_indikator_kegiatan'));
+        return view('cascading.kegiatan_nilai.index', compact('indikator','id_indikator_kegiatan','tahun'));
     }
 
     /**

@@ -43,8 +43,9 @@ class SasaranRenstraNilaiController extends Controller
 
         
         $indikator = Model_Sasaran_Renstra_Indikator::whereid($id_sasaran_renstra_indikator)->get();
+        $tahun  = Model_Visi::all();
 
-        return view('cascading.sasaran_renstra_nilai.index', compact('indikator','id_sasaran_renstra_indikator'));
+        return view('cascading.sasaran_renstra_nilai.index', compact('indikator','id_sasaran_renstra_indikator','tahun'));
     }
 
     /**

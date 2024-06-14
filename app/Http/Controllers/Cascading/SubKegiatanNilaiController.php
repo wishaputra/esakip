@@ -43,9 +43,10 @@ class SubKegiatanNilaiController extends Controller
 
       
         $indikator = Model_SubKegiatan_Indikator::whereid($id_indikator_sub_kegiatan)->get();
+        $tahun  = Model_Visi::all();
 
         // return view('cascading.kegiatan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.subkegiatan_nilai.index', compact('indikator', 'id_indikator_sub_kegiatan'));
+        return view('cascading.subkegiatan_nilai.index', compact('indikator', 'id_indikator_sub_kegiatan','tahun'));
     }
 
     /**

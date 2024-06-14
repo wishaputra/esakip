@@ -44,9 +44,10 @@ class ProgramNilaiController extends Controller
         // $title = "Tujuan " . $visi->tujuan;
        
         $indikator = Model_Program_Indikator::whereid($id_indikator_program)->get();
+        $tahun  = Model_Visi::all();
         
         // return view('cascading.tujuan.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.program_nilai.index', compact('indikator','id_indikator_program'));
+        return view('cascading.program_nilai.index', compact('indikator','id_indikator_program','tahun'));
     }
 
     /**

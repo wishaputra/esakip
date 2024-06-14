@@ -111,12 +111,22 @@
                                 <textarea name="satuan" id="satuan" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group col-md-12">
-                                <label for="tahun" class="col-form-label">tahun</label>
-                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                        <input type="hidden" name="id" id="id">
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group col-md-12">
+                                        <label for="tahun" class="col-form-label">Periode Tahun</label>
+                                        <select name="tahun" id="tahun" class="form-control">
+                                            <option value="">Pilih</option>
+                                            @foreach ($tahun as $item)
+                                                @for ($year = $item->tahun_awal; $year <= $item->tahun_akhir; $year++)
+                                                    <option value="{{ $year }}">{{ $year }}</option>
+                                                @endfor
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
                         <div class="col-md-12">
                             <div class="form-group col-md-12">

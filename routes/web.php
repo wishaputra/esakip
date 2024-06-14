@@ -281,29 +281,29 @@ Route::post('/api/load-chart', [structurecontroller::class, 'loadChart']);
 
 
 //treview
-Route::get('/getTujuanIndikator/{id}', [TreeViewController::class, 'getTujuanIndikator']);
-Route::get('/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']);
+Route::get('/public/getTujuanIndikator/{id}', [TreeViewController::class, 'getTujuanIndikator']);
+Route::get('/public/getTujuanNilai/{id}', [TreeViewController::class, 'getTujuanNilai']);
 
-Route::get('/getSasaranIndikator/{id}', [TreeViewController::class, 'getSasaranIndikator']);
-Route::get('/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai']);
+Route::get('/public/getSasaranIndikator/{id}', [TreeViewController::class, 'getSasaranIndikator']);
+Route::get('/public/getSasaranNilai/{id}', [TreeViewController::class, 'getSasaranNilai']);
 
-Route::get('/getUrusanIndikator/{id}', [TreeViewController::class, 'getUrusanIndikator']);
-Route::get('/getUrusanNilai/{id}', [TreeViewController::class, 'getUrusanNilai']);
+Route::get('/public/getUrusanIndikator/{id}', [TreeViewController::class, 'getUrusanIndikator']);
+Route::get('/public/getUrusanNilai/{id}', [TreeViewController::class, 'getUrusanNilai']);
 
-route::get('/getTujuanRenstraIndikator/{id}', [TreeViewController::class, 'getTujuanRenstraIndikator']);
-route::get('/getTujuanRenstraNilai/{id}', [TreeViewController::class, 'getTujuanRenstraNilai']);
+route::get('/public/getTujuanRenstraIndikator/{id}', [TreeViewController::class, 'getTujuanRenstraIndikator']);
+route::get('/public/getTujuanRenstraNilai/{id}', [TreeViewController::class, 'getTujuanRenstraNilai']);
 
-route::get('/getSasaranRenstraIndikator/{id}', [TreeViewController::class, 'getSasaranRenstraIndikator']);
-route::get('/getSasaranRenstraNilai/{id}', [TreeViewController::class, 'getSasaranRenstraNilai']);
+route::get('/public/getSasaranRenstraIndikator/{id}', [TreeViewController::class, 'getSasaranRenstraIndikator']);
+route::get('/public/getSasaranRenstraNilai/{id}', [TreeViewController::class, 'getSasaranRenstraNilai']);
 
-route::get('/getProgramIndikator/{id}', [TreeViewController::class, 'getProgramIndikator']);
-route::get('/getProgramNilai/{id}', [TreeViewController::class, 'getProgramNilai']);
+route::get('/public/getProgramIndikator/{id}', [TreeViewController::class, 'getProgramIndikator']);
+route::get('/public/getProgramNilai/{id}', [TreeViewController::class, 'getProgramNilai']);
 
-route::get('/getKegiatanIndikator/{id}', [TreeViewController::class, 'getKegiatanIndikator']);
-route::get('/getKegiatanNilai/{id}', [TreeViewController::class, 'getKegiatanNilai']);
+route::get('/public/getKegiatanIndikator/{id}', [TreeViewController::class, 'getKegiatanIndikator']);
+route::get('/public/getKegiatanNilai/{id}', [TreeViewController::class, 'getKegiatanNilai']);
 
-Route::get('/getSubKegiatanIndikator/{id}', [TreeViewController::class, 'getSubKegiatanIndikator']);
-Route::get('/getSubKegiatanNilai/{id}', [TreeViewController::class, 'getSubKegiatanNilai']);
+Route::get('/public/getSubKegiatanIndikator/{id}', [TreeViewController::class, 'getSubKegiatanIndikator']);
+Route::get('/public/getSubKegiatanNilai/{id}', [TreeViewController::class, 'getSubKegiatanNilai']);
 
 
 

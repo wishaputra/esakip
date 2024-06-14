@@ -42,9 +42,10 @@ class TujuanRenstraNilaiController extends Controller
 
 
         $indikator   = Model_Tujuan_Renstra_Indikator::whereid($id_indikator_tujuan_renstra)->get();
+        $tahun  = Model_Visi::all();
 
         // return view('cascading.tujuan_indikator.index', compact('title', 'id_visi', 'visi'));
-        return view('cascading.tujuan_renstra_nilai.index', compact('indikator','id_indikator_tujuan_renstra'));
+        return view('cascading.tujuan_renstra_nilai.index', compact('indikator','id_indikator_tujuan_renstra','tahun'));
     }
 
     /**

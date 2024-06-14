@@ -37,6 +37,7 @@ class SasaranNilaiController extends Controller
 
 
         $indikator = Model_Sasaran_Indikator::whereid($id_indikator)->get();
+        
         // $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
         // $id_sasaran = Model_Sasaran_Indikator::all();
 

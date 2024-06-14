@@ -135,6 +135,7 @@ class UrusanController extends Controller
         $request->validate($rule);
 
         $urusan->update([
+            // "id_visi" => $request->tahun,
             "id_visi" => $request->tahun,
             "id_sasaran" => $request->id_sasaran,
             "urusan" => $request->urusan,
