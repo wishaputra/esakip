@@ -99,8 +99,8 @@
                     <label for="sasaran" class="col-form-label">sasaran</label>
                     @foreach ($sasaran as $item)
                         <textarea name="sasaran" id="sasaran" class="form-control" readonly>{{ $item->sasaran }}</textarea>
-                        <!-- <input type="hidden" name="id_sasaran" value="{{ $item->id }}"> Add this line to include the id_sasaran field -->
-                        
+                        <input type="hidden" name="id_sasaran" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
+                        @break
                     @endforeach
                 </div>
                 <div class="col-md-12">
