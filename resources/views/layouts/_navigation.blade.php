@@ -289,7 +289,7 @@
                         <a href="{{ route('setup.sasaran_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran</span>
                         </a>
-                        <a href="{{ route('setup.urusan.index') }}">
+                        <a href="{{ route('setup.urusan_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Urusan</span>
                         </a>
                         <a href="{{ route('setup.perangkat_daerah.index') }}">
