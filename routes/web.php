@@ -20,10 +20,15 @@ use App\Http\Controllers\LogoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\Cascading\VisiController;
+use App\Http\Controllers\Cascading\VisiMenpanController;
 use App\Http\Controllers\Cascading\MisiController;
+use App\Http\Controllers\Cascading\MisiMenpanController;
 use App\Http\Controllers\Cascading\TujuanController;
+use App\Http\Controllers\Cascading\TujuanMenpanController;
 use App\Http\Controllers\Cascading\TujuanIndikatorController;
+use App\Http\Controllers\Cascading\TujuanMenpanIndikatorController;
 use App\Http\Controllers\Cascading\TujuanNilaiController;
+use App\Http\Controllers\Cascading\TujuanMenpanNilaiController;
 use App\Http\Controllers\Cascading\SasaranController;
 use App\Http\Controllers\Cascading\SasaranIndikatorController;
 use App\Http\Controllers\Cascading\SasaranNilaiController;
@@ -110,21 +115,42 @@ Route::get('/visi', function () {
     return view('cascading.visi.index');
 })->name('visi');
 
+Route::get('/visi_menpan', function () {
+    return view('cascading.visi_menpan.index');
+})->name('visi_menpan');
+
 Route::get('/misi', function () {
     return view('cascading.misi.index');
 })->name('misi');
+
+Route::get('/misi_menpan', function () {
+    return view('cascading.misi_menpan.index');
+})->name('misi_menpan');
+
 
 Route::get('/tujuan', function () {
     return view('cascading.tujuan.index');
 })->name('tujuan');
 
+Route::get('/tujuan_menpan', function () {
+    return view('cascading.tujuan_menpan.index');
+})->name('tujuan_menpan');
+
 Route::get('/tujuan_indikator', function () {
     return view('cascading.tujuan_indikator.index');
 })->name('tujuan_indikator');
 
+Route::get('/tujuan_menpan_indikator', function () {
+    return view('cascading.tujuan_menpan_indikator.index');
+})->name('tujuan_menpan_indikator');
+
 Route::get('/tujuan_nilai', function () {
     return view('cascading.tujuan_nilai.index');
-})->name('tujuan_nilai');
+})->name('tujuan_menpan_nilai');
+
+Route::get('/tujuan_menpan_nilai', function () {
+    return view('cascading.tujuan_menpan_nilai.index');
+})->name('tujuan_menpan_nilai');
 
 Route::get('/sasaran', function () {
     return view('cascading.sasaran.index');
@@ -367,15 +393,33 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::post('visi/api', [VisiController::class, 'api'])->name('visi.api');
             Route::resource('visi', VisiController::class);
 
+            Route::post('visi_menpan/api', [VisiMenpanController::class, 'api_visi_menpan'])->name('visi_menpan.api');
+            Route::resource('visi_menpan', VisiMenpanController::class);
+
             Route::post('misi/api', [MisiController::class, 'api'])->name('misi.api');
             Route::resource('misi', MisiController::class);
 
+            Route::post('misi_menpan/api', [MisiMenpanController::class, 'api_misi_menpan'])->name('misi_menpan.api');
+            Route::resource('misi_menpan', MisiMenpanController::class);
+
             Route::post('tujuan/api', [TujuanController::class, 'api'])->name('tujuan.api');
             Route::resource('tujuan', TujuanController::class);
+
+            Route::post('tujuan_menpan/api', [TujuanMenpanController::class, 'api_tujuan_menpan'])->name('tujuan_menpan.api');
+            Route::resource('tujuan_menpan', TujuanMenpanController::class);
+
             Route::post('tujuan_indikator/api', [TujuanIndikatorController::class, 'api'])->name('tujuan_indikator.api');
             Route::resource('tujuan_indikator', TujuanIndikatorController::class);
+
+            Route::post('tujuan_menpan_indikator/api', [TujuanMenpanIndikatorController::class, 'api_tujuan_menpan_indikator'])->name('tujuan_menpan_indikator.api');
+            Route::resource('tujuan_menpan_indikator', TujuanMenpanIndikatorController::class);
+
             Route::post('tujuan_nilai/api', [TujuanNilaiController::class, 'api'])->name('tujuan_nilai.api');
             Route::resource('tujuan_nilai', TujuanNilaiController::class);
+
+
+            Route::post('tujuan_menpan_nilai/api', [TujuanMenpanNilaiController::class, 'api_tujuan_menpan_nilai'])->name('tujuan_menpan_nilai.api');
+            Route::resource('tujuan_menpan_nilai', TujuanMenpanNilaiController::class);
 
             Route::post('sasaran/api', [SasaranController::class, 'api'])->name('sasaran.api');
             Route::resource('sasaran', SasaranController::class);
