@@ -30,8 +30,11 @@ use App\Http\Controllers\Cascading\TujuanMenpanIndikatorController;
 use App\Http\Controllers\Cascading\TujuanNilaiController;
 use App\Http\Controllers\Cascading\TujuanMenpanNilaiController;
 use App\Http\Controllers\Cascading\SasaranController;
+use App\Http\Controllers\Cascading\SasaranMenpanController;
 use App\Http\Controllers\Cascading\SasaranIndikatorController;
+use App\Http\Controllers\Cascading\SasaranMenpanIndikatorController;
 use App\Http\Controllers\Cascading\SasaranNilaiController;
+use App\Http\Controllers\Cascading\SasaranMenpanNilaiController;
 use App\Http\Controllers\Cascading\UrusanController;
 use App\Http\Controllers\Cascading\UrusanOpdController;
 use App\Http\Controllers\Cascading\UrusanOpdIndikatorController;
@@ -156,13 +159,25 @@ Route::get('/sasaran', function () {
     return view('cascading.sasaran.index');
 })->name('sasaran');
 
+Route::get('/sasaran_menpan', function () {
+    return view('cascading.sasaran_menpan.index');
+})->name('sasaran_menpan');
+
 Route::get('/sasaran_indikator', function () {
     return view('cascading.sasaran_indikator.index');
 })->name('sasaran_indikator');
 
+Route::get('/sasaran_menpan_indikator', function () {
+    return view('cascading.sasaran_menpan_indikator.index');
+})->name('sasaran_menpan_indikator');
+
 Route::get('/sasaran_nilai', function () {
     return view('cascading.sasaran_nilai.index');
 })->name('sasaran_nilai');
+
+Route::get('/sasaran_menpan_nilai', function () {
+    return view('cascading.sasaran_menpan_nilai.index');
+})->name('sasaran_menpan_nilai');
 
 Route::get('/urusan', function () {
     return view('cascading.urusan.index');
@@ -423,10 +438,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('sasaran/api', [SasaranController::class, 'api'])->name('sasaran.api');
             Route::resource('sasaran', SasaranController::class);
+
+            Route::post('sasaran_menpan/api', [SasaranMenpanController::class, 'api_sasaran_menpan'])->name('sasaran_menpan.api');
+            Route::resource('sasaran_menpan', SasaranMenpanController::class);
+
             Route::post('sasaran_indikator/api', [SasaranIndikatorController::class, 'api'])->name('sasaran_indikator.api');
             Route::resource('sasaran_indikator', SasaranIndikatorController::class);
+
+            Route::post('sasaran_menpan_indikator/api', [SasaranMenpanIndikatorController::class, 'api_sasaran_menpan_indikator'])->name('sasaran_menpan_indikator.api');
+            Route::resource('sasaran_menpan_indikator', SasaranMenpanIndikatorController::class);
+
             Route::post('sasaran_nilai/api', [SasaranNilaiController::class, 'api'])->name('sasaran_nilai.api');
             Route::resource('sasaran_nilai', SasaranNilaiController::class);
+
+            Route::post('sasaran_menpan_nilai/api', [SasaranMenpanNilaiController::class, 'api_sasaran_menpan_nilai'])->name('sasaran_menpan_nilai.api');
+            Route::resource('sasaran_menpan_nilai', SasaranMenpanNilaiController::class);
 
             Route::post('urusan/api', [UrusanController::class, 'api'])->name('urusan.api');
             Route::resource('urusan', UrusanController::class);

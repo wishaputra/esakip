@@ -14,9 +14,9 @@ use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 
-class SasaranIndikatorController extends Controller
+class SasaranMenpanIndikatorController extends Controller
 {
-    public function api(Request $request)
+    public function api_sasaran_menpan_indikator(Request $request)
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $sasaran_indikator   = Model_Sasaran_Indikator::whereid_sasaran($request->id_sasaran)->get();
@@ -24,17 +24,17 @@ class SasaranIndikatorController extends Controller
         return DataTables::of($sasaran_indikator)
             ->addColumn('sasaran_nilai_count', function ($p) {
                 $count = $p->sasaran_nilai->count();
-                return "<a  href='".route('setup.sasaran_nilai.index')."?id_indikator=".$p->id."'  title='Nilai Sasaran'>".$count."</a>";
+                return "<a  href='".route('setup.sasaran_menpan_nilai.index')."?id_indikator=".$p->id."'  title='Nilai Sasaran'>".$count."</a>";
             })
             ->addColumn('action', function ($p) {
                 return "
-                    <a  href='#' onclick='edit(" . $p->id . ")' title='Edit'><i class='icon-pencil mr-1'></i></a>
-                    <a href='#' onclick='remove(" . $p->id . ")' class='text-danger' title='Hapus'><i class='icon-remove'></i></a>";
+                    <a href='#' class='text-secondary' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' class='text-secondary' title='Hapus'><i class='icon-remove'></i></a>";
             })
             ->rawColumns(['sasaran_nilai_count', 'action'])
             ->toJson();
     }
-    
+   
     public function index(Request $request)
     {
         $id_sasaran = $request->id_sasaran;
@@ -45,7 +45,7 @@ class SasaranIndikatorController extends Controller
         $sasaran = Model_Sasaran::whereid($id_sasaran)->get();
     
 
-        return view('cascading.sasaran_indikator.index', compact('sasaran', 'id_sasaran'));
+        return view('cascading.sasaran_menpan_indikator.index', compact('sasaran', 'id_sasaran'));
     }
 
 
