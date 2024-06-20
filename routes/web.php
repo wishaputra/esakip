@@ -77,6 +77,7 @@ use App\Http\Controllers\Cascading\SubKegiatanMenpanIndikatorController;
 use App\Http\Controllers\Cascading\SubKegiatanNilaiController;
 use App\Http\Controllers\Cascading\SubKegiatanMenpanNilaiController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostMenpanController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
 use App\Http\Controllers\Section\IntroController;
@@ -432,6 +433,9 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('posts/api', [PostController::class, 'api'])->name('posts.api');
     Route::resource('posts', PostController::class);
+
+    Route::post('posts_menpan/api', [PostMenpanController::class, 'api_post_menpan'])->name('posts_menpan.api');
+    Route::resource('posts_menpan', PostMenpanController::class);
 
     Route::post('inbox/api', [InboxController::class, 'api'])->name('inbox.api');
     Route::get('inbox/count', [InboxController::class, 'countI'])->name('inbox.count');

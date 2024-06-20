@@ -210,8 +210,8 @@
 @endrole
 
 @if (Auth::user()->role == 'Menpan')
-    <!-- <li>
-        <a href="{{ route('posts.index') }}">
+    <li>
+        <a href="{{ route('posts_menpan.index') }}">
             <i class="icon s-18 icon-web pink-text "></i> <span>Page</span>
         </a>
 
@@ -270,7 +270,7 @@
     <ul class="treeview-menu ">
                 <li>
                     <a href="{{ route('setup.menu.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Menu</span></a>
-                </li> -->
+                </li>
 
                 <li class="treeview">
                     <a href="#">
