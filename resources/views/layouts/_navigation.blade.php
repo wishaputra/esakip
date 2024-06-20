@@ -269,7 +269,7 @@
 
     <ul class="treeview-menu ">
                 <li>
-                    <a href="{{ route('setup.menu.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Menu</span></a>
+                    <a href="{{ route('setup.menu_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Menu</span></a>
                 </li>
 
                 <li class="treeview">

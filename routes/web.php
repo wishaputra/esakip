@@ -22,6 +22,7 @@ use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MenuMenpanController;
 use App\Http\Controllers\Cascading\VisiController;
 use App\Http\Controllers\Cascading\VisiMenpanController;
 use App\Http\Controllers\Cascading\MisiController;
@@ -89,9 +90,11 @@ use App\Http\Controllers\Section\ServiceController;
 use App\Http\Controllers\Section\VideoController;
 use App\Http\Controllers\Section\SliderController;
 use App\Http\Controllers\SubMenuController;
+use App\Http\Controllers\SubMenuMenpanController;
 use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
+use App\Http\Controllers\SubMenu2MenpanController;
 use App\Http\Controllers\TextContentController;
 use App\Models\Cascading\Model_Tujuan;
 use App\Models\Cascading\Model_Sasaran;
@@ -641,11 +644,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::post('menu/api', [MenuController::class, 'api'])->name('menu.api');
         Route::resource('menu', MenuController::class);
 
+        Route::post('menu_menpan/api', [MenuMenpanController::class, 'api_menu_menpan'])->name('menu_menpan.api');
+        Route::resource('menu_menpan', MenuMenpanController::class);
+        
         Route::post('submenu/api', [SubMenuController::class, 'api'])->name('submenu.api');
         Route::resource('submenu', SubMenuController::class);
+
+        Route::post('submenu_menpan/api', [SubMenuMenpanController::class, 'api_submenu_menpan'])->name('submenu_menpan.api');
+        Route::resource('submenu_menpan', SubMenuMenpanController::class);
+
         Route::post('submenu2/api', [SubMenu2Controller::class, 'api'])->name('submenu2.api');
         Route::resource('submenu2', SubMenu2Controller::class);
 
+        Route::post('submenu2_menpan/api', [SubMenu2MenpanController::class, 'api_submenu2_menpan'])->name('submenu2_menpan.api');
+        Route::resource('submenu2_menpan', SubMenu2MenpanController::class);
+        
         Route::prefix('section')->name('section.')->group(function () {
             Route::get('intro', [IntroController::class, 'index'])->name('intro.index');
             Route::patch('intro/{intro}', [IntroController::class, 'update'])->name('intro.update');
