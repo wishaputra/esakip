@@ -212,7 +212,7 @@
         serverSide: true,
         order: [2, 'asc'],
         ajax: {
-            url: "{{ route('setup.front_menpan.api') }}",
+            url: "{{ route('setup.front.api') }}",
             method: 'POST'
         },
         columns: [

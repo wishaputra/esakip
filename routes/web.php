@@ -17,6 +17,7 @@ use App\Http\Controllers\Section\DownloadMenpanController;
 use App\Http\Controllers\TreeviewController;
 use App\Http\Controllers\FooterController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\FrontMenpanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
@@ -724,6 +725,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::post('front/api', [FrontController::class, 'api'])->name('front.api');
         Route::resource('front', FrontController::class);
+
+        Route::post('front_menpan/api', [FrontMenpanController::class, 'api_front_menpan'])->name('front_menpan.api');
+        Route::resource('front_menpan', FrontMenpanController::class);
 
         Route::resource('logo', LogoController::class);
 

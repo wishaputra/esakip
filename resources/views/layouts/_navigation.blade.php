@@ -312,7 +312,7 @@
                         </a>
                     </ul>
                 <li>
-                <a href="{{ route('setup.front.index') }}">
+                <a href="{{ route('setup.front_menpan.index') }}">
                     <i class="icon icon-layers s-16 indigo-text"></i> <span>Front End</span>
                 </a>
 
