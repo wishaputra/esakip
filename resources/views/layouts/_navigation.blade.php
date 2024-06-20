@@ -304,7 +304,7 @@
                         <a href="{{ route('setup.program_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
                         </a>
-                        <a href="{{ route('setup.kegiatan.index') }}">
+                        <a href="{{ route('setup.kegiatan_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
                         </a>
                         <a href="{{ route('setup.sub_kegiatan.index') }}">

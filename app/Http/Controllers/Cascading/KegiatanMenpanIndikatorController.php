@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Http\Controllers\Cascading;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Cascading\Model_Visi;
+use App\Models\Cascading\Model_Misi;
+use App\Models\Cascading\Model_Kegiatan;
+use App\Models\Cascading\Model_Kegiatan_Indikator;
+use App\Models\Cascading\Model_program;
+use Illuminate\Http\Request;
+use yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+
+class KegiatanMenpanIndikatorController extends Controller
+{
+    public function api_kegiatan_menpan_indikator(Request $request)
+    {
+        // $visi   = Model_Visi::find($request->id_visi)->misi;
+        $kegiatan_indikator   = Model_Kegiatan_Indikator::whereid_kegiatan($request->id_kegiatan)->get();
+        return DataTables::of($kegiatan_indikator)
+            ->addColumn('kegiatan_nilai_count', function ($p) {
+                $count = $p->kegiatan_nilai->count();
+                return "<a  href='".route('setup.kegiatan_menpan_nilai.index')."?id_indikator_kegiatan=".$p->id."'  title='Nilai Kegiatan'>".$count."</a>";
+            })
+            ->addColumn('action', function ($p) {
+                return "
+                    <a href='#' class='text-secondary' title='Edit'><i class='icon-pencil mr-1'></i></a>
+                    <a href='#' class='text-secondary' title='Hapus'><i class='icon-remove'></i></a>";
+            })
+            ->rawColumns(['kegiatan_nilai_count', 'action'])
+            ->toJson();
+    }
+    
+    public function index(Request $request)
+    {
+        $id_kegiatan = $request->id_kegiatan;
+        if (!$id_kegiatan || !Model_kegiatan::whereid($id_kegiatan)->first()) {
+            return redirect()->route('setup.kegiatan.index');
+        }
+
+      
+        $kegiatan = Model_kegiatan::whereid($id_kegiatan)->get();
+        
+        return view('cascading.kegiatan_menpan_indikator.index', compact('kegiatan','id_kegiatan'));
+    }
+
+    
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // dd($request->file('file_kmz')->getMimeType());
+        $request->validate([
+            "id_kegiatan" => 'required',
+            "indikator" => 'required',
+        ]);
+
+        Model_Kegiatan_indikator::create([
+            "id_kegiatan" => $request->id_kegiatan,
+            "indikator" => $request->indikator,
+            "creator" => Auth::user()->id,
+        ]);
+        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+    }
+
+    
+    public function show($id)
+    {
+        //
+    }
+
+
+    public function edit($id)
+    {
+        return Model_Kegiatan::find($id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $misi  = Model_Kegiatan_indikator::find($id);
+        $rule = [
+            "kegiatan" => 'required',
+            "indikator" => 'required',
+        ];
+
+        $request->validate($rule);
+
+        $misi->update([
+            "kegiatan" => $request->tujuan,
+            "indikator" => $request->indikator,
+            "creator" => Auth::user()->id,
+        ]);
+        return response()->json(["message" => "Berhasil merubah data!"], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $id)
+{
+    $misi  = Model_Kegiatan::find($id);
+
+    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
+        $count = $misi->tujuan->count();
+    } else {
+        $count = 0;
+    }
+
+    if ($count > 0) {
+        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
+    }
+
+    $misi->delete();
+    return response()->json(["message" => "Berhasil menghapus data!"], 200);
+}
+}

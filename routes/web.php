@@ -65,8 +65,11 @@ use App\Http\Controllers\Cascading\ProgramMenpanIndikatorController;
 use App\Http\Controllers\Cascading\ProgramNilaiController;
 use App\Http\Controllers\Cascading\ProgramMenpanNilaiController;
 use App\Http\Controllers\Cascading\KegiatanController;
+use App\Http\Controllers\Cascading\KegiatanMenpanController;
 use App\Http\Controllers\Cascading\KegiatanIndikatorController;
+use App\Http\Controllers\Cascading\KegiatanMenpanIndikatorController;
 use App\Http\Controllers\Cascading\KegiatanNilaiController;
+use App\Http\Controllers\Cascading\KegiatanMenpanNilaiController;
 use App\Http\Controllers\Cascading\SubKegiatanController;
 use App\Http\Controllers\Cascading\SubKegiatanIndikatorController;
 use App\Http\Controllers\Cascading\SubKegiatanNilaiController;
@@ -582,10 +585,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('kegiatan/api', [KegiatanController::class, 'api'])->name('kegiatan.api');
             Route::resource('kegiatan', KegiatanController::class);
+
+            Route::post('kegiatan_menpan/api', [KegiatanMenpanController::class, 'api_kegiatan_menpan'])->name('kegiatan_menpan.api');
+            Route::resource('kegiatan_menpan', KegiatanMenpanController::class);
+
             Route::post('kegiatan_indikator/api', [KegiatanIndikatorController::class, 'api'])->name('kegiatan_indikator.api');
             Route::resource('kegiatan_indikator', KegiatanIndikatorController::class);
+
+            Route::post('kegiatan_menpan_indikator/api', [KegiatanMenpanIndikatorController::class, 'api_kegiatan_menpan_indikator'])->name('kegiatan_menpan_indikator.api');
+            Route::resource('kegiatan_menpan_indikator', KegiatanMenpanIndikatorController::class);
+
             Route::post('kegiatan_nilai/api', [KegiatanNilaiController::class, 'api'])->name('kegiatan_nilai.api');
             Route::resource('kegiatan_nilai', KegiatanNilaiController::class);
+
+            Route::post('kegiatan_menpan_nilai/api', [KegiatanMenpanNilaiController::class, 'api_kegiatan_menpan_nilai'])->name('kegiatan_menpan_nilai.api');
+            Route::resource('kegiatan_menpan_nilai', KegiatanMenpanNilaiController::class);
 
             Route::post('sub_kegiatan/api', [SubKegiatanController::class, 'api'])->name('sub_kegiatan.api');
             Route::resource('sub_kegiatan', SubKegiatanController::class);
