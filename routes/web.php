@@ -45,6 +45,7 @@ use App\Http\Controllers\Cascading\UrusanMenpanNilaiController;
 use App\Http\Controllers\Cascading\UrusanIndikatorController;
 use App\Http\Controllers\Cascading\UrusanNilaiController;
 use App\Http\Controllers\Cascading\PerangkatDaerahController;
+use App\Http\Controllers\Cascading\PerangkatDaerahMenpanController;
 use App\Http\Controllers\Cascading\TujuanRenstraController;
 use App\Http\Controllers\Cascading\TujuanRenstraIndikatorController;
 use App\Http\Controllers\Cascading\TujuanRenstraNilaiController;
@@ -222,6 +223,10 @@ Route::get('/urusan_nilai', function () {
 Route::get('/perangkat_daerah', function () {
     return view('cascading.perangkat_daerah.index');
 })->name('perangkat_daerah');
+
+Route::get('/perangkat_daerah_menpan', function () {
+    return view('cascading.perangkat_daerah_menpan.index');
+})->name('perangkat_daerah_menpan');
 
 Route::get('/tujuan_renstra', function () {
     return view('cascading.tujuan_renstra.index');
@@ -496,6 +501,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('perangkat_daerah/api', [PerangkatDaerahController::class, 'api'])->name('perangkat_daerah.api');
             Route::resource('perangkat_daerah', PerangkatDaerahController::class);
+
+            Route::post('perangkat_daerah_menpan/api', [PerangkatDaerahMenpanController::class, 'api_perangkat_daerah_menpan'])->name('perangkat_daerah_menpan.api');
+            Route::resource('perangkat_daerah_menpan', PerangkatDaerahMenpanController::class);
 
             Route::post('tujuan_renstra/api', [TujuanRenstraController::class, 'api'])->name('tujuan_renstra.api');
             Route::resource('tujuan_renstra', TujuanRenstraController::class);
