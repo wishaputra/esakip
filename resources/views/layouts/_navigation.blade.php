@@ -301,7 +301,7 @@
                         <a href="{{ route('setup.sasaran_renstra_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sasaran Renstra</span>
                         </a>
-                        <a href="{{ route('setup.program.index') }}">
+                        <a href="{{ route('setup.program_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Program</span>
                         </a>
                         <a href="{{ route('setup.kegiatan.index') }}">
