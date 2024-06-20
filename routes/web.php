@@ -53,8 +53,11 @@ use App\Http\Controllers\Cascading\TujuanRenstraMenpanIndikatorController;
 use App\Http\Controllers\Cascading\TujuanRenstraNilaiController;
 use App\Http\Controllers\Cascading\TujuanRenstraMenpanNilaiController;
 use App\Http\Controllers\Cascading\SasaranRenstraController;
+use App\Http\Controllers\Cascading\SasaranRenstraMenpanController;
 use App\Http\Controllers\Cascading\SasaranRenstraIndikatorController;
+use App\Http\Controllers\Cascading\SasaranRenstraMenpanIndikatorController;
 use App\Http\Controllers\Cascading\SasaranRenstraNilaiController;
+use App\Http\Controllers\Cascading\SasaranRenstraMenpanNilaiController;
 use App\Http\Controllers\Cascading\ProgramController;
 use App\Http\Controllers\Cascading\ProgramIndikatorController;
 use App\Http\Controllers\Cascading\ProgramNilaiController;
@@ -540,10 +543,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('sasaran_renstra/api', [SasaranRenstraController::class, 'api'])->name('sasaran_renstra.api');
             Route::resource('sasaran_renstra', SasaranRenstraController::class);
+
+            Route::post('sasaran_renstra_menpan/api', [SasaranRenstraMenpanController::class, 'api_sasaran_renstra_menpan'])->name('sasaran_renstra_menpan.api');
+            Route::resource('sasaran_renstra_menpan', SasaranRenstraMenpanController::class);
+
             Route::post('sasaran_renstra_indikator/api', [SasaranRenstraIndikatorController::class, 'api'])->name('sasaran_renstra_indikator.api');
             Route::resource('sasaran_renstra_indikator', SasaranRenstraIndikatorController::class);
+
+            Route::post('sasaran_renstra_menpan_indikator/api', [SasaranRenstraMenpanIndikatorController::class, 'api_sasaran_renstra_menpan_indikator'])->name('sasaran_renstra_menpan_indikator.api');
+            Route::resource('sasaran_renstra_menpan_indikator', SasaranRenstraMenpanIndikatorController::class);
+
             Route::post('sasaran_renstra_nilai/api', [SasaranRenstraNilaiController::class, 'api'])->name('sasaran_renstra_nilai.api');
             Route::resource('sasaran_renstra_nilai', SasaranRenstraNilaiController::class);
+
+            Route::post('sasaran_renstra_menpan_nilai/api', [SasaranRenstraMenpanNilaiController::class, 'api_sasaran_renstra_menpan_nilai'])->name('sasaran_renstra_menpan_nilai.api');
+            Route::resource('sasaran_renstra_menpan_nilai', SasaranRenstraMenpanNilaiController::class);
 
             Route::post('program/api', [ProgramController::class, 'api'])->name('program.api');
             Route::resource('program', ProgramController::class);
