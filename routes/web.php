@@ -47,8 +47,11 @@ use App\Http\Controllers\Cascading\UrusanNilaiController;
 use App\Http\Controllers\Cascading\PerangkatDaerahController;
 use App\Http\Controllers\Cascading\PerangkatDaerahMenpanController;
 use App\Http\Controllers\Cascading\TujuanRenstraController;
+use App\Http\Controllers\Cascading\TujuanRenstraMenpanController;
 use App\Http\Controllers\Cascading\TujuanRenstraIndikatorController;
+use App\Http\Controllers\Cascading\TujuanRenstraMenpanIndikatorController;
 use App\Http\Controllers\Cascading\TujuanRenstraNilaiController;
+use App\Http\Controllers\Cascading\TujuanRenstraMenpanNilaiController;
 use App\Http\Controllers\Cascading\SasaranRenstraController;
 use App\Http\Controllers\Cascading\SasaranRenstraIndikatorController;
 use App\Http\Controllers\Cascading\SasaranRenstraNilaiController;
@@ -232,13 +235,25 @@ Route::get('/tujuan_renstra', function () {
     return view('cascading.tujuan_renstra.index');
 })->name('tujuan_renstra');
 
+Route::get('/tujuan_renstra_menpan', function () {
+    return view('cascading.tujuan_renstra_menpan.index');
+})->name('tujuan_renstra_menpan');
+
 Route::get('/tujuan_renstra_indikator', function () {
     return view('cascading.tujuan_renstra_indikator.index');
 })->name('tujuan_renstra_indikator');
 
+Route::get('/tujuan_renstra_menpan_indikator', function () {
+    return view('cascading.tujuan_renstra_menpan_indikator.index');
+})->name('tujuan_renstra_menpan_indikator');
+
 Route::get('/tujuan_renstra_nilai', function () {
     return view('cascading.tujuan_renstra_nilai.index');
 })->name('tujuan_renstra_nilai');
+
+Route::get('/tujuan_renstra_menpan_nilai', function () {
+    return view('cascading.tujuan_renstra_menpan_nilai.index');
+})->name('tujuan_renstra_menpan_nilai');
 
 Route::get('/tujuan-nodes', function () {
     $tujuanNodes = Model_Tujuan::all();
@@ -507,10 +522,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('tujuan_renstra/api', [TujuanRenstraController::class, 'api'])->name('tujuan_renstra.api');
             Route::resource('tujuan_renstra', TujuanRenstraController::class);
+
+            Route::post('tujuan_renstra_menpan/api', [TujuanRenstraMenpanController::class, 'api_tujuan_renstra_menpan'])->name('tujuan_renstra_menpan.api');
+            Route::resource('tujuan_renstra_menpan', TujuanRenstraMenpanController::class);
+
             Route::post('tujuan_renstra_indikator/api', [TujuanRenstraIndikatorController::class, 'api'])->name('tujuan_renstra_indikator.api');
             Route::resource('tujuan_renstra_indikator', TujuanRenstraIndikatorController::class);
+
+            Route::post('tujuan_renstra_menpan_indikator/api', [TujuanRenstraMenpanIndikatorController::class, 'api_tujuan_renstra_menpan_indikator'])->name('tujuan_renstra_menpan_indikator.api');
+            Route::resource('tujuan_renstra_menpan_indikator', TujuanRenstraMenpanIndikatorController::class);
+            
             Route::post('tujuan_renstra_nilai/api', [TujuanRenstraNilaiController::class, 'api'])->name('tujuan_renstra_nilai.api');
             Route::resource('tujuan_renstra_nilai', TujuanRenstraNilaiController::class);
+
+            Route::post('tujuan_renstra_menpan_nilai/api', [TujuanRenstraMenpanNilaiController::class, 'api_tujuan_renstra_menpan_nilai'])->name('tujuan_renstra_menpan_nilai.api');
+            Route::resource('tujuan_renstra_menpan_nilai', TujuanRenstraMenpanNilaiController::class);
 
             Route::post('sasaran_renstra/api', [SasaranRenstraController::class, 'api'])->name('sasaran_renstra.api');
             Route::resource('sasaran_renstra', SasaranRenstraController::class);

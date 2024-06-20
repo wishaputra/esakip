@@ -295,7 +295,7 @@
                         <a href="{{ route('setup.perangkat_daerah_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Perangkat Daerah</span>
                         </a>
-                        <a href="{{ route('setup.tujuan_renstra.index') }}">
+                        <a href="{{ route('setup.tujuan_renstra_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Tujuan Renstra</span>
                         </a>
                         <a href="{{ route('setup.sasaran_renstra.index') }}">
