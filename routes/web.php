@@ -9,7 +9,9 @@ use App\Http\Controllers\DiagramController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\BusinessMenpanController;
 use App\Http\Controllers\CategoryBusinessController;
+use App\Http\Controllers\CategoryBusinessMenpanController;
 use App\Http\Controllers\Section\DownloadController;
 use App\Http\Controllers\TreeviewController;
 use App\Http\Controllers\FooterController;
@@ -452,6 +454,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::post('list/api', [BusinessController::class, 'api'])->name('list.api');
         Route::resource('list', BusinessController::class);
+    });
+
+    Route::prefix('business_menpan')->name('business_menpan.')->group(function () {
+        Route::post('category/api', [CategoryBusinessMenpanController::class, 'api_category_menpan'])->name('category_menpan.api');
+        Route::resource('category', CategoryBusinessMenpanController::class);
+
+        Route::post('list/api', [BusinessMenpanController::class, 'api_list_menpan'])->name('list_menpan.api');
+        Route::resource('list', BusinessMenpanController::class);
     });
 
     Route::middleware('auth')->prefix('setup')->name('setup.')->group(function () {

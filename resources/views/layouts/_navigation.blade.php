@@ -239,13 +239,13 @@
         <ul class="treeview-menu ">
 
             <li>
-                <a href="{{ route('business.category.index') }}">
+                <a href="{{ route('business_menpan.category.index') }}">
                     <i class="icon icon-minus s-14 text-blue"></i> <span>Category</span>
                 </a>
 
             </li>
             <li>
-                <a href="{{ route('business.list.index') }}">
+                <a href="{{ route('business_menpan.list.index') }}">
                     <i class="icon icon-minus s-14 text-blue"></i> <span>List</span>
                 </a>
 
