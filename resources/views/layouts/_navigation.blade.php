@@ -307,7 +307,7 @@
                         <a href="{{ route('setup.kegiatan_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Kegiatan</span>
                         </a>
-                        <a href="{{ route('setup.sub_kegiatan.index') }}">
+                        <a href="{{ route('setup.sub_kegiatan_menpan.index') }}">
                             <i class="icon icon-circle-o s-14 text-blue"></i> <span>Sub Kegiatan</span>
                         </a>
                     </ul>
