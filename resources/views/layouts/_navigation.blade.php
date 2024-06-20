@@ -255,7 +255,7 @@
 
     <li>
 
-        <a href="{{ route('setup.section.download.index') }}">
+        <a href="{{ route('setup.section.download_menpan.index') }}">
             <i class="icon s-18 icon-download text-blue"></i> <span>File Download</span>
         </a>
 

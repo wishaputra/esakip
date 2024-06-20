@@ -13,6 +13,7 @@ use App\Http\Controllers\BusinessMenpanController;
 use App\Http\Controllers\CategoryBusinessController;
 use App\Http\Controllers\CategoryBusinessMenpanController;
 use App\Http\Controllers\Section\DownloadController;
+use App\Http\Controllers\Section\DownloadMenpanController;
 use App\Http\Controllers\TreeviewController;
 use App\Http\Controllers\FooterController;
 use App\Http\Controllers\FrontController;
@@ -679,6 +680,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('download/api', [DownloadController::class, 'api'])->name('download.api');
             Route::resource('download', DownloadController::class);
+
+            Route::post('download_menpan/api', [DownloadMenpanController::class, 'api_download_menpan'])->name('download_menpan.api');
+            Route::resource('download_menpan', DownloadMenpanController::class);
             
             Route::get('/treeview', [TreeviewController::class, 'index'])->name('treeview.index');
             Route::get('/treeview', [TreeviewController::class, 'index'])->name('treeview');
