@@ -90,6 +90,7 @@ use App\Http\Controllers\Section\IntroController;
 use App\Http\Controllers\Section\IntroMenpanController;
 use App\Http\Controllers\Section\PricingController;
 use App\Http\Controllers\Section\ServiceController;
+use App\Http\Controllers\Section\ServiceMenpanController;
 use App\Http\Controllers\Section\VideoController;
 use App\Http\Controllers\Section\SliderController;
 use App\Http\Controllers\Section\SliderMenpanController;
@@ -678,6 +679,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('service/api', [ServiceController::class, 'api'])->name('service.api');
             Route::resource('service', ServiceController::class)->parameters([
+                'service' => 'service'
+            ]);
+            Route::post('service_menpan/api', [ServiceMenpanController::class, 'api_service_menpan'])->name('service_menpan.api');
+            Route::resource('service_menpan', ServiceMenpanController::class)->parameters([
                 'service' => 'service'
             ]);
             Route::post('video/api', [VideoController::class, 'api'])->name('video.api');
