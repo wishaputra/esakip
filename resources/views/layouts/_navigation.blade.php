@@ -324,11 +324,11 @@
             </a>
             <ul class="treeview-menu">
                 <li>
-                    <a href="{{ route('setup.section.slider.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Slider</span></a>
+                    <a href="{{ route('setup.section.slider_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Slider</span></a>
                 </li>
                 
                 <li>
-                    <a href="{{ route('setup.section.intro.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Intro</span></a>
+                    <a href="{{ route('setup.section.intro_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Intro</span></a>
                 </li>
                 <li>
                     <a href="{{ route('setup.section.client.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Client</span></a>

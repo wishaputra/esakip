@@ -86,10 +86,12 @@ use App\Http\Controllers\PostMenpanController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ContactController;
 use App\Http\Controllers\Section\IntroController;
+use App\Http\Controllers\Section\IntroMenpanController;
 use App\Http\Controllers\Section\PricingController;
 use App\Http\Controllers\Section\ServiceController;
 use App\Http\Controllers\Section\VideoController;
 use App\Http\Controllers\Section\SliderController;
+use App\Http\Controllers\Section\SliderMenpanController;
 use App\Http\Controllers\SubMenuController;
 use App\Http\Controllers\SubMenuMenpanController;
 use App\Http\Controllers\Section\TestimoniController;
@@ -663,6 +665,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::prefix('section')->name('section.')->group(function () {
             Route::get('intro', [IntroController::class, 'index'])->name('intro.index');
             Route::patch('intro/{intro}', [IntroController::class, 'update'])->name('intro.update');
+            
+            Route::get('intro_menpan', [IntroMenpanController::class, 'index_menpan'])->name('intro_menpan.index');
+            Route::patch('intro_menpan/{intro}', [IntroMenpanController::class, 'update'])->name('intro.update');
 
             Route::post('client/api', [ClientController::class, 'api'])->name('client.api');
             Route::resource('client', ClientController::class);
@@ -691,6 +696,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             ]);
             Route::post('slider/api', [SliderController::class, 'api'])->name('slider.api');
             Route::resource('slider', SliderController::class);
+
+            Route::post('slider_menpan/api', [SliderMenpanController::class, 'api_slider_menpan'])->name('slider_menpan.api');
+            Route::resource('slider_menpan', SliderMenpanController::class);
 
             Route::post('download/api', [DownloadController::class, 'api'])->name('download.api');
             Route::resource('download', DownloadController::class);
