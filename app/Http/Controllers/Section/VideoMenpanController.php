@@ -4,21 +4,19 @@ namespace App\Http\Controllers\Section;
 
 use App\Http\Controllers\Controller;
 use App\Models\Section\Client;
-use App\Models\Section\Service;
+use App\Models\Section\Video;
 use App\Models\TextContent;
 use Illuminate\Http\Request;
 use Storage;
 use Yajra\DataTables\DataTables;
 
-class ServiceMenpanController extends Controller
+class VideoMenpanController extends Controller
 {
-    protected $route  = "setup.section.service.";
-    public function api_service_menpan()
+    protected $route  = "setup.section.video.";
+    public function api_video_menpan()
     {
-        $service = Service::orderBy('order', 'ASC')->get();
-        
-        return DataTables::of($service)
-
+        $video = Video::orderBy('order', 'ASC')->get();
+        return DataTables::of($video)
             ->editColumn('icon', function ($p) {
                 return "<i class='".$p->icon."'></i>";
             })
@@ -33,11 +31,11 @@ class ServiceMenpanController extends Controller
     
     public function index()
     {
-        $title = "Service";
+        $title = "Video";
         $route = $this->route;
-        $txt = TextContent::whereid(2)->first();
+        $txt = TextContent::whereid(14)->first();
         
-        return view('section.service_menpan.index', compact('title', 'route', 'txt'));
+        return view('section.video_menpan.index', compact('title', 'route', 'txt'));
     }
 
     
@@ -57,32 +55,29 @@ class ServiceMenpanController extends Controller
         $request->validate([
             "nama" => 'required',
             "order" => 'required|numeric',
-           
             "deskripsi" => 'required',
-            "icon" => 'required',
+            "link" => 'required',
         ]);
-
         
-
-        Service::create([
+        Video::create([
             "nama" => $request->nama,
             "order" => $request->order,
             "deskripsi" => $request->deskripsi,
-            "icon" => $request->icon,
+            "link" => $request->link,
            
         ]);
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 
     
-    public function show(Service $service)
+    public function show(Video $video)
     {
     }
 
-    
-    public function edit(Service $service)
+   
+    public function edit(Video $video)
     {
-        return $service;
+        return $video;
     }
 
     /**
@@ -92,24 +87,21 @@ class ServiceMenpanController extends Controller
      * @param  \App\Models\Section\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, Video $video)
     {
         $request->validate([
             "nama" => 'required',
             "order" => 'required|numeric',
-           
             "deskripsi" => 'required',
-            "icon" => 'required',
+            "link" => 'required',
             
         ]);
 
-        
-
-        $service->update([
+        $video->update([
             "nama" => $request->nama,
             "order" => $request->order,
             "deskripsi" => $request->deskripsi,
-            "icon" => $request->icon,
+            "link" => $request->link,
            
         ]);
         return response()->json(["message" => "Berhasil merubah data!"], 200);
@@ -121,9 +113,9 @@ class ServiceMenpanController extends Controller
      * @param  \App\Models\Section\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(Video $video)
     {
-        $service->delete();
+        $video->delete();
         return response()->json(["message" => "Berhasil menghapus data!"], 200);
     }
 }

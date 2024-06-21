@@ -89,14 +89,17 @@ use App\Http\Controllers\Section\ContactController;
 use App\Http\Controllers\Section\IntroController;
 use App\Http\Controllers\Section\IntroMenpanController;
 use App\Http\Controllers\Section\PricingController;
+use App\Http\Controllers\Section\PricingMenpanController;
 use App\Http\Controllers\Section\ServiceController;
 use App\Http\Controllers\Section\ServiceMenpanController;
 use App\Http\Controllers\Section\VideoController;
+use App\Http\Controllers\Section\VideoMenpanController;
 use App\Http\Controllers\Section\SliderController;
 use App\Http\Controllers\Section\SliderMenpanController;
 use App\Http\Controllers\SubMenuController;
 use App\Http\Controllers\SubMenuMenpanController;
 use App\Http\Controllers\Section\TestimoniController;
+use App\Http\Controllers\Section\TestimoniMenpanController;
 use App\Http\Controllers\Section\TeamController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\SubMenu2MenpanController;
@@ -689,11 +692,21 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::resource('video', VideoController::class)->parameters([
                 'video' => 'video'
             ]);
+            Route::post('video_menpan/api', [VideoMenpanController::class, 'api_video_menpan'])->name('video_menpan.api');
+            Route::resource('video_menpan', VideoMenpanController::class)->parameters([
+                'video' => 'video'
+            ]);
             Route::post('pricing/api', [PricingController::class, 'api'])->name('pricing.api');
             Route::resource('pricing', PricingController::class);
 
+            Route::post('pricing_menpan/api', [PricingMenpanController::class, 'api_pricing_menpan'])->name('pricing_menpan.api');
+            Route::resource('pricing_menpan', PricingMenpanController::class);
+
             Route::post('testimoni/api', [TestimoniController::class, 'api'])->name('testimoni.api');
             Route::resource('testimoni', TestimoniController::class);
+
+            Route::post('testimoni_menpan/api', [TestimoniMenpanController::class, 'api_testimoni_menpan'])->name('testimoni_menpan.api');
+            Route::resource('testimoni_menpan', TestimoniMenpanController::class);
 
             Route::post('team/api', [TeamController::class, 'api'])->name('team.api');
             Route::resource('team', TeamController::class);

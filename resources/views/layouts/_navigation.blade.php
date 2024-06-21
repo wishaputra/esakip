@@ -337,13 +337,13 @@
                     <a href="{{ route('setup.section.service_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Service</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.video.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Video</span></a>
+                    <a href="{{ route('setup.section.video_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Video</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.pricing.index') }}"><i class="icon icon-minus  s-14 text-blue"></i> <span>Pricing</span></a>
+                    <a href="{{ route('setup.section.pricing_menpan.index') }}"><i class="icon icon-minus  s-14 text-blue"></i> <span>Pricing</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.testimoni.index') }}"><i class="icon icon-minus  s-14 text-blue"></i> <span>Testimoni</span></a>
+                    <a href="{{ route('setup.section.testimoni_menpan.index') }}"><i class="icon icon-minus  s-14 text-blue"></i> <span>Testimoni</span></a>
                 </li>
                 <li>
                     <a href="{{ route('setup.section.team.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>About Team</span></a>
