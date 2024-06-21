@@ -9,6 +9,9 @@
 @endpush
 
 @section('content')
+
+
+
 <div class="page has-sidebar-left bg-light">
     <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
@@ -24,12 +27,12 @@
                 <ul class="nav responsive-tab nav-material nav-material-white" id="v-pills-tab">
                     <li>
                         <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1">
-                            <i class="icon icon-list"></i>Semua Data</a>
+                            <i class="icon icon-list"></i>Semua User</a>
                     </li>
-                    {{-- <li>
+                    <!-- <li>
                         <a class="nav-link " onclick="add()" href="#">
-                            <i class="icon icon-plus-circle"></i>Tambah Data</a>
-                    </li> --}}
+                            <i class="icon icon-plus-circle"></i>Tambah User</a>
+                    </li> -->
 
 
                 </ul>
@@ -50,15 +53,16 @@
 
                             </div>
                             <div class="card-body">
-                                <table class="table" id="menu-table">
+                                <table class="table" id="user-table">
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">Name</td>
-                                            <td>Order</td>
-                                            <td>File Section</td>
-                                            <td>Status</td>
-
+                                            <td width="20%">Nama</td>
+                                            <td width="20%">Username</td>
+                                            <td width="20%">Email</td>
+                                            <td width="20%">No. Telp</td>
+                                            <td>Perangkat Daerah</td>
+                                            <td>Role</td>
                                             <td width="10%">Aksi</td>
                                         </tr>
                                     </thead>
@@ -69,8 +73,13 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+
+
+
+
         </div>
     </div>
 </div>
@@ -91,37 +100,59 @@
                     {{ method_field('POST') }}
                     @csrf
                     <input type="hidden" name="id" id="id">
-
-
-                    
-                        
+                    <div class="form-row">
+                        <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Name</label>
+                                <label for="" class="col-form-label">Nama</label>
                                 <input type="text" name="name" id="name" class="form-control">
                             </div>
-                        
-                        
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Order</label>
-                                <input type="text" name="order" id="order" class="form-control">
+                                <label for="" class="col-form-label">Username</label>
+                                <input type="text" name="username" id="username" class="form-control">
                             </div>
-                        
-                       
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">File Section</label>
-                                <input type="text" name="file_section" id="file_section" disabled  class="form-control">
+                                <label for="" class="col-form-label">Password</label>
+                                <input type="password" name="password" id="password" class="form-control">
                             </div>
-                       
-                      
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
+                                <label for="" class="col-form-label">Email</label>
+                                <input type="email" name="email" id="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">No. Telp</label>
+                                <input type="number" name="telp" id="telp" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Perangkat Daerah</label>
+                                <select name="id_opd" id="id_opd" class="form-control">
+                                    <option value="">Pilih</option>
+                                    @foreach ($opd as $item)
+                                        <option value="{{ $item->id }}">{{ $item->perangkat_daerah }}</option>
+                                    @endforeach
                                 </select>
-                                
                             </div>
-            </div>
+                        </div>
+                        <div class="col-md-4">
+    <div class="form-group col-md-12">
+        <label for="" class="col-form-label">Role</label>
+        <select name="role" id="role" class="form-control">
+            <option value="">Pilih</option>
+            <option value="Super Admin">Super Admin</option>
+            <option value="Admin Perangkat Daerah">Admin Perangkat Daerah</option>
+            <option value="Menpan">Menpan</option>
+        </select>
+    </div>
+</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 <button type="submit" id="action" class="btn btn-primary tButton">Simpan</button>
@@ -143,25 +174,28 @@
         $('.modal-title').html('Tambah Data')
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
-        $('#nama').focus();
+        $('#name').focus();
     }
     
     function edit(id){
         save_method = 'edit';
         $('#alert').html('');
         $('#form').trigger('reset');
-        
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.front.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.user.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
             $('#name').val(data.name).focus();
-            $('#order').val(data.order);
-            $('#file_section').val(data.file_section);
-            $('#status').val(data.status);
+            $('#username').val(data.username);
+            $('#password').val(data.password);
+            $('#email').val(data.email);
+            $('#telp').val(data.telp);
+            $('#id_opd').val(data.id_opd);
+            $('#role').val(data.role);
             $('#form-modal').modal('show');
-        }, "JSON").fail(function(){ 
+        }, "JSON").fail(function(){
+            reload();
         });
     }
    
@@ -173,7 +207,7 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.front.store') }}" : "{{ route('setup.front.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route('setup.user.store') }}" : "{{ route('setup.user.update', ':id') }}".replace(':id', $('#id').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -207,38 +241,39 @@
         $(this).addClass('was-validated');
     });
 
-    var table = $('#menu-table').dataTable({
-        processing: true,
-        serverSide: true,
-        order: [2, 'asc'],
-        ajax: {
-            url: "{{ route('setup.front_menpan.api') }}",
-            method: 'POST'
-        },
-        columns: [
-            {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'name', name: 'name'},
-            {data: 'order', name: 'order'},
-            {data: 'file_section', name: 'file_section'},
-            {data: 'status', name: 'status'},
-            
-            {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
-        ]
-    });
+    var table = $('#user-table').dataTable({
+    processing: true,
+    serverSide: true,
+    order: [2, 'asc'],
+    ajax: {
+        url: "{{ route('setup.user_menpan.api') }}",
+        method: 'POST'
+    },
+    columns: [
+        {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
+        {data: 'name', name: 'name'},
+        {data: 'username', name: 'username'},
+        {data: 'email', name: 'email'},
+        {data: 'telp', name: 'telp'},
+        {data: 'perangkat_daerah', name: 'perangkat_daerah'},  // Updated column name
+        {data: 'role', name: 'role'},       
+        {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+    ]
+});
 
-    table.on('draw.dt', function(){
-        var PageInfo = $('#menu-table').DataTable().page.info();
-        table.api().column(0, {page: 'current'}).nodes().each(function (cell, i){
-            cell.innerHTML = i + 1 + PageInfo.start;
-        });
-        $("a.group").fancybox({
-		'transitionIn'	:	'elastic',
-		'transitionOut'	:	'elastic',
-		'speedIn'		:	600, 
-		'speedOut'		:	200, 
-		'overlayShow'	:	false
-	});
+table.on('draw.dt', function(){
+    var PageInfo = $('#user-table').DataTable().page.info();
+    table.api().column(0, {page: 'current'}).nodes().each(function (cell, i){
+        cell.innerHTML = i + 1 + PageInfo.start;
     });
+    $("a.group").fancybox({
+        'transitionIn' : 'elastic',
+        'transitionOut': 'elastic',
+        'speedIn'      : 600, 
+        'speedOut'     : 200, 
+        'overlayShow'  : false
+    });
+});
 
         function remove(id){
         $.confirm({
@@ -255,7 +290,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.front.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route('setup.user.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',

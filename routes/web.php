@@ -8,6 +8,7 @@ use App\Http\Controllers\NodeController;
 use App\Http\Controllers\DiagramController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BlogMenpanController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessMenpanController;
 use App\Http\Controllers\CategoryBusinessController;
@@ -16,12 +17,15 @@ use App\Http\Controllers\Section\DownloadController;
 use App\Http\Controllers\Section\DownloadMenpanController;
 use App\Http\Controllers\TreeviewController;
 use App\Http\Controllers\FooterController;
+use App\Http\Controllers\FooterMenpanController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\FrontMenpanController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LogoController;
+use App\Http\Controllers\LogoMenpanController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserMenpanController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuMenpanController;
 use App\Http\Controllers\Cascading\VisiController;
@@ -86,6 +90,7 @@ use App\Http\Controllers\PostMenpanController;
 use App\Http\Controllers\Section\ClientController;
 use App\Http\Controllers\Section\ClientMenpanController;
 use App\Http\Controllers\Section\ContactController;
+use App\Http\Controllers\Section\ContactMenpanController;
 use App\Http\Controllers\Section\IntroController;
 use App\Http\Controllers\Section\IntroMenpanController;
 use App\Http\Controllers\Section\PricingController;
@@ -101,6 +106,7 @@ use App\Http\Controllers\SubMenuMenpanController;
 use App\Http\Controllers\Section\TestimoniController;
 use App\Http\Controllers\Section\TestimoniMenpanController;
 use App\Http\Controllers\Section\TeamController;
+use App\Http\Controllers\Section\TeamMenpanController;
 use App\Http\Controllers\SubMenu2Controller;
 use App\Http\Controllers\SubMenu2MenpanController;
 use App\Http\Controllers\TextContentController;
@@ -460,6 +466,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         'blog' => 'post'
     ]);
 
+    Route::post('blog_menpan/api', [BlogMenpanController::class, 'api_blog_menpan'])->name('blog_menpan.api');
+    Route::resource('blog_menpan', BlogMenpanController::class)->parameters([
+        'blog' => 'post'
+    ]);
+
     Route::prefix('business')->name('business.')->group(function () {
         Route::post('category/api', [CategoryBusinessController::class, 'api'])->name('category.api');
         Route::resource('category', CategoryBusinessController::class);
@@ -711,7 +722,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::post('team/api', [TeamController::class, 'api'])->name('team.api');
             Route::resource('team', TeamController::class);
 
+            Route::post('team_menpan/api', [TeamMenpanController::class, 'api_team_menpan'])->name('team_menpan.api');
+            Route::resource('team_menpan', TeamMenpanController::class);
+
             Route::resource('contact', ContactController::class);
+
+            Route::resource('contact_menpan', ContactMenpanController::class);
 
             Route::resource('textcontent', TextContentController::class)->parameters([
                 'textcontent' => 'textcontent'
@@ -738,12 +754,18 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 
         Route::post('footer/api_link', [FooterController::class, 'api_link'])->name('footer.api_link');
+
+        Route::post('footer_menpan/api_link_menpan', [FooterMenpanController::class, 'api_link_menpan'])->name('footer.api_link_menpan');
+
         Route::post('footer/link', [FooterController::class, 'link_store'])->name('footer.link_store');
         Route::get('footer/{id}/link', [FooterController::class, 'link_edit'])->name('footer.link_edit');
         Route::patch('footer/link/{id}', [FooterController::class, 'link_patch'])->name('footer.link_patch');
         Route::delete('footer/link/{id}', [FooterController::class, 'link_destroy'])->name('footer.link_destroy');
 
         Route::post('footer/api_social', [FooterController::class, 'api_social'])->name('footer.api_social');
+
+        Route::post('footer_menpan/api_social_menpan', [FooterMenpanController::class, 'api_social_menpan'])->name('footer.api_social_menpan');
+
         Route::post('footer/social', [FooterController::class, 'social_store'])->name('footer.social_store');
         Route::get('footer/{id}/social', [FooterController::class, 'social_edit'])->name('footer.social_edit');
         Route::patch('footer/social/{id}', [FooterController::class, 'social_patch'])->name('footer.social_patch');
@@ -751,6 +773,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 
         Route::resource('footer', FooterController::class);
+
+        Route::resource('footer_menpan', FooterMenpanController::class);
 
 
         Route::post('front/api', [FrontController::class, 'api'])->name('front.api');
@@ -761,8 +785,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::resource('logo', LogoController::class);
 
+        Route::resource('logo_menpan', LogoMenpanController::class);
+
         Route::post('user/api', [UserController::class, 'api'])->name('user.api');
         Route::resource('user', UserController::class);
+
+        Route::post('user_menpan/api', [UserMenpanController::class, 'api_user_menpan'])->name('user_menpan.api');
+        Route::resource('user_menpan', UserMenpanController::class);
     });
 });
 

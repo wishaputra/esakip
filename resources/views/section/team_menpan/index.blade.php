@@ -9,6 +9,9 @@
 @endpush
 
 @section('content')
+
+
+
 <div class="page has-sidebar-left bg-light">
     <header class="blue accent-3 relative nav-sticky">
         <div class="container-fluid text-white">
@@ -26,10 +29,10 @@
                         <a class="nav-link active" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1">
                             <i class="icon icon-list"></i>Semua Data</a>
                     </li>
-                    {{-- <li>
+                    <!-- <li>
                         <a class="nav-link " onclick="add()" href="#">
                             <i class="icon icon-plus-circle"></i>Tambah Data</a>
-                    </li> --}}
+                    </li> -->
 
 
                 </ul>
@@ -44,6 +47,33 @@
 
                 <div class="row">
 
+                    <div class="col-md-6 offset-3">
+                        <div class="card mb-3 mt-3 shadow r-0">
+
+                            <div class="card-body">
+                                <form class="needs-validation" id="form2" method="POST" autocomplete="off" novalidate>
+                                    {{ method_field('PATCH') }}
+                                    @csrf
+                                    <input type="hidden" name="id" id="id_txt" value="{{ $txt->id }}">
+                                    <div class="form-group col-md-12">
+                                        <label for="" class="col-form-label">Title</label>
+                                        <input readonly type="text" name="title" id="title" class="form-control"
+                                            value="{{ $txt->title }}">
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="" class="col-form-label">Description</label>
+                                        <textarea readonly name="description" id="" cols="30" rows="3" class="form-control">{{ $txt->description }}</textarea>
+                                    </div>
+                                    
+                                    <button type="submit" id="action" class="btn btn-primary tButton float-right" disabled>Simpan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+
                     <div class="col-md-12">
                         <div class="card mb-3 mt-3 shadow r-0">
                             <div class="card-header white">
@@ -54,10 +84,12 @@
                                     <thead>
                                         <tr>
                                             <td>#</td>
-                                            <td width="20%">Name</td>
-                                            <td>Order</td>
-                                            <td>File Section</td>
-                                            <td>Status</td>
+                                            <td>Urutan</td>
+                                            <td>Nama</td>
+                                            <td>Jabatan</td>
+                                            <td>Facebook</td>
+                                            <td>twitter</td>
+                                            <td>Poto</td>
 
                                             <td width="10%">Aksi</td>
                                         </tr>
@@ -69,15 +101,20 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+
+
+
+
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="form-modalLabel"></h5>
@@ -92,35 +129,57 @@
                     @csrf
                     <input type="hidden" name="id" id="id">
 
+                    <div class="form-row">
+                        
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">No Urut</label>
+                                <input type="number" name="order" id="order" class="form-control">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Nama</label>
+                                <input type="text" name="nama" id="nama" class="form-control">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Jabatan</label>
 
-                    
-                        
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Name</label>
-                                <input type="text" name="name" id="name" class="form-control">
+                                <input type="text" name="jabatan" id="jabatan" value="" placeholder=""
+                                    class="form-control">
                             </div>
-                        
-                        
                             <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Order</label>
-                                <input type="text" name="order" id="order" class="form-control">
+                                <label for="" class="col-form-label">Facebook Link</label>
+
+                                <input type="text" name="facebook_link" id="facebook_link" value="" placeholder=""
+                                    class="form-control">
                             </div>
-                        
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Twitter Link</label>
+
+                                <input type="text" name="twitter_link" id="twitter_link" value="" placeholder=""
+                                    class="form-control">
+                            </div>
+                            
+
+                            <div class="form-group col-md-12">
+                                <label for="" class="col-form-label">Photo</label>
+                                <img  id="frm_photo" style="display: none" width="100px" src="">
+                                <input type="file" name="poto" id="poto" placeholder="" class="form-control">
+                                <small class="text-danger" id="ket_photo" style="display: none">*Abaikan jika tidak ingin mengganti photo</small>
+                            </div>
+                           
                        
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">File Section</label>
-                                <input type="text" name="file_section" id="file_section" disabled  class="form-control">
-                            </div>
-                       
-                      
-                            <div class="form-group col-md-12">
-                                <label for="" class="col-form-label">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
-                                
-                            </div>
+                        
+                    </div>
+
+                  
+
+
+
+
+
+
+
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -138,12 +197,19 @@
 <script>
     function add(){
         $('#alert').html('');
+        
         save_method = "add";
         $('#form').trigger('reset');
         $('.modal-title').html('Tambah Data')
         $('input[name=_method]').val('POST');
         $('#form-modal').modal('show');
         $('#nama').focus();
+        $('#frm_photo').hide();
+        $('#ket_photo').hide();
+        
+        
+            
+       
     }
     
     function edit(id){
@@ -153,17 +219,33 @@
         
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
+        $('#ket_photo').show();
+        
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.front.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route($route.'edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#name').val(data.name).focus();
+            $('#nama').val(data.nama).focus();
+            $('#jabatan').val(data.jabatan);
+            $('#facebook_link').val(data.facebook_link);
+            $('#twitter_link').val(data.twitter_link);
             $('#order').val(data.order);
-            $('#file_section').val(data.file_section);
-            $('#status').val(data.status);
+            
+            
+            
+
+            $('#frm_photo').show();
+            $('#frm_photo').attr('src','{{URL::to("/")}}'+'/'+data.poto);
+          
+           
             $('#form-modal').modal('show');
-        }, "JSON").fail(function(){ 
+        }, "JSON").fail(function(){
+            reload();
         });
+
+       
+        
     }
+
    
     $('#form').on('submit', function (a) {
         if ($(this)[0].checkValidity() === false) {
@@ -173,7 +255,48 @@
             $('#alert').html('');
             $('#action').attr('disabled', true);
 
-            url = (save_method == 'add') ? "{{ route('setup.front.store') }}" : "{{ route('setup.front.update', ':id') }}".replace(':id', $('#id').val());
+            url = (save_method == 'add') ? "{{ route($route.'store') }}" : "{{ route($route.'update', ':id') }}".replace(':id', $('#id').val());
+            $.ajax({
+                url : url,
+                type : 'POST',
+                data: new FormData($(this)[0]),
+                contentType: false,
+                processData: false,
+                success : function(data) {
+                    $('#alert').html("<div role='alert' class='alert alert-success alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>Success!</strong> " + data.message + "</div>");
+                    table.api().ajax.reload();
+                    $.alert({
+                            title: 'Success!',
+                            type: 'green',
+                            content: data.message,
+                        });
+                    $('#form-modal').modal('hide');
+                },
+                error : function(data){
+                    err = ''; respon = data.responseJSON;
+                    $.each(respon.errors, function(index, value){
+                        err += "<li>" + value +"</li>";
+                    });
+                    $('#alert').html("<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>Error!</strong> " + respon.message + "<ol class='pl-3 m-0'>" + err + "</ol></div>");
+                },
+                complete : function(data){
+                    $('#action').removeAttr('disabled');
+                }
+            });
+          
+            return false;
+        }
+        $(this).addClass('was-validated');
+    });
+    $('#form2').on('submit', function (a) {
+        if ($(this)[0].checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }else{
+            $('#alert').html('');
+            $('#action').attr('disabled', true);
+
+            url =  "{{ route('setup.section.textcontent.update', ':id') }}".replace(':id', $('#id_txt').val());
             $.ajax({
                 url : url,
                 type : 'POST',
@@ -210,17 +333,21 @@
     var table = $('#menu-table').dataTable({
         processing: true,
         serverSide: true,
-        order: [2, 'asc'],
+        order: [1, 'asc'],
         ajax: {
-            url: "{{ route('setup.front_menpan.api') }}",
+            url: "{{ route('setup.section.team_menpan.api') }}",
             method: 'POST'
         },
         columns: [
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
-            {data: 'name', name: 'name'},
             {data: 'order', name: 'order'},
-            {data: 'file_section', name: 'file_section'},
-            {data: 'status', name: 'status'},
+            {data: 'nama', name: 'nama'},
+            {data: 'jabatan', name: 'jabatan'},
+            {data: 'facebook_link', name: 'facebook_link'},
+            {data: 'twitter_link', name: 'twitter_link'},
+            {data: 'poto', name: 'poto'},
+           
+            
             
             {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
         ]
@@ -240,6 +367,8 @@
 	});
     });
 
+    
+
         function remove(id){
         $.confirm({
             title: '',
@@ -255,7 +384,7 @@
                     btnClass: 'btn-primary',
                     keys: ['enter'],
                     action: function(){
-                        $.post("{{ route('setup.front.destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
+                        $.post("{{ route($route.'destroy', ':id') }}".replace(':id', id), {'_method' : 'DELETE'}, function(data) {
                             table.api().ajax.reload();
                             $.alert({
                                 title: 'Success!',
@@ -276,5 +405,7 @@
             }
         });
     }
+
+  
 </script>
 @endpush

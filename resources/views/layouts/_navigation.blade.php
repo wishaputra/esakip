@@ -346,26 +346,26 @@
                     <a href="{{ route('setup.section.testimoni_menpan.index') }}"><i class="icon icon-minus  s-14 text-blue"></i> <span>Testimoni</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.team.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>About Team</span></a>
+                    <a href="{{ route('setup.section.team_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>About Team</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.contact.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Contact</span></a>
+                    <a href="{{ route('setup.section.contact_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Contact</span></a>
                 </li>
             </ul>
 
         </li>
         <li>
-            <a href="{{ route('setup.footer.index') }}">
+            <a href="{{ route('setup.footer_menpan.index') }}">
                 <i class="icon  s-16 icon-chevron-circle-down red-text"></i> <span>Footer</span>
             </a>
         </li>
         <li>
-            <a href="{{ route('setup.logo.index') }}">
+            <a href="{{ route('setup.logo_menpan.index') }}">
                 <i class="icon  s-16 icon-image red-text"></i> <span>Logo</span>
             </a>
         </li>
         <li>
-            <a href="{{ route('setup.user.index') }}">
+            <a href="{{ route('setup.user_menpan.index') }}">
                 <i class="icon  s-16 icon-user blue-text"></i> <span>Manajemen User</span>
             </a>
         </li>
