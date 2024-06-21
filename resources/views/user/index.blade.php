@@ -149,7 +149,6 @@
             <option value="">Pilih</option>
             <option value="Super Admin">Super Admin</option>
             <option value="Admin Perangkat Daerah">Admin Perangkat Daerah</option>
-            <option value="Menpan">Menpan</option>
         </select>
     </div>
 </div>

@@ -39,6 +39,7 @@ class User extends Authenticatable implements JWTSubject
         'id_opd',
         'telp',
         'username',
+        'NIK',
         'name',
         'email',
         'password',

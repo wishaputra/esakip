@@ -56,15 +56,15 @@
                                     <input type="hidden" name="id" id="id_txt" value="{{ $txt->id }}">
                                     <div class="form-group col-md-12">
                                         <label for="" class="col-form-label">Title</label>
-                                        <input type="text" name="title" id="title" class="form-control"
+                                        <input readonly type="text" name="title" id="title" class="form-control"
                                             value="{{ $txt->title }}">
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label for="" class="col-form-label">Description</label>
-                                        <textarea name="description" id="" cols="30" rows="3"
+                                        <textarea readonly name="description" id="" cols="30" rows="3"
                                             class="form-control">{{ $txt->description }}</textarea>
                                     </div>
-
+                                    <button type="submit" id="action" class="btn btn-primary tButton float-right" disabled>Simpan</button>
                                     
                                 </form>
                             </div>
