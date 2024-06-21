@@ -331,7 +331,7 @@
                     <a href="{{ route('setup.section.intro_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Intro</span></a>
                 </li>
                 <li>
-                    <a href="{{ route('setup.section.client.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Client</span></a>
+                    <a href="{{ route('setup.section.client_menpan.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Client</span></a>
                 </li>
                 <li>
                     <a href="{{ route('setup.section.service.index') }}"><i class="icon icon-minus s-14 text-blue"></i> <span>Service</span></a>

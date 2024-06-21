@@ -84,6 +84,7 @@ use App\Http\Controllers\Cascading\SubKegiatanMenpanNilaiController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostMenpanController;
 use App\Http\Controllers\Section\ClientController;
+use App\Http\Controllers\Section\ClientMenpanController;
 use App\Http\Controllers\Section\ContactController;
 use App\Http\Controllers\Section\IntroController;
 use App\Http\Controllers\Section\IntroMenpanController;
@@ -671,6 +672,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('client/api', [ClientController::class, 'api'])->name('client.api');
             Route::resource('client', ClientController::class);
+
+            Route::post('client_menpan/api', [ClientMenpanController::class, 'api_client_menpan'])->name('client_menpan.api');
+            Route::resource('client_menpan', ClientMenpanController::class);
 
             Route::post('service/api', [ServiceController::class, 'api'])->name('service.api');
             Route::resource('service', ServiceController::class)->parameters([
