@@ -217,7 +217,7 @@
 
     </li>
     <li>
-        <a href="{{ route('blog.index') }}">
+        <a href="{{ route('blog2.index') }}">
             <i class="icon s-18 icon-notebook2 amber-text"></i> <span>Blog</span>
         </a>
 

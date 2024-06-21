@@ -8,7 +8,7 @@ use App\Http\Controllers\NodeController;
 use App\Http\Controllers\DiagramController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\BlogMenpanController;
+use App\Http\Controllers\Blog2Controller;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\BusinessMenpanController;
 use App\Http\Controllers\CategoryBusinessController;
@@ -466,9 +466,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         'blog' => 'post'
     ]);
 
-    Route::post('blog_menpan/api', [BlogMenpanController::class, 'api_blog_menpan'])->name('blog_menpan.api');
-    Route::resource('blog_menpan', BlogMenpanController::class)->parameters([
-        'blog' => 'post'
+    Route::post('blog2/api', [Blog2Controller::class, 'api2'])->name('blog2.api');
+    Route::resource('blog2', Blog2Controller::class)->parameters([
+        'blog2' => 'posts2'
     ]);
 
     Route::prefix('business')->name('business.')->group(function () {
