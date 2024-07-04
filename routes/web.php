@@ -144,8 +144,8 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], func
 
 Route::get('/getMisiByTahun/{id}', [TujuanController::class, 'getMisiByTahun'])->name('getMisiByTahun');
 Route::get('/get-tujuan-by-tahun/{id}', [SasaranController::class, 'getTujuanByTahun'])->name('getTujuanByTahun');
-Route::get('/get-sasaran-urusan-by-tahun/{id}', [UrusanController::class,'getSasaranUrusanByTahun'])->name('getSasaranUrusanByTahun');
-Route::get('/get-sasaran-by-tahun/{id}', [TujuanRenstraController::class,'getSasaranByTahun'])->name('getSasaranByTahun');
+Route::get('/get-sasaran-by-tahun/{id}', [UrusanController::class,'getSasaranByTahun'])->name('getSasaranByTahun');
+Route::get('/get-urusan-by-tahun/{id}', [TujuanRenstraController::class,'getUrusanByTahun'])->name('getUrusanByTahun');
 Route::get('/getTujuanRenstraByTahun/{id}', [SasaranRenstraController::class,'getTujuanRenstraByTahun'])->name('getTujuanRenstraByTahun');
 Route::get('/get-sasaran-renstra-by-tahun/{id}', [ProgramController::class,'getSasaranRenstraByTahun'])->name('getSasaranRenstraByTahun');
 Route::get('/get-program-by-tahun/{id}', [KegiatanController::class,'getProgramByTahun'])->name('getProgramByTahun');

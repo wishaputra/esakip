@@ -169,7 +169,7 @@ $(document).ready(function() {
         var tahunId = $(this).val();
         if (tahunId) {
             $.ajax({
-                url: '{{ route("getSasaranByTahun", ":id") }}'.replace(':id', tahunId),
+                url: '{{ route("getUrusanByTahun", ":id") }}'.replace(':id', tahunId),
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {

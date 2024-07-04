@@ -101,7 +101,7 @@ class SubKegiatanIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_SubKegiatan::find($id);
+        return Model_SubKegiatan_Indikator::find($id);
     }
 
     /**

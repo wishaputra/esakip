@@ -101,7 +101,7 @@ class KegiatanIndikatorController extends Controller
      */
     public function edit($id)
     {
-        return Model_Kegiatan::find($id);
+        return Model_Kegiatan_Indikator::find($id);
     }
 
     /**
@@ -137,7 +137,7 @@ class KegiatanIndikatorController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Kegiatan::find($id);
+    $misi  = Model_Kegiatan_Indikator::find($id);
 
     if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
         $count = $misi->tujuan->count();

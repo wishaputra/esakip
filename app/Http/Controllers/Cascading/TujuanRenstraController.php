@@ -38,7 +38,7 @@ class TujuanRenstraController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function getSasaranByTahun($id)
+     public function getUrusanByTahun($id)
 {
     $urusan = Model_Urusan::where('id_visi', $id)->get();
     return response()->json($urusan->pluck('urusan', 'id'));

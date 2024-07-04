@@ -139,20 +139,20 @@ class TujuanRenstraIndikatorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
-{
-    $misi  = Model_Tujuan_Renstra::find($id);
-
-    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
-        $count = $misi->tujuan->count();
-    } else {
-        $count = 0;
+    {
+        $tujuan_renstra  = Model_tujuan_renstra_indikator::find($id);
+    
+        if ($tujuan_renstra && $tujuan_renstra->indikator && is_iterable($tujuan_renstra->indikator)) {
+            $count = $tujuan_renstra->indikator->count();
+        } else {
+            $count = 0;
+        }
+    
+        if ($count > 0) {
+            return response()->json(["message" => "<center>Hapus Urusan terlebih dahulu</center>"], 500);
+        }
+    
+        $tujuan_renstra->delete();
+        return response()->json(["message" => "Berhasil menghapus data!"], 200);
     }
-
-    if ($count > 0) {
-        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
-    }
-
-    $misi->delete();
-    return response()->json(["message" => "Berhasil menghapus data!"], 200);
-}
 }

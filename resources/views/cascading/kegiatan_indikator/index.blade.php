@@ -163,12 +163,9 @@
         $('.modal-title').html("Edit Data");
         $('#reset').hide();
         $('input[name=_method]').val('PATCH');
-        $.get("{{ route('setup.kegiatan.edit', ':id') }}".replace(':id', id), function(data){
+        $.get("{{ route('setup.kegiatan_indikator.edit', ':id') }}".replace(':id', id), function(data){
             $('#id').val(data.id);
-            $('#tahun').val(data.tahun_awal);
-            $('#id_program').val(data.id_program);
-            $('#kode_kegiatan').val(data.kode_kegiatan).focus();
-            $('#kegiatan').val(data.kegiatan).focus();
+            $('#indikator').val(data.indikator).focus();
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();

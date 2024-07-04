@@ -101,11 +101,11 @@
                         <input type="hidden" name="id_program" value="{{ $item->id }}"> <!-- Add this line to include the id_sasaran field -->
                         @break
                     @endforeach
-                </div>
+                    </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
-                                <label for="indikator" class="col-form-label">Indikator</label>
-                                <textarea name="indikator" id="indikator" class="form-control" rows="2"></textarea>
+                                <label for="indikator" class="col-form-label">indikator</label>
+                                <textarea name="indikator" id="indikator" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
 
