@@ -60,6 +60,7 @@
                                             <td>Satuan</td>
                                             <td>Tahun</td>
                                             <td>Triwulan</td>
+                                            <td>Pagu</td>
                                             <td>Target</td>
                                             <td>capaian</td>
                                             <td width="10%">Aksi</td>
@@ -144,6 +145,12 @@
 
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
+                                <label for="pagu" class="col-form-label">Nilai Pagu</label>
+                                <input type="text" name="pagu" id="pagu" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
                                 <label for="target" class="col-form-label">target</label>
                                 <textarea name="target" id="target" class="form-control" rows="3"></textarea>
                             </div>
@@ -191,9 +198,10 @@
             $('#id').val(data.id);
             $('#satuan').val(data.satuan);
             $('#tahun').val(data.tahun).focus();
-            $('#triwulan').val(data.tahun).focus();
-            $('#target').val(data.target).focus();
-            $('#capaian').val(data.capaian).focus();
+            $('#triwulan').val(data.tahun);
+            $('#pagu').val(data.pagu);
+            $('#target').val(data.target);
+            $('#capaian').val(data.capaian);
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -259,6 +267,7 @@
             {data: 'satuan', name: 'satuan'},
             {data: 'tahun', name: 'tahun'},
             {data: 'triwulan', name: 'triwulan'},
+            {data: 'pagu', name: 'pagu'},
             {data: 'target', name: 'target'},
             {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            

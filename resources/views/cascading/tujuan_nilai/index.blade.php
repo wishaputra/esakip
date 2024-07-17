@@ -59,6 +59,7 @@
                                         <td width="15%">#</td>
                                             <td>satuan</td>
                                             <td>tahun</td>
+                                            <td>pagu</td>
                                             <td>target</td>
                                             <td>capaian</td>
                                             <td width="10%">Aksi</td>
@@ -113,7 +114,13 @@
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="tahun" class="col-form-label">tahun</label>
-                                <textarea name="tahun" id="tahun" class="form-control" rows="3"></textarea>
+                                <input type="text" name="tahun" id="tahun" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-12">
+                                <label for="pagu" class="col-form-label">Nilai Pagu</label>
+                                <input type="text" name="pagu" id="pagu" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -180,8 +187,9 @@
             $('#id').val(data.id);
             $('#satuan').val(data.satuan);
             $('#tahun').val(data.tahun).focus();
-            $('#target').val(data.target).focus();
-            $('#capaian').val(data.capaian).focus();
+            $('#pagu').val(data.pagu);
+            $('#target').val(data.target);
+            $('#capaian').val(data.capaian);
             $('#form-modal').modal('show');
         }, "JSON").fail(function(){
             reload();
@@ -246,6 +254,7 @@
             {data: 'id', name: 'id', orderable: false, searchable: false, align: 'center', className: 'text-center'},
             {data: 'satuan', name: 'satuan'},
             {data: 'tahun', name: 'tahun'},
+            {data: 'pagu', name: 'pagu'},
             {data: 'target', name: 'target'},
             {data: 'capaian', name: 'capaian'},
             // {data: 'submenu_count', name: 'submenu_count'},            
