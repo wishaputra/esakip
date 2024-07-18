@@ -83,11 +83,14 @@ class SubKegiatanNilaiController extends Controller
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "triwulan" => $request->triwulan,
-            "pagu" => $request->triwulan,
+            "pagu" => $request->pagu,
             "target" => $request->target,
             "capaian" => $request->target,
             "creator" => Auth::user()->id,
         ]);
+
+        // Model_Kegiatan_Nilai::find($id)->update(["pagu" => $request->pagu]);
+        
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 

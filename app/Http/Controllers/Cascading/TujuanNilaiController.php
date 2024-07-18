@@ -49,7 +49,7 @@ class TujuanNilaiController extends Controller
             "id_indikator_tujuan" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
-            "pagu" => 'required',
+            // "pagu" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -58,7 +58,7 @@ class TujuanNilaiController extends Controller
             "id_indikator_tujuan" => $request->id_indikator_tujuan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
-            "pagu" => $request->pagu,
+            // "pagu" => $request->pagu,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
@@ -83,7 +83,7 @@ class TujuanNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
-            "pagu" => 'required',
+            // "pagu" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -94,7 +94,7 @@ class TujuanNilaiController extends Controller
             "id_tujuan_tujuan" => $request->id_tujuan_tujuan,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
-            "pagu" => $request->pagu,
+            // "pagu" => $request->pagu,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,

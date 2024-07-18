@@ -55,7 +55,7 @@ class SasaranNilaiController extends Controller
             "id_indikator_sasaran" => 'required',
             "satuan" => 'required',
             "tahun" => 'required',
-            "pagu" => 'required',
+            // "pagu" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
@@ -64,7 +64,7 @@ class SasaranNilaiController extends Controller
             "id_indikator_sasaran" => $request->id_indikator_sasaran,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
-            "pagu" => $request->tahun,
+            // "pagu" => $request->tahun,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
@@ -89,7 +89,7 @@ class SasaranNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
-            "pagu" => 'required',
+            // "pagu" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ];
@@ -100,7 +100,7 @@ class SasaranNilaiController extends Controller
             "id_indikator_sasaran" => $request->id_indikator_sasaran,
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
-            "pagu" => $request->pagu,
+            // "pagu" => $request->pagu,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
