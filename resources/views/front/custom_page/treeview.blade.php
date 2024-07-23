@@ -211,6 +211,7 @@
                     <th width="250px">Indikator</th>
                     <th width="90px">Satuan</th>
                     <th width="90px">Tahun </th>
+                    {{-- <th width="90px">Nilai Pagu </th> --}}
                     <th width="90px">Target</th>
                     <th width="90px">Capaian</th>
                     

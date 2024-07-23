@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cascading\Model_Kegiatan_Nilai;
+use App\Models\Cascading\Model_Kegiatan;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_SubKegiatan;
 use App\Models\Cascading\Model_SubKegiatan_Indikator;
 use App\Models\Cascading\Model_SubKegiatan_Nilai;
+use App\Models\Cascading\Model_Kegiatan_Nilai;
+use App\Models\Cascading\Model_Program_Nilai;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -89,8 +91,45 @@ class SubKegiatanNilaiController extends Controller
             "creator" => Auth::user()->id,
         ]);
 
-        // Model_Kegiatan_Nilai::find($id)->update(["pagu" => $request->pagu]);
-        
+        // -------------- QUERY PAGU ---------------- //
+        /* Total Pagu Kegiatan */        
+        $id_kegiatan = DB::table('cascading_sub_kegiatan')
+                    ->join('cascading_sub_kegiatan_indikator', 'cascading_sub_kegiatan.id', '=', 'cascading_sub_kegiatan_indikator.id_sub_kegiatan')
+                    ->where('cascading_sub_kegiatan_indikator.id', $request->id_indikator_sub_kegiatan)
+                    ->pluck('cascading_sub_kegiatan.id_kegiatan')
+                    ->first();
+
+        $totalPaguKegiatan = DB::table('cascading_sub_kegiatan_nilai')
+                            ->join('cascading_sub_kegiatan_indikator', 'cascading_sub_kegiatan_indikator.id', '=', 'cascading_sub_kegiatan_nilai.id_indikator_sub_kegiatan')
+                            ->join('cascading_sub_kegiatan', 'cascading_sub_kegiatan_indikator.id_sub_kegiatan', '=', 'cascading_sub_kegiatan.id')
+                            ->where('cascading_sub_kegiatan.id_kegiatan', $id_kegiatan)
+                            ->sum('cascading_sub_kegiatan_nilai.pagu');
+
+        $model_kegiatan_nilai  = Model_Kegiatan_Nilai::find($id_kegiatan);
+        $model_kegiatan_nilai->update(["pagu" => $totalPaguKegiatan + $request->pagu]);
+
+        /* Total Pagu Program */
+        /* SELECT SUM(pagu) FROM cascading_kegiatan_nilai JOIN cascading_kegiatan_indikator JOIN cascading_kegiatan WHERE id_program = 2 */
+        $id_program = Model_Kegiatan::where('id', $id_kegiatan)->first()->id_program;
+
+        $totalPaguProgram = DB::table('cascading_kegiatan_nilai')
+                            ->join('cascading_kegiatan_indikator', 'cascading_kegiatan_nilai.id', '=', 'cascading_kegiatan_indikator.cascading_kegiatan_nilai_id')
+                            ->join('cascading_kegiatan', 'cascading_kegiatan_indikator.cascading_kegiatan_id', '=', 'cascading_kegiatan.id')
+                            ->where('cascading_kegiatan.id_kegiatan', $id_program)
+                            ->sum('cascading_kegiatan_nilai.pagu');
+
+        $model_program_nilai  = Model_Program_Nilai::find($id_program);
+        $model_program_nilai->update(["pagu" => $totalPaguProgram + $request->pagu]);
+
+        /* Total Pagu Urusan */
+        /* SELECT SUM(pagu) FROM cascading_program_nilai JOIN cascading_program_indikator JOIN cascading_program WHERE id_sasaran_renstra = 2 */
+
+        /* Total Pagu Sasaran */
+        /* SELECT SUM(pagu) FROM cascading_urusan_nilai JOIN cascading_urusan_indikator JOIN cascading_urusan WHERE id_sasaran = 2 */
+
+        /* Total Pagu Tujuan */
+        /* SELECT SUM(pagu) FROM cascading_sasaran_nilai JOIN cascading_sasaran_indikator JOIN cascading_sasaran WHERE id_sasaran = 2 */
+
         return response()->json(["message" => "Berhasil menambahkan data!"], 200);
     }
 

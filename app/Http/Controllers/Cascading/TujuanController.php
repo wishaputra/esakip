@@ -17,7 +17,22 @@ class TujuanController extends Controller
     {
         // $visi   = Model_Visi::find($request->id_visi)->misi;
         $tujuan   = Model_Tujuan::all();
-        return DataTables::of($tujuan)
+        // if(Auth::user()->role == "Menpan"){
+        //     return DataTables::of($tujuan)
+        //     ->addColumn('tujuan_indikator_count', function ($p) {
+        //         $count = $p->tujuan_indikator->count();
+        //         return "<a  href='".route('setup.tujuan_menpan_indikator.index')."?id_tujuan=".$p->id."'  title='Indikator Tujuan'>".$count."</a>";
+        //     })
+        //     ->addColumn('action', function ($p) {
+        //         return "
+        //             <a href='#' class='text-secondary' title='Edit'><i class='icon-pencil mr-1'></i></a>
+        //             <a href='#' class='text-secondary' title='Hapus'><i class='icon-remove'></i></a>";
+        //     })
+        //     ->rawColumns(['tujuan_indikator_count', 'action'])
+        //     ->toJson();
+        // }
+        // else{
+            return DataTables::of($tujuan)
             ->addColumn('tujuan_indikator_count', function ($p) {
                 $count = $p->tujuan_indikator->count();
                 return "<a  href='".route('setup.tujuan_indikator.index')."?id_tujuan=".$p->id."'  title='Indikator Tujuan'>".$count."</a>";
@@ -29,6 +44,7 @@ class TujuanController extends Controller
             })
             ->rawColumns(['tujuan_indikator_count', 'action'])
             ->toJson();
+        // }
     }
     /**
      * Display a listing of the resource.
