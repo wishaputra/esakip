@@ -69,6 +69,12 @@ class SubKegiatanNilaiController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        $subKegiatanNilai = Model_SubKegiatan_Nilai::create($request->all());
+    
+        // Update the pagu in the related kegiatan nilai
+        $this->updatePagu($subKegiatanNilai->id_indikator_kegiatan);
         // dd($request->file('file_kmz')->getMimeType());
         $request->validate([
             "id_indikator_sub_kegiatan" => 'required',
@@ -211,5 +217,17 @@ class SubKegiatanNilaiController extends Controller
 
     $misi->delete();
     return response()->json(["message" => "Berhasil menghapus data!"], 200);
+}
+public function updatePagu($idIndikatorKegiatan)
+{
+    // Calculate the sum of pagu for all related sub kegiatan nilai
+    $sumPagu = Model_SubKegiatan_Nilai::where('id_indikator_kegiatan', $idIndikatorKegiatan)->sum('pagu');
+
+    // Update the pagu column in kegiatan nilai
+    $kegiatanNilai = Model_Kegiatan_Nilai::where('id_indikator_kegiatan', $idIndikatorKegiatan)->first();
+    if ($kegiatanNilai) {
+        $kegiatanNilai->pagu = $sumPagu;
+        $kegiatanNilai->save();
+    }
 }
 }

@@ -125,6 +125,17 @@ class TreeViewController extends Controller
         return response()->json($nilai);
     }
 
+
+    public function getKegiatanPagu($id)
+{
+    // Fetch and sum pagu data from subkegiatan
+    $totalPagu = DB::table('cascading_sub_kegiatan_indikator')
+                    ->where('id_kegiatan', $id)
+                    ->sum('pagu');
+
+    return $totalPagu;
+}
+
     public function getSubKegiatanIndikator($id)
 {
     $indikator = DB::table('cascading_sub_kegiatan_indikator')->where('id_sub_kegiatan', $id)->get();

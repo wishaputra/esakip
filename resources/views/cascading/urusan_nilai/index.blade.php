@@ -141,12 +141,12 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="col-md-12">
+                        <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="pagu" class="col-form-label">Nilai Pagu</label>
                                 <input type="text" name="pagu" id="pagu" class="form-control">
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group col-md-12">
                                 <label for="target" class="col-form-label">target</label>
@@ -210,7 +210,7 @@
             $('#satuan').val(data.satuan);
             $('#tahun').val(data.tahun).focus();
             $('#triwulan').val(data.triwulan);
-            // $('#pagu').val(data.pagu);
+            $('#pagu').val(data.pagu);
             $('#target').val(data.target);
             $('#capaian').val(data.capaian);
             $('#form-modal').modal('show');

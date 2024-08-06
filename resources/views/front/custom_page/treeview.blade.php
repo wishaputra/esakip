@@ -207,14 +207,13 @@
     <div id="tabel" class="table-responsive mx-3" style="display: none;">
         <table class="table table-bordered" id="dataTable">
             <thead class="card-header">
-                <tr>
+                <tr id="tableHeaderRow">
                     <th width="250px">Indikator</th>
                     <th width="90px">Satuan</th>
-                    <th width="90px">Tahun </th>
-                    {{-- <th width="90px">Nilai Pagu </th> --}}
+                    <th width="90px">Tahun</th>
+                    <th width="90px" id="nilaiPaguHeader">Nilai Pagu</th>
                     <th width="90px">Target</th>
                     <th width="90px">Capaian</th>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -223,6 +222,7 @@
         </table>
     </div>
 </div>
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
@@ -359,7 +359,7 @@ $('#myUL').on('click', 'span.caret', function() {
         method: 'GET',
         success: function(response) {
             indikatorData = response;
-            populateTable(indikatorData, nilaiData);
+            populateTable(indikatorData, nilaiData, true); // Pass true to indicate "tujuan"
         },
         error: function() {
             console.log('Error fetching indikator data');
@@ -372,16 +372,23 @@ $('#myUL').on('click', 'span.caret', function() {
         method: 'GET',
         success: function(response) {
             nilaiData = response;
-            populateTable(indikatorData, nilaiData);
+            populateTable(indikatorData, nilaiData, true); // Pass true to indicate "tujuan"
         },
         error: function() {
             console.log('Error fetching nilai data');
         }
     });
 
-    function populateTable(indikators, nilais) {
+    function populateTable(indikators, nilais, isTujuan) {
         var tableBody = $('#dataTable tbody');
+        var tableHeaderRow = $('#tableHeaderRow');
         tableBody.empty(); // Clear existing rows
+
+        if (isTujuan) {
+            $('#nilaiPaguHeader').hide(); // Hide the "Nilai Pagu" column header
+        } else {
+            $('#nilaiPaguHeader').show(); // Show the "Nilai Pagu" column header
+        }
 
         var nilaiMap = {}; // Create a map for quick lookup of nilai data by indikator ID
         nilais.forEach(function(nilai) {
@@ -393,14 +400,23 @@ $('#myUL').on('click', 'span.caret', function() {
             var row = '<tr>' +
                 '<td>' + indikator.indikator + '</td>' +
                 '<td>' + (nilai.satuan || '') + '</td>' +
-                '<td>' + (nilai.tahun || '') + '</td>' +
-                '<td>' + (nilai.target || '') + '</td>' +
-                '<td>' + (nilai.capaian || '') + '</td>' +
-                '</tr>';
+                '<td>' + (nilai.tahun || '') + '</td>';
+
+            if (isTujuan) {
+                row += '<td>' + (nilai.target || '') + '</td>' +
+                       '<td>' + (nilai.capaian || '') + '</td>';
+            } else {
+                row += '<td>' + (nilai.nilai_pagu || '') + '</td>' +  // Include "Nilai Pagu" for other nodes
+                       '<td>' + (nilai.target || '') + '</td>' +
+                       '<td>' + (nilai.capaian || '') + '</td>';
+            }
+
+            row += '</tr>';
             tableBody.append(row);
         });
     }
 });
+
 
 
 
@@ -471,6 +487,7 @@ $('#myUL').on('click', 'span.urusan', function() {
     $("#judul").html("Urusan");
     $("#deskripsi").html(selectedUrusan);
     $('#tabel').show();
+    $('#nilaiPaguHeader').show();
     $('#triwulanHeader').show();
     $('#subTableHeader').show();
 
@@ -483,7 +500,7 @@ $('#myUL').on('click', 'span.urusan', function() {
         method: 'GET',
         success: function(response) {
             indikatorData = response;
-            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument for Urusan
+            populateTable(indikatorData, nilaiData); // Pass true as the third argument for Urusan
         },
         error: function() {
             console.log('Error fetching indikator data');
@@ -496,88 +513,90 @@ $('#myUL').on('click', 'span.urusan', function() {
         method: 'GET',
         success: function(response) {
             nilaiData = response;
-            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument for Urusan
+            populateTable(indikatorData, nilaiData); // Pass true as the third argument for Urusan
         },
         error: function() {
             console.log('Error fetching nilai data');
         }
     });
 
-    function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+    function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_urusan === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_urusan === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
-
+    }
 });
+
+
 
 $('#myUL').on('click', 'span.tujuanRenstra', function() {
     var selectedTujuanRenstra = $(this).text().replace('TUJUAN RENSTRA: ', '');
@@ -596,7 +615,7 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         method: 'GET',
         success: function(response) {
             indikatorData = response;
-            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
+            populateTable(indikatorData, nilaiData);
         },
         error: function() {
             console.log('Error fetching indikator data');
@@ -609,88 +628,87 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         method: 'GET',
         success: function(response) {
             nilaiData = response;
-            populateTable(indikatorData, nilaiData, true); // Pass true as the third argument
+            populateTable(indikatorData, nilaiData);
         },
         error: function() {
             console.log('Error fetching nilai data');
         }
     });
 
-    
-    
-    function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+    function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_tujuan_renstra === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_tujuan_renstra === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
+    }
 });
 
    
@@ -733,79 +751,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
     
-        function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_sasaran_renstra === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_sasaran_renstra === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
+    }
 });
 
 
@@ -846,79 +865,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_program === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_program === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
+    }
 });
 
     
@@ -959,79 +979,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
         });
     
         
-        function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_kegiatan === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_kegiatan === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
+    }
 });
     
 
@@ -1072,79 +1093,80 @@ $('#myUL').on('click', 'span.tujuanRenstra', function() {
             }
         });
     
-        function populateTable(indikators, nilais, selectedTriwulan) {
-    var tableBody = $('#dataTable tbody');
-    tableBody.empty(); // Clear existing rows
+        function populateTable(indikators, nilais) {
+        var tableBody = $('#dataTable tbody');
+        tableBody.empty(); // Clear existing rows
 
-    indikators.forEach(function(indikator) {
-        var relatedNilais = nilais.filter(function(nilai) {
-            return nilai.id_indikator_sub_kegiatan === indikator.id;
+        indikators.forEach(function(indikator) {
+            var relatedNilais = nilais.filter(function(nilai) {
+                return nilai.id_indikator_sub_kegiatan === indikator.id;
+            });
+
+            // Group nilais by year
+            var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
+                if (!acc[nilai.tahun]) {
+                    acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan, pagu: nilai.pagu };
+                }
+                acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
+                acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
+                return acc;
+            }, {});
+
+            var isFirstRow = true;
+
+            for (var tahun in groupedNilais) {
+                var targetColumns = groupedNilais[tahun].target.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
+                    return '<td>' + (value || '') + '</td>';
+                }).join('');
+
+                var row = '<tr>';
+                if (isFirstRow) {
+                    row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
+                    isFirstRow = false;
+                }
+                row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
+                    '<td>' + tahun + '</td>' +
+                    '<td>' + groupedNilais[tahun].pagu + '</td>' + // Add Pagu column here
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + targetColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '<td>' +
+                    '<table class="table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>TW 1</th>' +
+                    '<th>TW 2</th>' +
+                    '<th>TW 3</th>' +
+                    '<th>TW 4</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                    '<tr>' + capaianColumns + '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</td>' +
+                    '</tr>';
+
+                tableBody.append(row);
+            }
         });
-
-        // Group nilais by year
-        var groupedNilais = relatedNilais.reduce(function(acc, nilai) {
-            if (!acc[nilai.tahun]) {
-                acc[nilai.tahun] = { target: ['', '', '', ''], capaian: ['', '', '', ''], satuan: nilai.satuan };
-            }
-            acc[nilai.tahun].target[nilai.triwulan - 1] = nilai.target;
-            acc[nilai.tahun].capaian[nilai.triwulan - 1] = nilai.capaian;
-            return acc;
-        }, {});
-
-        var isFirstRow = true;
-
-        for (var tahun in groupedNilais) {
-            var targetColumns = groupedNilais[tahun].target.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var capaianColumns = groupedNilais[tahun].capaian.map(function(value) {
-                return '<td>' + (value || '') + '</td>';
-            }).join('');
-
-            var row = '<tr>';
-            if (isFirstRow) {
-                row += '<td rowspan="' + Object.keys(groupedNilais).length + '">' + indikator.indikator + '</td>';
-                isFirstRow = false;
-            }
-            row += '<td>' + groupedNilais[tahun].satuan + '</td>' +
-                '<td>' + tahun + '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + targetColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '<td>' +
-                '<table class="table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>TW 1</th>' +
-                '<th>TW 2</th>' +
-                '<th>TW 3</th>' +
-                '<th>TW 4</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>' +
-                '<tr>' + capaianColumns + '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '</td>' +
-                '</tr>';
-
-            tableBody.append(row);
-        }
-    });
-}
+    }
 });
 
 

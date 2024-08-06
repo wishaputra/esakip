@@ -637,6 +637,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
             Route::post('kegiatan_nilai/api', [KegiatanNilaiController::class, 'api'])->name('kegiatan_nilai.api');
             Route::resource('kegiatan_nilai', KegiatanNilaiController::class);
+            Route::get('update-pagu', [KegiatanNilaiController::class, 'updatePagu']);
+
 
             Route::post('kegiatan_menpan_nilai/api', [KegiatanMenpanNilaiController::class, 'api_kegiatan_menpan_nilai'])->name('kegiatan_menpan_nilai.api');
             Route::resource('kegiatan_menpan_nilai', KegiatanMenpanNilaiController::class);

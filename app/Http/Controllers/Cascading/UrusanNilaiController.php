@@ -89,6 +89,7 @@ class UrusanNilaiController extends Controller
         $rule = [
             "satuan" => 'required',
             "tahun" => 'required',
+            "pagu" => 'required',
             "triwulan" => 'required',
             "target" => 'required',
             "capaian" => 'required',
@@ -101,6 +102,7 @@ class UrusanNilaiController extends Controller
             "satuan" => $request->satuan,
             "tahun" => $request->tahun,
             "triwulan" => $request->triwulan,
+            "pagu" => $request->pagu,
             "target" => $request->target,
             "capaian" => $request->capaian,
             "creator" => Auth::user()->id,
