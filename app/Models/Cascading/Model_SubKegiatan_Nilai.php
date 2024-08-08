@@ -7,33 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Model_SubKegiatan_Nilai extends Model
 {
     protected $table = "cascading_sub_kegiatan_nilai";
-    protected $fillable = [
-        'id_indikator_sub_kegiatan', 'satuan', 'tahun', 'triwulan', 
-        'pagu', 'target', 'capaian', 'creator', 'created_at', 'updated_at'
-    ];
+    protected $fillable = ['id_indikator_sub_kegiatan', 'satuan', 'tahun', 'triwulan', 'pagu', 'target', 'capaian', 'creator', 'created_at', 'updated_at'];
 
-    protected static function boot()
+    public function subkegiatan_indikator()
     {
-        parent::boot();
-
-        static::saved(function ($subKegiatanNilai) {
-            $subKegiatanNilai->updateKegiatanNilaiPagu();
-        });
-
-        static::deleted(function ($subKegiatanNilai) {
-            $subKegiatanNilai->updateKegiatanNilaiPagu();
-        });
+        // Assuming 'id' is the primary key in 'Model_SubKegiatan_Indikator'
+        return $this->belongsTo(Model_SubKegiatan_Indikator::class, 'id_indikator_sub_kegiatan');
     }
 
     public function kegiatanNilai()
     {
-        return $this->belongsTo(Model_Kegiatan_Nilai::class, 'id_indikator_kegiatan', 'id_indikator_kegiatan');
-    }
-
-    public function updateKegiatanNilaiPagu()
-    {
-        if ($this->kegiatanNilai) {
-            $this->kegiatanNilai->updatePagu();
-        }
+        // Assuming 'id_indikator_kegiatan' is the correct foreign key in this model
+        return $this->belongsTo(Model_Kegiatan_Nilai::class, 'id_indikator_kegiatan');
     }
 }

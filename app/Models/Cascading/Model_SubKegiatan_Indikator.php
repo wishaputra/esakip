@@ -11,7 +11,7 @@ class Model_SubKegiatan_Indikator extends Model
 
     public function subkegiatan()
     {
-        return $this->belongsTo(Model_SubKegiatan::class, 'id');
+        return $this->belongsTo(Model_SubKegiatan::class, 'id_sub_kegiatan');
     }
 
     public function subkegiatan_nilai()

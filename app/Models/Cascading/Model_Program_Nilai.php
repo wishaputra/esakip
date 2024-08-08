@@ -10,7 +10,7 @@ class Model_Program_Nilai extends Model
     protected $fillable = ['id_indikator_program', 'satuan', 'tahun', 'triwulan', 'pagu', 'target', 'capaian', 'creator', 'created_at', 'updated_at'];
 
     public function program_indikator()
-    {
-        return $this->belongsTo(Model_Program_Indikator::class, 'id');
-    }
+{
+    return $this->belongsTo(Model_Program_Indikator::class, 'id_indikator_program');
+}
 }

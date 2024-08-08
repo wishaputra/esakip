@@ -198,7 +198,7 @@
             $('#id').val(data.id);
             $('#satuan').val(data.satuan);
             $('#tahun').val(data.tahun).focus();
-            $('#triwulan').val(data.tahun);
+            $('#triwulan').val(data.triwulan);
             $('#pagu').val(data.pagu);
             $('#target').val(data.target);
             $('#capaian').val(data.capaian);
