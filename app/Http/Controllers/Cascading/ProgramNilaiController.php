@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Cascading;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cascading\Model_Program_Nilai;
+use App\Models\Cascading\Model_sasaran_renstra_Nilai;
+use App\Models\Cascading\Model_sasaran_renstra_indikator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
@@ -28,11 +30,7 @@ class ProgramNilaiController extends Controller
             ->rawColumns(['action'])
             ->toJson();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index(Request $request)
     {
         $id_indikator_program = $request->id_indikator_program;
@@ -50,11 +48,7 @@ class ProgramNilaiController extends Controller
         return view('cascading.program_nilai.index', compact('indikator','id_indikator_program','tahun'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function create()
     {
         //
@@ -67,47 +61,78 @@ class ProgramNilaiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            "id_indikator_program" => 'required',
-            "satuan" => 'required',
-            "tahun" => 'required',
-            "triwulan" => 'required',
-            "pagu" => 'required',
-            "target" => 'required',
-            "capaian" => 'required',
-        ]);
+{
+    $request->validate([
+        "id_indikator_program" => 'required',
+        "satuan" => 'required',
+        "tahun" => 'required',
+        "triwulan" => 'required',
+        "pagu" => 'required',
+        "target" => 'required',
+        "capaian" => 'required',
+    ]);
 
-        Model_program_Nilai::create([
-            "id_indikator_program" => $request->id_indikator_program,
-            "satuan" => $request->satuan,
-            "tahun" => $request->tahun,
-            "triwulan" => $request->tahun,
-            "pagu" => $request->pagu,
-            "target" => $request->target,
-            "capaian" => $request->capaian,
-            "creator" => Auth::user()->id,
-        ]);
+    // Create the new entry in cascading_program_nilai
+    $programNilai = Model_Program_Nilai::create([
+        "id_indikator_program" => $request->id_indikator_program,
+        "satuan" => $request->satuan,
+        "tahun" => $request->tahun,
+        "triwulan" => $request->triwulan,
+        "pagu" => $request->pagu,
+        "target" => $request->target,
+        "capaian" => $request->capaian,
+        "creator" => Auth::user()->id,
+    ]);
 
-        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+    // Get the related id_program from cascading_program_indikator
+    $id_program = Model_Program_Indikator::where('id', $request->id_indikator_program)
+                                          ->pluck('id_program')
+                                          ->first();
+
+    // Calculate total pagu for the program
+    $totalPaguProgram = DB::table('cascading_program_nilai')
+                        ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                        ->where('cascading_program_indikator.id_program', $id_program)
+                        ->sum('cascading_program_nilai.pagu');
+
+    // Update the total pagu in cascading_program
+    $model_program = Model_Program::find($id_program);
+    if ($model_program) {
+        $model_program->update(["pagu" => $totalPaguProgram]);
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    // Get the id_sasaran_renstra related to the program
+    $id_sasaran_renstra = Model_Program::where('id', $id_program)
+                                        ->pluck('id_sasaran_renstra')
+                                        ->first();
+
+    // Calculate total pagu for the sasaran renstra
+    $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
+                                ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                                ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
+                                ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
+                                ->sum('cascading_program_nilai.pagu');
+
+    // Get the related sasaran_renstra_indikator IDs
+    $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
+                                                                ->pluck('id')
+                                                                ->toArray();
+
+    // Update the total pagu in cascading_sasaran_renstra_nilai
+    Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
+                                ->update(["pagu" => $totalPaguSasaranRenstra]);
+
+    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+}
+
+
+  
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
         return Model_Program_Nilai::find($id);
@@ -121,32 +146,73 @@ class ProgramNilaiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $program_nilai  = Model_program_Nilai::find($id);
-        $rule = [
-            "satuan" => 'required',
-            "tahun" => 'required',
-            "triwulan" => 'required',
-            "pagu" => 'required',
-            "target" => 'required',
-            "capaian" => 'required',
-        ];
+{
+    $program_nilai = Model_Program_Nilai::find($id);
+    
+    $rule = [
+        "satuan" => 'required',
+        "tahun" => 'required',
+        "triwulan" => 'required',
+        "pagu" => 'required',
+        "target" => 'required',
+        "capaian" => 'required',
+    ];
 
-        $request->validate($rule);
+    $request->validate($rule);
 
-        $program_nilai->update([
-            "id_program_indikator" => $request->id_program_indikator,
-            "satuan" => $request->satuan,
-            "tahun" => $request->tahun,
-            "triwulan" => $request->triwulan,
-            "pagu" => $request->pagu,
-            "target" => $request->target,
-            "capaian" => $request->capaian,
-            "creator" => Auth::user()->id,
-        ]);
+    // Update the existing entry in cascading_program_nilai
+    $program_nilai->update([
+        "id_indikator_program" => $request->id_indikator_program,
+        "satuan" => $request->satuan,
+        "tahun" => $request->tahun,
+        "triwulan" => $request->triwulan,
+        "pagu" => $request->pagu,
+        "target" => $request->target,
+        "capaian" => $request->capaian,
+        "creator" => Auth::user()->id,
+    ]);
 
-        return response()->json(["message" => "Berhasil merubah data!"], 200);
+    // Get the related id_program from cascading_program_indikator
+    $id_program = Model_Program_Indikator::where('id', $request->id_indikator_program)
+                                          ->pluck('id_program')
+                                          ->first();
+
+    // Calculate total pagu for the program
+    $totalPaguProgram = DB::table('cascading_program_nilai')
+                        ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                        ->where('cascading_program_indikator.id_program', $id_program)
+                        ->sum('cascading_program_nilai.pagu');
+
+    // Update the total pagu in cascading_program
+    $model_program = Model_Program::find($id_program);
+    if ($model_program) {
+        $model_program->update(["pagu" => $totalPaguProgram]);
     }
+
+    // Get the id_sasaran_renstra related to the program
+    $id_sasaran_renstra = Model_Program::where('id', $id_program)
+                                        ->pluck('id_sasaran_renstra')
+                                        ->first();
+
+    // Calculate total pagu for the sasaran renstra
+    $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
+                                ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                                ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
+                                ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
+                                ->sum('cascading_program_nilai.pagu');
+
+    // Get the related sasaran_renstra_indikator IDs
+    $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
+                                                                ->pluck('id')
+                                                                ->toArray();
+
+    // Update the total pagu in cascading_sasaran_renstra_nilai
+    Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
+                                ->update(["pagu" => $totalPaguSasaranRenstra]);
+
+    return response()->json(["message" => "Berhasil merubah data!"], 200);
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -156,19 +222,60 @@ class ProgramNilaiController extends Controller
      */
     public function destroy(Request $request, $id)
 {
-    $misi  = Model_Program_nilai::find($id);
+    // Find the entry in cascading_program_nilai
+    $programNilai = Model_Program_Nilai::find($id);
 
-    if ($misi && $misi->tujuan && is_iterable($misi->tujuan)) {
-        $count = $misi->tujuan->count();
-    } else {
-        $count = 0;
+    if (!$programNilai) {
+        return response()->json(["message" => "Data tidak ditemukan!"], 404);
     }
 
-    if ($count > 0) {
-        return response()->json(["message" => "<center>Hapus Submenu terlebih dahulu</center>"], 500);
+    // Get the id_program related to the indikator_program
+    $id_program = Model_Program_Indikator::where('id', $programNilai->id_indikator_program)
+                                          ->pluck('id_program')
+                                          ->first();
+
+    if (!$id_program) {
+        return response()->json(["message" => "Program tidak ditemukan!"], 404);
     }
 
-    $misi->delete();
+    // Delete the program_nilai entry
+    $programNilai->delete();
+
+    // Calculate total pagu for the program
+    $totalPaguProgram = DB::table('cascading_program_nilai')
+                        ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                        ->where('cascading_program_indikator.id_program', $id_program)
+                        ->sum('cascading_program_nilai.pagu');
+
+    // Update the total pagu in cascading_program
+    $model_program = Model_Program::find($id_program);
+    if ($model_program) {
+        $model_program->update(["pagu" => $totalPaguProgram]);
+    }
+
+    // Calculate total pagu for the sasaran renstra
+    $id_sasaran_renstra = Model_Program::where('id', $id_program)
+                                        ->pluck('id_sasaran_renstra')
+                                        ->first();
+
+    if ($id_sasaran_renstra) {
+        $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
+                                    ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                                    ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
+                                    ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
+                                    ->sum('cascading_program_nilai.pagu');
+
+        // Get the related sasaran_renstra_indikator IDs
+        $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
+                                                                    ->pluck('id')
+                                                                    ->toArray();
+
+        // Update the total pagu in cascading_sasaran_renstra_nilai
+        Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
+                                    ->update(["pagu" => $totalPaguSasaranRenstra]);
+    }
+
     return response()->json(["message" => "Berhasil menghapus data!"], 200);
 }
+
 }
