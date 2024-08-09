@@ -8,7 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cascading\Model_Visi;
 use App\Models\Cascading\Model_Misi;
 use App\Models\Cascading\Model_Tujuan;
+use App\Models\Cascading\Model_Urusan;
+use App\Models\Cascading\Model_Urusan_Indikator;
+use App\Models\Cascading\Model_Urusan_Nilai;
 use App\Models\Cascading\Model_Tujuan_Renstra_Indikator;
+use App\Models\Cascading\Model_Tujuan_Renstra;
 use Illuminate\Http\Request;
 use yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
@@ -65,30 +69,64 @@ class TujuanRenstraNilaiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            "id_indikator_tujuan_renstra" => 'required',
-            "satuan" => 'required',
-            "tahun" => 'required',
-            "triwulan" => 'required',
-            "pagu" => 'required',
-            "target" => 'required',
-            "capaian" => 'required',
-        ]);
+{
+    $request->validate([
+        "id_indikator_tujuan_renstra" => 'required',
+        "satuan" => 'required',
+        "tahun" => 'required',
+        "triwulan" => 'required',
+        "pagu" => 'required',
+        "target" => 'required',
+        "capaian" => 'required',
+    ]);
 
-        Model_Tujuan_Renstra_Nilai::create([
-            "id_indikator_tujuan_renstra" => $request->id_indikator_tujuan_renstra,
-            "satuan" => $request->satuan,
-            "tahun" => $request->tahun,
-            "triwulan" => $request->triwulan,
-            "pagu" => $request->pagu,
-            "target" => $request->target,
-            "capaian" => $request->capaian,
-            "creator" => Auth::user()->id,
-        ]);
+    // Create the new entry in cascading_tujuan_renstra_nilai
+    $tujuanRenstraNilai = Model_Tujuan_Renstra_Nilai::create([
+        "id_indikator_tujuan_renstra" => $request->id_indikator_tujuan_renstra,
+        "satuan" => $request->satuan,
+        "tahun" => $request->tahun,
+        "triwulan" => $request->triwulan,
+        "pagu" => $request->pagu,
+        "target" => $request->target,
+        "capaian" => $request->capaian,
+        "creator" => Auth::user()->id,
+    ]);
 
-        return response()->json(["message" => "Berhasil menambahkan data!"], 200);
-    }
+    // Get the related id_tujuan_renstra from the Tujuan Renstra Indikator
+    $id_tujuan_renstra = Model_Tujuan_Renstra_Indikator::where('id', $request->id_indikator_tujuan_renstra)
+                                                      ->pluck('id_tujuan_renstra')
+                                                      ->first();
+
+    // Calculate total pagu for the tujuan renstra
+    $totalPaguTujuanRenstra = DB::table('cascading_tujuan_renstra_nilai')
+                               ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
+                               ->where('cascading_tujuan_renstra_indikator.id_tujuan_renstra', $id_tujuan_renstra)
+                               ->sum('cascading_tujuan_renstra_nilai.pagu');
+
+    // Get the related id_urusan from the Tujuan Renstra
+    $id_urusan = Model_Tujuan_Renstra::where('id', $id_tujuan_renstra)
+                                    ->pluck('id_urusan')
+                                    ->first();
+
+    // Calculate total pagu for the urusan
+    $totalPaguUrusan = DB::table('cascading_tujuan_renstra_nilai')
+                        ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
+                        ->join('cascading_tujuan_renstra', 'cascading_tujuan_renstra_indikator.id_tujuan_renstra', '=', 'cascading_tujuan_renstra.id')
+                        ->where('cascading_tujuan_renstra.id_urusan', $id_urusan)
+                        ->sum('cascading_tujuan_renstra_nilai.pagu');
+
+    // Get the related urusan_indikator IDs
+    $urusanIndikatorIds = Model_Urusan_Indikator::where('id_urusan', $id_urusan)
+                                               ->pluck('id')
+                                               ->toArray();
+
+    // Update the total pagu in cascading_urusan_nilai
+    Model_Urusan_Nilai::whereIn('id_indikator_urusan', $urusanIndikatorIds)
+                      ->update(['pagu' => $totalPaguUrusan]);
+
+    return response()->json(["message" => "Berhasil menambahkan data!"], 200);
+}
+
 
     /**
      * Display the specified resource.
