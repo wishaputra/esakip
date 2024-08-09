@@ -3,8 +3,6 @@
 namespace App\Providers;
 
 use App\Models\Frontend;
-use App\Models\Cascading\Model_SubKegiatan_Nilai;
-use App\Observers\SubKegiatanNilaiObserver;
 use App\Models\Logo;
 use App\Models\Menu;
 use App\Models\TextContent;
@@ -31,8 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Model_SubKegiatan_Nilai::observe(SubKegiatanNilaiObserver::class);
-
+       
         View::composer('front.index', function ($view) {
             $view->with('textContent', TextContent::all());
         });
