@@ -63,6 +63,7 @@ class SubKegiatanNilaiController extends Controller
   
     public function store(Request $request)
 {
+    // Validate the request
     $request->validate([
         "id_indikator_sub_kegiatan" => 'required',
         "satuan" => 'required',
@@ -92,7 +93,7 @@ class SubKegiatanNilaiController extends Controller
                 ->pluck('cascading_sub_kegiatan.id_kegiatan')
                 ->first();
 
-    // Calculate total pagu for the kegiatan
+    // Update total pagu for kegiatan
     $totalPaguKegiatan = DB::table('cascading_sub_kegiatan_nilai')
                         ->join('cascading_sub_kegiatan_indikator', 'cascading_sub_kegiatan_indikator.id', '=', 'cascading_sub_kegiatan_nilai.id_indikator_sub_kegiatan')
                         ->join('cascading_sub_kegiatan', 'cascading_sub_kegiatan_indikator.id_sub_kegiatan', '=', 'cascading_sub_kegiatan.id')
@@ -100,7 +101,7 @@ class SubKegiatanNilaiController extends Controller
                         ->sum('cascading_sub_kegiatan_nilai.pagu');
 
     // Update the total pagu in cascading_kegiatan_nilai
-    $model_kegiatan_nilai  = Model_Kegiatan_Nilai::whereHas('kegiatan_indikator', function($query) use ($id_kegiatan) {
+    $model_kegiatan_nilai = Model_Kegiatan_Nilai::whereHas('kegiatan_indikator', function($query) use ($id_kegiatan) {
         $query->where('id_kegiatan', $id_kegiatan);
     })->first();
 
@@ -108,72 +109,86 @@ class SubKegiatanNilaiController extends Controller
         $model_kegiatan_nilai->update(["pagu" => $totalPaguKegiatan]);
     }
 
-    // Calculate total pagu for the program
-    $id_program = Model_Kegiatan::where('id', $id_kegiatan)->pluck('id_program')->first();
+    // Update total pagu for program
+    $id_program = DB::table('cascading_kegiatan')
+                    ->where('id', $id_kegiatan)
+                    ->pluck('id_program')
+                    ->first();
 
-    $totalPaguProgram = DB::table('cascading_kegiatan_nilai')
-                        ->join('cascading_kegiatan_indikator', 'cascading_kegiatan_nilai.id_indikator_kegiatan', '=', 'cascading_kegiatan_indikator.id')
-                        ->join('cascading_kegiatan', 'cascading_kegiatan_indikator.id_kegiatan', '=', 'cascading_kegiatan.id')
-                        ->where('cascading_kegiatan.id_program', $id_program)
-                        ->sum('cascading_kegiatan_nilai.pagu');
+    if ($id_program) {
+        $totalPaguProgram = DB::table('cascading_kegiatan_nilai')
+                            ->join('cascading_kegiatan_indikator', 'cascading_kegiatan_nilai.id_indikator_kegiatan', '=', 'cascading_kegiatan_indikator.id')
+                            ->join('cascading_kegiatan', 'cascading_kegiatan_indikator.id_kegiatan', '=', 'cascading_kegiatan.id')
+                            ->where('cascading_kegiatan.id_program', $id_program)
+                            ->sum('cascading_kegiatan_nilai.pagu');
 
-    // Update the total pagu in cascading_program_nilai
-    $model_program_nilai  = Model_Program_Nilai::where('id_indikator_program', $model_kegiatan_nilai->id_indikator_program)->first();
+        $model_program_nilai = Model_Program_Nilai::where('id_indikator_program', $id_program)->first();
+        if ($model_program_nilai) {
+            $model_program_nilai->update(["pagu" => $totalPaguProgram]);
+        }
 
-    if ($model_program_nilai) {
-        $model_program_nilai->update(["pagu" => $totalPaguProgram]);
-    }
+        // Update total pagu for sasaran_renstra
+        $id_sasaran_renstra = DB::table('cascading_program')
+                                ->where('id', $id_program)
+                                ->pluck('id_sasaran_renstra')
+                                ->first();
 
-    // Calculate total pagu for the sasaran_renstra
-    $id_sasaran_renstra = Model_Program::where('id', $id_program)->pluck('id_sasaran_renstra')->first();
+        if ($id_sasaran_renstra) {
+            $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
+                                        ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                                        ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
+                                        ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
+                                        ->sum('cascading_program_nilai.pagu');
 
-    $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
-                                    ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
-                                    ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
-                                    ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
-                                    ->sum('cascading_program_nilai.pagu');
+            $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
+                                                                        ->pluck('id')
+                                                                        ->toArray();
 
-    $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
-                                                                    ->pluck('id')
-                                                                    ->toArray();
+            Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
+                                        ->update(["pagu" => $totalPaguSasaranRenstra]);
 
-    Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
-                                ->update(["pagu" => $totalPaguSasaranRenstra]);
+            // Update total pagu for tujuan_renstra
+            $id_tujuan_renstra = Model_Sasaran_Renstra::where('id', $id_sasaran_renstra)->pluck('id_tujuan_renstra')->first();
 
-    // Calculate total pagu for the tujuan_renstra
-    $id_tujuan_renstra = Model_Sasaran_Renstra::where('id', $id_sasaran_renstra)->pluck('id_tujuan_renstra')->first();
+            if ($id_tujuan_renstra) {
+                $totalPaguTujuanRenstra = DB::table('cascading_sasaran_renstra_nilai')
+                                            ->join('cascading_sasaran_renstra_indikator', 'cascading_sasaran_renstra_nilai.id_indikator_sasaran_renstra', '=', 'cascading_sasaran_renstra_indikator.id')
+                                            ->join('cascading_sasaran_renstra', 'cascading_sasaran_renstra_indikator.id_sasaran_renstra', '=', 'cascading_sasaran_renstra.id')
+                                            ->where('cascading_sasaran_renstra.id_tujuan_renstra', $id_tujuan_renstra)
+                                            ->sum('cascading_sasaran_renstra_nilai.pagu');
 
-    $totalPaguTujuanRenstra = DB::table('cascading_sasaran_renstra_nilai')
-                                    ->join('cascading_sasaran_renstra_indikator', 'cascading_sasaran_renstra_nilai.id_indikator_sasaran_renstra', '=', 'cascading_sasaran_renstra_indikator.id')
-                                    ->join('cascading_sasaran_renstra', 'cascading_sasaran_renstra_indikator.id_sasaran_renstra', '=', 'cascading_sasaran_renstra.id')
-                                    ->where('cascading_sasaran_renstra.id_tujuan_renstra', $id_tujuan_renstra)
-                                    ->sum('cascading_sasaran_renstra_nilai.pagu');
+                $tujuanRenstraIndikatorIds = Model_Tujuan_Renstra_Indikator::where('id_tujuan_renstra', $id_tujuan_renstra)
+                                                                        ->pluck('id')
+                                                                        ->toArray();
 
-    $tujuanRenstraIndikatorIds = Model_Tujuan_Renstra_Indikator::where('id_tujuan_renstra', $id_tujuan_renstra)
-                                                                ->pluck('id')
-                                                                ->toArray();
+                Model_Tujuan_Renstra_Nilai::whereIn('id_indikator_tujuan_renstra', $tujuanRenstraIndikatorIds)
+                                            ->update(["pagu" => $totalPaguTujuanRenstra]);
 
-    Model_Tujuan_Renstra_Nilai::whereIn('id_indikator_tujuan_renstra', $tujuanRenstraIndikatorIds)
-                                ->update(["pagu" => $totalPaguTujuanRenstra]);
+                // Update total pagu for urusan
+                $id_urusan = Model_Tujuan_Renstra::where('id', $id_tujuan_renstra)->pluck('id_urusan')->first();
 
-    // Calculate total pagu for the urusan
-    $id_urusan = Model_Tujuan_Renstra::where('id', $id_tujuan_renstra)->pluck('id_urusan')->first();
+                if ($id_urusan) {
+                    $totalPaguUrusan = DB::table('cascading_tujuan_renstra_nilai')
+                                        ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
+                                        ->join('cascading_tujuan_renstra', 'cascading_tujuan_renstra_indikator.id_tujuan_renstra', '=', 'cascading_tujuan_renstra.id')
+                                        ->where('cascading_tujuan_renstra.id_urusan', $id_urusan)
+                                        ->sum('cascading_tujuan_renstra_nilai.pagu');
 
-    $totalPaguUrusan = DB::table('cascading_tujuan_renstra_nilai')
-                            ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
-                            ->join('cascading_tujuan_renstra', 'cascading_tujuan_renstra_indikator.id_tujuan_renstra', '=', 'cascading_tujuan_renstra.id')
-                            ->where('cascading_tujuan_renstra.id_urusan', $id_urusan)
-                            ->sum('cascading_tujuan_renstra_nilai.pagu');
-
-    $urusanIndikatorIds = Model_Urusan_Indikator::where('id_urusan', $id_urusan)
+                    $urusanIndikatorIds = Model_Urusan_Indikator::where('id_urusan', $id_urusan)
                                                 ->pluck('id')
                                                 ->toArray();
 
-    Model_Urusan_Nilai::whereIn('id_indikator_urusan', $urusanIndikatorIds)
-                      ->update(["pagu" => $totalPaguUrusan]);
+                    Model_Urusan_Nilai::whereIn('id_indikator_urusan', $urusanIndikatorIds)
+                                        ->update(["pagu" => $totalPaguUrusan]);
+                }
+            }
+        }
+    }
 
     return response()->json(["message" => "Berhasil menambahkan data!"], 200);
 }
+
+
 
 
 
@@ -230,14 +245,15 @@ class SubKegiatanNilaiController extends Controller
                     ->pluck('cascading_sub_kegiatan.id_kegiatan')
                     ->first();
 
-    // Update total pagu for Kegiatan_Nilai
+    // Update total pagu for kegiatan
     $totalPaguKegiatan = DB::table('cascading_sub_kegiatan_nilai')
-                            ->join('cascading_sub_kegiatan_indikator', 'cascading_sub_kegiatan_indikator.id', '=', 'cascading_sub_kegiatan_nilai.id_indikator_sub_kegiatan')
-                            ->join('cascading_sub_kegiatan', 'cascading_sub_kegiatan_indikator.id_sub_kegiatan', '=', 'cascading_sub_kegiatan.id')
-                            ->where('cascading_sub_kegiatan.id_kegiatan', $id_kegiatan)
-                            ->sum('cascading_sub_kegiatan_nilai.pagu');
+                        ->join('cascading_sub_kegiatan_indikator', 'cascading_sub_kegiatan_indikator.id', '=', 'cascading_sub_kegiatan_nilai.id_indikator_sub_kegiatan')
+                        ->join('cascading_sub_kegiatan', 'cascading_sub_kegiatan_indikator.id_sub_kegiatan', '=', 'cascading_sub_kegiatan.id')
+                        ->where('cascading_sub_kegiatan.id_kegiatan', $id_kegiatan)
+                        ->sum('cascading_sub_kegiatan_nilai.pagu');
 
-    $model_kegiatan_nilai  = Model_Kegiatan_Nilai::whereHas('kegiatan_indikator', function($query) use ($id_kegiatan) {
+    // Update the total pagu in cascading_kegiatan_nilai
+    $model_kegiatan_nilai = Model_Kegiatan_Nilai::whereHas('kegiatan_indikator', function($query) use ($id_kegiatan) {
         $query->where('id_kegiatan', $id_kegiatan);
     })->first();
 
@@ -245,68 +261,81 @@ class SubKegiatanNilaiController extends Controller
         $model_kegiatan_nilai->update(["pagu" => $totalPaguKegiatan]);
     }
 
-    // Update total pagu for Program_Nilai
-    $id_program = Model_Kegiatan::where('id', $id_kegiatan)->pluck('id_program')->first();
+    // Update total pagu for program
+    $id_program = DB::table('cascading_kegiatan')
+                    ->where('id', $id_kegiatan)
+                    ->pluck('id_program')
+                    ->first();
 
-    $totalPaguProgram = DB::table('cascading_kegiatan_nilai')
+    if ($id_program) {
+        $totalPaguProgram = DB::table('cascading_kegiatan_nilai')
                             ->join('cascading_kegiatan_indikator', 'cascading_kegiatan_nilai.id_indikator_kegiatan', '=', 'cascading_kegiatan_indikator.id')
                             ->join('cascading_kegiatan', 'cascading_kegiatan_indikator.id_kegiatan', '=', 'cascading_kegiatan.id')
                             ->where('cascading_kegiatan.id_program', $id_program)
                             ->sum('cascading_kegiatan_nilai.pagu');
 
-    $model_program_nilai  = Model_Program_Nilai::where('id_indikator_program', $model_kegiatan_nilai->id_indikator_program)->first();
+        $model_program_nilai = Model_Program_Nilai::where('id_indikator_program', $id_program)->first();
+        if ($model_program_nilai) {
+            $model_program_nilai->update(["pagu" => $totalPaguProgram]);
+        }
 
-    if ($model_program_nilai) {
-        $model_program_nilai->update(["pagu" => $totalPaguProgram]);
-    }
+        // Update total pagu for sasaran_renstra
+        $id_sasaran_renstra = DB::table('cascading_program')
+                                ->where('id', $id_program)
+                                ->pluck('id_sasaran_renstra')
+                                ->first();
 
-    // Update total pagu for Sasaran_Renstra_Nilai
-    $id_sasaran_renstra = Model_Program::where('id', $id_program)->pluck('id_sasaran_renstra')->first();
+        if ($id_sasaran_renstra) {
+            $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
+                                        ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
+                                        ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
+                                        ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
+                                        ->sum('cascading_program_nilai.pagu');
 
-    $totalPaguSasaranRenstra = DB::table('cascading_program_nilai')
-                                    ->join('cascading_program_indikator', 'cascading_program_nilai.id_indikator_program', '=', 'cascading_program_indikator.id')
-                                    ->join('cascading_program', 'cascading_program_indikator.id_program', '=', 'cascading_program.id')
-                                    ->where('cascading_program.id_sasaran_renstra', $id_sasaran_renstra)
-                                    ->sum('cascading_program_nilai.pagu');
+            $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
+                                                                        ->pluck('id')
+                                                                        ->toArray();
 
-    $sasaranRenstraIndikatorIds = Model_Sasaran_Renstra_Indikator::where('id_sasaran_renstra', $id_sasaran_renstra)
-                                                                    ->pluck('id')
-                                                                    ->toArray();
+            Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
+                                        ->update(["pagu" => $totalPaguSasaranRenstra]);
 
-    Model_Sasaran_Renstra_Nilai::whereIn('id_indikator_sasaran_renstra', $sasaranRenstraIndikatorIds)
-                                ->update(["pagu" => $totalPaguSasaranRenstra]);
+            // Update total pagu for tujuan_renstra
+            $id_tujuan_renstra = Model_Sasaran_Renstra::where('id', $id_sasaran_renstra)->pluck('id_tujuan_renstra')->first();
 
-    // Update total pagu for Tujuan_Renstra_Nilai
-    $id_tujuan_renstra = Model_Sasaran_Renstra::where('id', $id_sasaran_renstra)->pluck('id_tujuan_renstra')->first();
+            if ($id_tujuan_renstra) {
+                $totalPaguTujuanRenstra = DB::table('cascading_sasaran_renstra_nilai')
+                                            ->join('cascading_sasaran_renstra_indikator', 'cascading_sasaran_renstra_nilai.id_indikator_sasaran_renstra', '=', 'cascading_sasaran_renstra_indikator.id')
+                                            ->join('cascading_sasaran_renstra', 'cascading_sasaran_renstra_indikator.id_sasaran_renstra', '=', 'cascading_sasaran_renstra.id')
+                                            ->where('cascading_sasaran_renstra.id_tujuan_renstra', $id_tujuan_renstra)
+                                            ->sum('cascading_sasaran_renstra_nilai.pagu');
 
-    $totalPaguTujuanRenstra = DB::table('cascading_sasaran_renstra_nilai')
-                                    ->join('cascading_sasaran_renstra_indikator', 'cascading_sasaran_renstra_nilai.id_indikator_sasaran_renstra', '=', 'cascading_sasaran_renstra_indikator.id')
-                                    ->join('cascading_sasaran_renstra', 'cascading_sasaran_renstra_indikator.id_sasaran_renstra', '=', 'cascading_sasaran_renstra.id')
-                                    ->where('cascading_sasaran_renstra.id_tujuan_renstra', $id_tujuan_renstra)
-                                    ->sum('cascading_sasaran_renstra_nilai.pagu');
+                $tujuanRenstraIndikatorIds = Model_Tujuan_Renstra_Indikator::where('id_tujuan_renstra', $id_tujuan_renstra)
+                                                                        ->pluck('id')
+                                                                        ->toArray();
 
-    $tujuanRenstraIndikatorIds = Model_Tujuan_Renstra_Indikator::where('id_tujuan_renstra', $id_tujuan_renstra)
-                                                                ->pluck('id')
-                                                                ->toArray();
+                Model_Tujuan_Renstra_Nilai::whereIn('id_indikator_tujuan_renstra', $tujuanRenstraIndikatorIds)
+                                            ->update(["pagu" => $totalPaguTujuanRenstra]);
 
-    Model_Tujuan_Renstra_Nilai::whereIn('id_indikator_tujuan_renstra', $tujuanRenstraIndikatorIds)
-                                ->update(["pagu" => $totalPaguTujuanRenstra]);
+                // Update total pagu for urusan
+                $id_urusan = Model_Tujuan_Renstra::where('id', $id_tujuan_renstra)->pluck('id_urusan')->first();
 
-    // Update total pagu for Urusan_Nilai
-    $id_urusan = Model_Tujuan_Renstra::where('id', $id_tujuan_renstra)->pluck('id_urusan')->first();
+                if ($id_urusan) {
+                    $totalPaguUrusan = DB::table('cascading_tujuan_renstra_nilai')
+                                        ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
+                                        ->join('cascading_tujuan_renstra', 'cascading_tujuan_renstra_indikator.id_tujuan_renstra', '=', 'cascading_tujuan_renstra.id')
+                                        ->where('cascading_tujuan_renstra.id_urusan', $id_urusan)
+                                        ->sum('cascading_tujuan_renstra_nilai.pagu');
 
-    $totalPaguUrusan = DB::table('cascading_tujuan_renstra_nilai')
-                            ->join('cascading_tujuan_renstra_indikator', 'cascading_tujuan_renstra_nilai.id_indikator_tujuan_renstra', '=', 'cascading_tujuan_renstra_indikator.id')
-                            ->join('cascading_tujuan_renstra', 'cascading_tujuan_renstra_indikator.id_tujuan_renstra', '=', 'cascading_tujuan_renstra.id')
-                            ->where('cascading_tujuan_renstra.id_urusan', $id_urusan)
-                            ->sum('cascading_tujuan_renstra_nilai.pagu');
-
-    $urusanIndikatorIds = Model_Urusan_Indikator::where('id_urusan', $id_urusan)
+                    $urusanIndikatorIds = Model_Urusan_Indikator::where('id_urusan', $id_urusan)
                                                 ->pluck('id')
                                                 ->toArray();
 
-    Model_Urusan_Nilai::whereIn('id_indikator_urusan', $urusanIndikatorIds)
-                      ->update(["pagu" => $totalPaguUrusan]);
+                    Model_Urusan_Nilai::whereIn('id_indikator_urusan', $urusanIndikatorIds)
+                                        ->update(["pagu" => $totalPaguUrusan]);
+                }
+            }
+        }
+    }
 
     return response()->json(["message" => "Berhasil merubah data!"], 200);
 }

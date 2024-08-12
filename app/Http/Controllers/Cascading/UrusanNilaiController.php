@@ -54,7 +54,6 @@ class UrusanNilaiController extends Controller
             "satuan" => 'required',
             "tahun" => 'required',
             "triwulan" => 'required',
-            "pagu" => 'required',
             "target" => 'required',
             "capaian" => 'required',
         ]);
